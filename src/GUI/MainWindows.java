@@ -22,6 +22,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
+//WER SOLL DENN DEN MIST IMPORTIEREN KÖNNEN???
 
 public class MainWindows extends Shell {
 	private Text Suchfeld;
