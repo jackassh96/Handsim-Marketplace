@@ -1,5 +1,6 @@
 package GUI;
 
 public class Controller {
-// Ben, you dirty boy
+
+// We are all dirty gangsters.
 }
