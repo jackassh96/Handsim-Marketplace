@@ -1,6 +1,6 @@
 package GUI;
 
 public class Controller {
-
-// We are all dirty gangsters.
+	int test = 0;
+// We are all big gangsters.
 }
