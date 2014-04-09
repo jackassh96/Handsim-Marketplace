@@ -4,6 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Assignment {
+	
+
+	public Assignment(String assignmentID, ArrayList<Position> positionList,
+			OfferHandler offerHandler, String description, Date dateOfCreation,
+			Date deadline, String status, String title) {
+
+		this.assignmentID = assignmentID;
+		this.positionList = positionList;
+		this.offerHandler = offerHandler;
+		this.description = description;
+		this.dateOfCreation = dateOfCreation;
+		this.deadline = deadline;
+		this.status = status;
+		this.title = title;
+	}
+
 	private String assignmentID;
 	private ArrayList<Position> positionList;
 	private OfferHandler offerHandler;
@@ -12,14 +28,11 @@ public class Assignment {
 	private Date deadline;
 	private String status;
 	private String title;
-	
-	
-	public Assignment() {
-		// TODO Auto-generated constructor stub
-	}
 
 
-	//Getters and Setters
+	/*
+	 * Getters and Setters
+	 */
 	public String getAssignmentID() {
 		return assignmentID;
 	}

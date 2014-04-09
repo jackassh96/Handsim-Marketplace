@@ -6,6 +6,12 @@ public class OfferHandler {
 	private String offerHandlerID;
 	private ArrayList<Offer> offerList;
 
+	
+	public OfferHandler(String offerHandlerID, ArrayList<Offer> offerList) {
+		this.offerHandlerID = offerHandlerID;
+		this.offerList = offerList;
+	}
+
 	/*
 	 * Returns specified ID if it exists. 
 	 */
@@ -20,10 +26,6 @@ public class OfferHandler {
 		}
 		if (offerList.get(i) == null) return null;
 		else return offerList.get(i);
-	}
-	
-	public OfferHandler() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/*

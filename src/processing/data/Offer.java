@@ -10,9 +10,16 @@ public class Offer {
 	private Company company;
 	private Date date;
 	private String description;
-	
-	public Offer() {
-		// TODO Auto-generated constructor stub
+
+	public Offer(String offerID, double price, String amountOfTimeNeeded,
+			String status, Company company, Date date, String description) {
+		this.offerID = offerID;
+		this.price = price;
+		this.amountOfTimeNeeded = amountOfTimeNeeded;
+		this.status = status;
+		this.company = company;
+		this.date = date;
+		this.description = description;
 	}
 
 	/*

@@ -6,15 +6,27 @@ public class Company {
 	private String street;
 	private String number;
 	private int postCode;
+	private String city;
 	private String owner;
 	private String phone;
 	private String eMail;
 	private String description;
-	
-	
-	public Company() {
-		// TODO Auto-generated constructor stub
+
+public Company(String companyID, String name, String street, String number,
+			int postCode, String city, String owner, String phone,
+			String eMail, String description) {
+		this.companyID = companyID;
+		this.name = name;
+		this.street = street;
+		this.number = number;
+		this.postCode = postCode;
+		this.city = city;
+		this.owner = owner;
+		this.phone = phone;
+		this.eMail = eMail;
+		this.description = description;
 	}
+
 
 /*
  * Getters and Setters
@@ -89,12 +101,12 @@ public class Company {
 	}
 
 
-	public String geteMail() {
+	public String getEMail() {
 		return eMail;
 	}
 
 
-	public void seteMail(String eMail) {
+	public void setEMail(String eMail) {
 		this.eMail = eMail;
 	}
 
@@ -106,6 +118,14 @@ public class Company {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 }

@@ -8,8 +8,12 @@ public class Category {
 	private Category parentCategory;
 	private ArrayList<Category> subCategoryList;
 	
-	public Category() {
-		// TODO Auto-generated constructor stub
+	public Category(String categoryID, String title, Category parentCategory,
+			ArrayList<Category> subCategoryList) {
+		this.categoryID = categoryID;
+		this.title = title;
+		this.parentCategory = parentCategory;
+		this.subCategoryList = subCategoryList;
 	}
 
 	/*Getters and Setters 

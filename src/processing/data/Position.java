@@ -7,8 +7,12 @@ public class Position {
 	private ServiceGroup serviceGroup;
 	
 	
-	public Position() {
-		// TODO Auto-generated constructor stub
+	public Position(String positionID, String description, int amount,
+			ServiceGroup serviceGroup) {
+		this.positionID = positionID;
+		this.description = description;
+		this.amount = amount;
+		this.serviceGroup = serviceGroup;
 	}
 
 	/*

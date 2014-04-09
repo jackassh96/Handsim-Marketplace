@@ -6,6 +6,12 @@ public class AssignmentHandler {
 	private ArrayList<Assignment> assignmentList;
 	private String assignmentHandlerID;
 	
+	public AssignmentHandler(ArrayList<Assignment> assignmentList,
+			String assignmentHandlerID) {
+		this.assignmentList = assignmentList;
+		this.assignmentHandlerID = assignmentHandlerID;
+	}
+
 	/*
 	 * Returns specified ID if it exists. 
 	 */
@@ -20,10 +26,6 @@ public class AssignmentHandler {
 		}
 		if (assignmentList.get(i) == null) return null;
 		else return assignmentList.get(i);
-	}
-	
-	public AssignmentHandler() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/*

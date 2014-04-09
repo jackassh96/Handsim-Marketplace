@@ -1,11 +1,16 @@
 package processing.data;
 
+import java.util.ArrayList;
+
 public class ServiceGroup extends Category {
 	
 	private String sizeIndicator;
-	
-	public ServiceGroup() {
-		// TODO Auto-generated constructor stub
+
+	public ServiceGroup(String categoryID, String title,
+			Category parentCategory, ArrayList<Category> subCategoryList,
+			String sizeIndicator) {
+		super(categoryID, title, parentCategory, subCategoryList);
+		this.sizeIndicator = sizeIndicator;
 	}
 
 	/*
