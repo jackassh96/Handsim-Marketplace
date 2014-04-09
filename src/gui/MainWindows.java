@@ -19,7 +19,7 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.wb.swt.SWTResourceManager;
+import gui.SWTResourceManager;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
@@ -30,17 +30,17 @@ public class MainWindows extends Shell {
 	private Text BenutzernameTextField;
 	private Text VornameTextField;
 	private Text NachnameTextField;
-	private Text Stra???eTextField;
+	private Text StrasseTextField;
 	private Text PostleitzahlTextField;
 	private Text StadtTextField;
 	private Text HausnummerTextField;
 	private Text UnternehmensTextField;
 	private Text EmailTextField;
 	private Text TelefonTextField;
-	private Table DashboardAuftr???geTable;
+	private Table DashboardAuftraegeTable;
 	private Table DashboardTermineTable;
 	private Table UnternehmensTable;
-	private Table MeineAuftr???geTable;
+	private Table MeineAuftraegeTable;
 
 	/**
 	 * Launch the application.
@@ -49,7 +49,7 @@ public class MainWindows extends Shell {
 	public static void main(String args[]) {
 		try {
 			Display display = Display.getDefault();
-			CSPmainWindows shell = new CSPmainWindows(display);
+			MainWindows shell = new MainWindows(display);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -66,7 +66,7 @@ public class MainWindows extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public CSPmainWindows(Display display) {
+	public MainWindows(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -131,19 +131,19 @@ public class MainWindows extends Shell {
 		DashboardMidleContainer.setLayoutData(BorderLayout.CENTER);
 		DashboardMidleContainer.setLayout(new GridLayout(2, false));
 		
-		Label DashboardAuftr???geLabel = new Label(DashboardMidleContainer, SWT.NONE);
-		DashboardAuftr???geLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardAuftr???geLabel.setText("Meine Auftr\u00E4ge");
+		Label DashboardAuftraegeLabel = new Label(DashboardMidleContainer, SWT.NONE);
+		DashboardAuftraegeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		DashboardAuftraegeLabel.setText("Meine Auftr\u00E4ge");
 		
 		Label DashboardTermineLabel = new Label(DashboardMidleContainer, SWT.NONE);
 		DashboardTermineLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		DashboardTermineLabel.setText("N\u00E4chste Termine");
 		
-		DashboardAuftr???geTable = new Table(DashboardMidleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		DashboardAuftr???geTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardAuftr???geTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		DashboardAuftr???geTable.setHeaderVisible(true);
-		DashboardAuftr???geTable.setLinesVisible(true);
+		DashboardAuftraegeTable = new Table(DashboardMidleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		DashboardAuftraegeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		DashboardAuftraegeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		DashboardAuftraegeTable.setHeaderVisible(true);
+		DashboardAuftraegeTable.setLinesVisible(true);
 		
 		DashboardTermineTable = new Table(DashboardMidleContainer, SWT.BORDER | SWT.FULL_SELECTION);
 		DashboardTermineTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -180,31 +180,31 @@ public class MainWindows extends Shell {
 		
 		Composite UnternehmenTableButtonContainer = new Composite(UnternehmenMidleHeaderContainer, SWT.NONE);
 		
-		final Composite Auftr???geContainer = new Composite(MainContainer, SWT.NONE);
-		Auftr???geContainer.setLayout(new BorderLayout(0, 0));
+		final Composite AuftraegeContainer = new Composite(MainContainer, SWT.NONE);
+		AuftraegeContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite Auftr???geMidleContainer = new Composite(Auftr???geContainer, SWT.NONE);
-		Auftr???geMidleContainer.setLayoutData(BorderLayout.CENTER);
-		Auftr???geMidleContainer.setLayout(new BorderLayout(0, 0));
+		Composite AuftraegeMidleContainer = new Composite(AuftraegeContainer, SWT.NONE);
+		AuftraegeMidleContainer.setLayoutData(BorderLayout.CENTER);
+		AuftraegeMidleContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite Auftr???geMidleHeaderContainer = new Composite(Auftr???geMidleContainer, SWT.NONE);
-		Auftr???geMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
-		Auftr???geMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite AuftraegeMidleHeaderContainer = new Composite(AuftraegeMidleContainer, SWT.NONE);
+		AuftraegeMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
+		AuftraegeMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label MeineAuftr???geLabel = new Label(Auftr???geMidleHeaderContainer, SWT.NONE);
-		MeineAuftr???geLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
-		MeineAuftr???geLabel.setText("Meine Auftr\u00E4ge");
+		Label MeineAuftraegeLabel = new Label(AuftraegeMidleHeaderContainer, SWT.NONE);
+		MeineAuftraegeLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
+		MeineAuftraegeLabel.setText("Meine Auftr\u00E4ge");
 		
-		Composite Auftr???geTableButtonContainer = new Composite(Auftr???geMidleHeaderContainer, SWT.NONE);
+		Composite AuftraegeTableButtonContainer = new Composite(AuftraegeMidleHeaderContainer, SWT.NONE);
 		
-		MeineAuftr???geTable = new Table(Auftr???geMidleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		MeineAuftr???geTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		MeineAuftr???geTable.setLayoutData(BorderLayout.CENTER);
-		MeineAuftr???geTable.setHeaderVisible(true);
-		MeineAuftr???geTable.setLinesVisible(true);
+		MeineAuftraegeTable = new Table(AuftraegeMidleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		MeineAuftraegeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		MeineAuftraegeTable.setLayoutData(BorderLayout.CENTER);
+		MeineAuftraegeTable.setHeaderVisible(true);
+		MeineAuftraegeTable.setLinesVisible(true);
 		
-		Composite Auftr???geTopContainer = new Composite(Auftr???geContainer, SWT.NONE);
-		Auftr???geTopContainer.setLayoutData(BorderLayout.NORTH);
+		Composite AuftraegeTopContainer = new Composite(AuftraegeContainer, SWT.NONE);
+		AuftraegeTopContainer.setLayoutData(BorderLayout.NORTH);
 		
 		final Composite ProfilContainer = new Composite(MainContainer, SWT.NONE);
 		ProfilContainer.setLayout(new BorderLayout(0, 0));
@@ -263,17 +263,17 @@ public class MainWindows extends Shell {
 		EmailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		EmailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label Stra???eLabel = new Label(ProfilMidleContainer, SWT.NONE);
-		Stra???eLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		Stra???eLabel.setText("Stra\u00DFe");
+		Label StrasseLabel = new Label(ProfilMidleContainer, SWT.NONE);
+		StrasseLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		StrasseLabel.setText("Stra\u00DFe");
 		
 		Label TelefonLabel = new Label(ProfilMidleContainer, SWT.NONE);
 		TelefonLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		TelefonLabel.setText("Telefon");
 		
-		Stra???eTextField = new Text(ProfilMidleContainer, SWT.BORDER);
-		Stra???eTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		Stra???eTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		StrasseTextField = new Text(ProfilMidleContainer, SWT.BORDER);
+		StrasseTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		StrasseTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		TelefonTextField = new Text(ProfilMidleContainer, SWT.BORDER);
 		TelefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -344,7 +344,7 @@ public class MainWindows extends Shell {
 		
 		AuftragsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				MainStack.topControl = Auftr???geContainer;
+				MainStack.topControl = AuftraegeContainer;
 				MainContainer.layout();
 			}
 		});
