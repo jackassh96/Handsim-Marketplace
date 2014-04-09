@@ -1,12 +1,12 @@
 package processing.data;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 
 public class Assignment {
 	
 
-	public Assignment(String assignmentID, ArrayList<Position> positionList,
+	public Assignment(String assignmentID, Position[] positionList,
 			OfferHandler offerHandler, String description, Date dateOfCreation,
 			Date deadline, String status, String title) {
 
@@ -21,7 +21,7 @@ public class Assignment {
 	}
 
 	private String assignmentID;
-	private ArrayList<Position> positionList;
+	private Position[] positionList;
 	private OfferHandler offerHandler;
 	private String description;
 	private Date dateOfCreation;
@@ -38,12 +38,6 @@ public class Assignment {
 	}
 	public void setAssignmentID(String assignmentID) {
 		this.assignmentID = assignmentID;
-	}
-	public ArrayList<Position> getPositionList() {
-		return positionList;
-	}
-	public void setPositionList(ArrayList<Position> positionList) {
-		this.positionList = positionList;
 	}
 	public OfferHandler getOfferHandler() {
 		return offerHandler;
@@ -80,6 +74,12 @@ public class Assignment {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public Position[] getPositionList() {
+		return positionList;
+	}
+	public void setPositionList(Position[] positionList) {
+		this.positionList = positionList;
 	}
 
 }

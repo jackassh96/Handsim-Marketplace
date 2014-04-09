@@ -7,7 +7,7 @@ public class ServiceGroup extends Category {
 	private String sizeIndicator;
 
 	public ServiceGroup(String categoryID, String title,
-			Category parentCategory, ArrayList<Category> subCategoryList,
+			Category parentCategory, Category[] subCategoryList,
 			String sizeIndicator) {
 		super(categoryID, title, parentCategory, subCategoryList);
 		this.sizeIndicator = sizeIndicator;

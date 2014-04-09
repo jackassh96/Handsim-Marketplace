@@ -1,13 +1,11 @@
 package processing.data;
 
-import java.util.ArrayList;
-
 public class OfferHandler {
 	private String offerHandlerID;
-	private ArrayList<Offer> offerList;
+	private Offer[] offerList;
 
 	
-	public OfferHandler(String offerHandlerID, ArrayList<Offer> offerList) {
+	public OfferHandler(String offerHandlerID, Offer[] offerList) {
 		this.offerHandlerID = offerHandlerID;
 		this.offerList = offerList;
 	}
@@ -24,8 +22,8 @@ public class OfferHandler {
 			e.printStackTrace();
 			return null;
 		}
-		if (offerList.get(i) == null) return null;
-		else return offerList.get(i);
+		if (offerList[i] == null) return null;
+		else return offerList[i];
 	}
 
 	/*
@@ -39,12 +37,14 @@ public class OfferHandler {
 		this.offerHandlerID = offerHandlerID;
 	}
 
-	public ArrayList<Offer> getOfferList() {
+	public Offer[] getOfferList() {
 		return offerList;
 	}
 
-	public void setOfferList(ArrayList<Offer> offerList) {
+	public void setOfferList(Offer[] offerList) {
 		this.offerList = offerList;
 	}
+
+
 
 }
