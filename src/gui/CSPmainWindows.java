@@ -19,7 +19,6 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
