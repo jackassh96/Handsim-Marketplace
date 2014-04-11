@@ -68,6 +68,8 @@ public class CSPmainWindows extends Shell {
 		super(display, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
+		
+		//Obere statische Leiste zur Navigation zwischen den einzelnen Seiten
 		Composite HeaderContainer = new Composite(this, SWT.NONE);
 		HeaderContainer.setLayoutData(BorderLayout.NORTH);
 		HeaderContainer.setLayout(new BorderLayout(0, 0));
@@ -107,6 +109,7 @@ public class CSPmainWindows extends Shell {
 		Suchfeld.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		Suchfeld.setText("Suche");
 		
+		//Composites zur Abstandshaltung in alle Richtungen
 		Composite LowContainer = new Composite(this, SWT.NONE);
 		LowContainer.setLayoutData(BorderLayout.SOUTH);
 		
@@ -116,26 +119,29 @@ public class CSPmainWindows extends Shell {
 		Composite RightContainer = new Composite(this, SWT.NONE);
 		RightContainer.setLayoutData(BorderLayout.EAST);
 		
+		//MainContainer beinhaltet die 4 Ansichten des Hauptfensters (alle großen Container final um sie im ActionHandler ansprechen zu können)
 		final Composite MainContainer = new Composite(this, SWT.NONE);
 		MainContainer.setLayoutData(BorderLayout.CENTER);
 		final StackLayout MainStack = new StackLayout();
 		MainContainer.setLayout(MainStack);
 		
+		//DashboardContainer mit den zwei Tabellen für einen schnellen Überblick - wird als erstes angewählt
 		final Composite DashboardContainer = new Composite(MainContainer, SWT.NONE);
 		MainStack.topControl = DashboardContainer;
 		DashboardContainer.setLayout(new BorderLayout(0, 0));
 		
+		//MiddleContainer beinhaltet die zwei Tabellen der Dashboardansicht
 		Composite DashboardMiddleContainer = new Composite(DashboardContainer, SWT.NONE);
 		DashboardMiddleContainer.setLayoutData(BorderLayout.CENTER);
 		DashboardMiddleContainer.setLayout(new GridLayout(2, false));
 		
 		Label DashboardAufträgeLabel = new Label(DashboardMiddleContainer, SWT.NONE);
 		DashboardAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardAufträgeLabel.setText("Meine Auftr\u00E4ge");
+		DashboardAufträgeLabel.setText("Meine Aufträge");
 		
 		Label DashboardTermineLabel = new Label(DashboardMiddleContainer, SWT.NONE);
 		DashboardTermineLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardTermineLabel.setText("N\u00E4chste Termine");
+		DashboardTermineLabel.setText("Nächste Termine");
 		
 		DashboardAufträgeTable = new Table(DashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
 		DashboardAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -149,9 +155,11 @@ public class CSPmainWindows extends Shell {
 		DashboardTermineTable.setHeaderVisible(true);
 		DashboardTermineTable.setLinesVisible(true);
 		
+		//Composite als Abstandshalter nach oben hin
 		Composite DashboardTopContainer = new Composite(DashboardContainer, SWT.NONE);
 		DashboardTopContainer.setLayoutData(BorderLayout.NORTH);
 		
+		//Container mit der Unternehmensansicht
 		final Composite UnternehmenContainer = new Composite(MainContainer, SWT.NONE);
 		UnternehmenContainer.setLayout(new BorderLayout(0, 0));
 		
@@ -178,6 +186,7 @@ public class CSPmainWindows extends Shell {
 		
 		Composite UnternehmenTableButtonContainer = new Composite(UnternehmenMidleHeaderContainer, SWT.NONE);
 		
+		//Container mit der Aufträgeansicht
 		final Composite AufträgeContainer = new Composite(MainContainer, SWT.NONE);
 		AufträgeContainer.setLayout(new BorderLayout(0, 0));
 		
@@ -191,7 +200,7 @@ public class CSPmainWindows extends Shell {
 		
 		Label MeineAufträgeLabel = new Label(AufträgeMidleHeaderContainer, SWT.NONE);
 		MeineAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
-		MeineAufträgeLabel.setText("Meine Auftr\u00E4ge");
+		MeineAufträgeLabel.setText("Meine Aufträge");
 		
 		Composite AufträgeTableButtonContainer = new Composite(AufträgeMidleHeaderContainer, SWT.NONE);
 		AufträgeTableButtonContainer.setLayout(new BorderLayout(0, 0));
@@ -213,7 +222,7 @@ public class CSPmainWindows extends Shell {
 		AufträgeBearbeitenButton.setText("Bearbeiten");
 		
 		Button AufträgeLöschenButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
-		AufträgeLöschenButton.setText("L\u00F6schen");
+		AufträgeLöschenButton.setText("Löschen");
 		
 		MeineAufträgeTable = new Table(AufträgeMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
 		MeineAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -224,6 +233,7 @@ public class CSPmainWindows extends Shell {
 		Composite AufträgeTopContainer = new Composite(AufträgeContainer, SWT.NONE);
 		AufträgeTopContainer.setLayoutData(BorderLayout.NORTH);
 		
+		//Container mit der Profilansicht
 		final Composite ProfilContainer = new Composite(MainContainer, SWT.NONE);
 		ProfilContainer.setLayout(new BorderLayout(0, 0));
 		
@@ -246,7 +256,6 @@ public class CSPmainWindows extends Shell {
 		Composite ProfilMiddleContainer = new Composite(ProfilContainer, SWT.NONE);
 		ProfilMiddleContainer.setLayoutData(BorderLayout.CENTER);
 		ProfilMiddleContainer.setLayout(new GridLayout(2, false));
-		
 		
 		Label BenutzernameLabel = new Label(ProfilMiddleContainer, SWT.NONE);
 		BenutzernameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -312,6 +321,7 @@ public class CSPmainWindows extends Shell {
 		TelefonTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
 		TelefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		TelefonTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//VerifyListener um Buchstaben bei der Eingabe zu verbieten
 		TelefonTextField.addVerifyListener(new VerifyListener() {
 	        public void verifyText(VerifyEvent e) {
 	            	if(Character.isAlphabetic(e.character)){
@@ -343,18 +353,21 @@ public class CSPmainWindows extends Shell {
 		Label PostleitzahlLabel = new Label(ProfilMiddleContainer, SWT.NONE);
 		PostleitzahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		PostleitzahlLabel.setText("Postleitzahl");
+		//Leeres Label um das GridLayout zu füllen
 		new Label(ProfilMiddleContainer, SWT.NONE);
 		
 		PostleitzahlTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
 		PostleitzahlTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		PostleitzahlTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		PostleitzahlTextField.setTextLimit(5);
+		//Leeres Label um das GridLayout zu füllen
 		new Label(ProfilMiddleContainer, SWT.NONE);
 		
 		Composite ProfilTopContainer = new Composite(ProfilContainer, SWT.NONE);
 		ProfilTopContainer.setLayoutData(BorderLayout.NORTH);
 		createContents();
 		
+		//SelectionListener der Buttons im Header um zwischen den Sichten zu wechseln
 		DashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MainStack.topControl = DashboardContainer;
@@ -389,7 +402,7 @@ public class CSPmainWindows extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("SWT Application");
+		setText("HANDSIM-Marketplace");
 		setSize(1280, 720);
 
 	}
