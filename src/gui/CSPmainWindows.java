@@ -21,6 +21,7 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class CSPmainWindows extends Shell {
@@ -216,12 +217,21 @@ public class CSPmainWindows extends Shell {
 		AufträgeLowerTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Button AufträgeNeuButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
+		AufträgeNeuButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				new AuftragErstellenPositionenWindow();
+			}
+		});
+		AufträgeNeuButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		AufträgeNeuButton.setText("Neu");
 		
 		Button AufträgeBearbeitenButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
+		AufträgeBearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		AufträgeBearbeitenButton.setText("Bearbeiten");
 		
 		Button AufträgeLöschenButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
+		AufträgeLöschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		AufträgeLöschenButton.setText("Löschen");
 		
 		MeineAufträgeTable = new Table(AufträgeMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);

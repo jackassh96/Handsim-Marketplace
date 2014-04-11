@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class AuftragErstellenPositionenWindow extends Shell {
 
@@ -26,27 +28,15 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			AuftragErstellenPositionenWindow shell = new AuftragErstellenPositionenWindow(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public AuftragErstellenPositionenWindow(Display display) {
-		super(display, SWT.SHELL_TRIM);
+	public AuftragErstellenPositionenWindow() {
+		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
 		Composite LowContainer = new Composite(this, SWT.NONE);
@@ -70,10 +60,23 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		MiddleRightLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Button WeiterButton = new Button(MiddleRightLowContainer, SWT.NONE);
+		WeiterButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				((Button)e.getSource()).getShell().setVisible(false);
+				AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(((Button)e.getSource()).getShell());
+			}
+		});
 		WeiterButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		WeiterButton.setText("Weiter");
 		
 		Button AbbrechenButton = new Button(MiddleRightLowContainer, SWT.NONE);
+		AbbrechenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				((Button)e.getSource()).getShell().dispose();
+			}
+		});
 		AbbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		AbbrechenButton.setText("Abbrechen");
 		
@@ -150,7 +153,20 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Tree OutputTree = new Tree(MiddleMainContainer, SWT.BORDER);
 		OutputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		
 		createContents();
+		
+		try {
+			this.open();
+			this.layout();
+			while (!this.isDisposed()) {
+				if (!this.getDisplay().readAndDispatch()) {
+					this.getDisplay().sleep();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -158,7 +174,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("Auftrag Erstellen");
-		setSize(864, 636);
+		setSize(900, 700);
 
 	}
 

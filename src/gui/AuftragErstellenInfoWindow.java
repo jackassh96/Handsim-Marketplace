@@ -11,38 +11,26 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+import processing.Controller;
 
 public class AuftragErstellenInfoWindow extends Shell {
 	private Text TitelText;
 	private Text BeschreibungText;
-
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			AuftragErstellenInfoWindow shell = new AuftragErstellenInfoWindow(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private Shell previousWindow;
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public AuftragErstellenInfoWindow(Display display) {
-		super(display, SWT.SHELL_TRIM);
+	public AuftragErstellenInfoWindow(Shell previousPage) {
+		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
+		previousWindow = previousPage;
+		
+		this.setLocation(previousWindow.getLocation());
 		
 		Composite UpperContainer = new Composite(this, SWT.NONE);
 		UpperContainer.setLayoutData(BorderLayout.NORTH);
@@ -108,20 +96,55 @@ public class AuftragErstellenInfoWindow extends Shell {
 		MiddleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Button ZurückButton = new Button(MiddleLeftLowContainer, SWT.NONE);
+		ZurückButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
+				window.dispose();
+				window.getPreviousWindow().open();
+			}
+		});
 		ZurückButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		ZurückButton.setText("Zurück");
 		
 		Button ErstellenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
+		ErstellenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+			}
+		});
 		ErstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		ErstellenButton.setText("Erstellen");
 		
 		Button AbbrechenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
+		AbbrechenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				((Button)e.getSource()).getShell().dispose();
+			}
+		});
 		AbbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		AbbrechenButton.setText("Abbrechen");
 		
 		Label LowerLeftLowLabel = new Label(LeftLowContainer, SWT.NONE);
 		LowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
 		createContents();
+		try {
+			this.open();
+			this.layout();
+			while (!this.isDisposed()) {
+				if (!this.getDisplay().readAndDispatch()) {
+					this.getDisplay().sleep();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Shell getPreviousWindow(){
+		return previousWindow;
 	}
 
 	/**
@@ -129,7 +152,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("Auftrag Erstellen");
-		setSize(817, 668);
+		setSize(900, 700);
 
 	}
 
