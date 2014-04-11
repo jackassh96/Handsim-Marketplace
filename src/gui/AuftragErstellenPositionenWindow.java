@@ -24,14 +24,6 @@ import org.eclipse.swt.events.SelectionEvent;
 public class AuftragErstellenPositionenWindow extends Shell {
 
 	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		
-	}
-
-	/**
 	 * Create the shell.
 	 * @param display
 	 */

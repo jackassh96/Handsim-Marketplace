@@ -43,7 +43,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		
 		Label IhreAuswahlLabel = new Label(LeftUpperContainer, SWT.NONE);
 		IhreAuswahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		IhreAuswahlLabel.setText("Ihre ausgewählten Leistungen");
+		IhreAuswahlLabel.setText("\tIhre ausgewählten Leistungen");
 		
 		Composite RightUpperContainer = new Composite(UpperContainer, SWT.NONE);
 		
@@ -121,7 +121,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 		AbbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				((Button)e.getSource()).getShell().dispose();
+				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
+				window.dispose();
+				window.getPreviousWindow().dispose();
 			}
 		});
 		AbbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
