@@ -13,22 +13,33 @@ import sun.misc.BASE64Encoder;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.HashMap;
- 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class dbHandler {
+
+	// GENERAL TODO's :
+	//	-> Documentation
+	//	-> Tests 
+	//	-> Comments
+	//
+	//	-> method for changing user profile
+	//	-> method to change status of offer
+	//	-> 
 	
+	
+	//TODO set default URL,USER AND PW
 	private String dbUrl;
 	private String dbUser;
 	private String dbPw;
-	private String dbName = "benzn";
+	private String dbName = "Handsim";
 	
-	private String userTable = "nutzer";
+	private String userTable = "marketuser";
 	private String companyTable = "tn_teilnehmer";
-	private String assingmentTable = "assignments";
-	private String categoryTable = "categories";
-	private String positionTable = "position";
+	private String assingmentTable = "marketassignments";
+	private String categoryTable = "marketcategories";
+	private String positionTable = "marketposition";
+	private String offerTable = "marketoffer";
 	
 	private String rejectStateName = "Abgelehnt";
 			
@@ -108,24 +119,7 @@ public class dbHandler {
 		return true;
 	}
 	
-	//TODO Documentation 
-	public boolean createUserTable() throws SQLException {
-		Connection con = setUpConnection();
-		try {	//TODO fix statement to create database structure
-				System.out.println();
-				PreparedStatement pst = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + dbName + "." + userTable + " ( " +
-															"`Nutzername` varchar(20) COLLATE utf8_unicode_ci NOT NULL,+" +
-															"`Password` varchar(20) COLLATE utf8_unicode_ci NOT NULL," +
-															" PRIMARY KEY (`Nutzername`)" +
-															") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62");
-				pst.execute();
-		}
-		catch (SQLException ex) {
-			throw new SQLException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
-		}
-		con.close();
-		return true;
-	}
+	
 	
 	//TODO Documentation
 	public boolean checkLogInData(String username, String password) throws SQLException {
@@ -162,11 +156,12 @@ public class dbHandler {
 
 	//TODO Documentation
 	public String encodePw(String password) {
-	    String geheim = "RaJzEkTSFRbW54oBwkfryQ"; 
+		
+		String randomString = "RaJzEkTSFRbW54oBwkfryQ"; 
 		
 		try {
 		      // byte-Array erzeugen
-		      byte[] key = (geheim).getBytes("UTF-8");
+		      byte[] key = (randomString).getBytes("UTF-8");
 		      // aus dem Array einen Hash-Wert erzeugen mit MD5 oder SHA
 		      MessageDigest sha = MessageDigest.getInstance("MD5");
 		      key = sha.digest(key);
@@ -183,16 +178,16 @@ public class dbHandler {
 		 
 		      // bytes zu Base64-String konvertieren (dient der Lesbarkeit)
 		      BASE64Encoder myEncoder = new BASE64Encoder();
-		      geheim = myEncoder.encode(encrypted);
+		      randomString = myEncoder.encode(encrypted);
 		      
-		      //dont give the hint its base64 :D
-		      geheim = geheim.replaceAll("==", "");
+		      //dont give a hint its base64 :D
+		      randomString = randomString.replaceAll("==", "");
 	      }
 	      catch (Exception ex) {
 	    	  //TODO throw new WasAuchImmerException -> nothing to do hard error!
 	      }
 		
-		return geheim;
+		return randomString;
 	}
 	
 	//TODO Documentation
@@ -215,13 +210,17 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				String [] rowStr = new String[5];
-				rowStr[0] = neu.getNString("firma");
-				rowStr[1] = neu.getNString("anrede");
-				rowStr[2] = neu.getNString("vorname");
-				rowStr[3] = neu.getNString("nachname");
-				rowStr[4] = neu.getNString("email");
-				
+				//TODO ID needed?
+				String [] rowStr = new String[9];
+				rowStr[0] = String.valueOf(neu.getInt("t_id"));
+				rowStr[1] = neu.getNString("firma");
+				rowStr[2] = neu.getNString("street");
+				rowStr[3] = neu.getNString("number");
+				rowStr[4] = neu.getNString("postcode");
+				rowStr[5] = neu.getNString("vorname") + " " + neu.getNString("nachname");
+				rowStr[6] = neu.getNString("phone");
+				rowStr[7] = neu.getNString("email");
+				rowStr[8] = neu.getNString("description");
 				
 				hFirmenMap.put(String.valueOf(i), rowStr);
 				i++;
@@ -232,31 +231,7 @@ public class dbHandler {
 		return hFirmenMap;
 	}
 
-	//TODO Documentation 
-	public boolean createAssignmentTable() throws SQLException {
-	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure
-			PreparedStatement pst = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + dbName + "." + assingmentTable + " ( " +
-														"`Assignment_ID` int(15) NOT NULL AUTO_INCREMENT," +
-														"`Owner` varchar(100) COLLATE utf8_unicode_ci NOT NULL," +
-														"`PositionList` varchar(100) COLLATE utf8_unicode_ci NOT NULL," +
-														"`OfferHandler` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
-														"`Description` varchar(100) COLLATE utf8_unicode_ci NOT NULL," + 
-														"`DateOfCreation` varchar(15) COLLATE utf8_unicode_ci NOT NULL," +
-														"`Deadline` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL," +
-														"`Status` varchar(15) COLLATE utf8_unicode_ci NOT NULL," +
-														"`Title` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
-														"`DueDate` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
-														" PRIMARY KEY (`Assignment_ID`)" +
-														") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62");
-			pst.execute();
-	}
-	catch (SQLException ex) {
-		throw new SQLException("Tabelle (Assignment) konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
-	}
-	con.close();
-	return true;
-	}
+	
 	
 	//TODO Documentation 
 	public boolean createAssignment( String owner, Position[] positionList, OfferHandler  oHandler, String description, DatumFull dateOfCreation, DatumFull deadline , String status, String title, DatumFull dueDate) throws SQLException {
@@ -306,22 +281,8 @@ public class dbHandler {
 	con.close();
 	return true;
 	}
-	
-	
-	int x = 23; //-> Zeilen
-	int y = 5; //-> Spalten
-	
-//	String[][] neurwfe; 
-	
-	String[][] arS = new String[x][y];
-	
-	
 
-//	ArrayList<String[]> b = new ArrayList<>();
-	//TODO DATENBANKTABELLE SIEHT WIE AUS???
-//	getCategories	--> Hole alle Categorien 
-//	CREATE TABLE categories ( `Category_ID` int(15) NOT NULL AUTO_INCREMENT , `Title` varchar(25) COLLATE utf8_unicode_ci NOT NULL, `Parent_Category` varchar(15) COLLATE utf8_unicode_ci NOT NULL, `Sub_Category_List` varchar(50) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Category_ID`)) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62;
-
+	//TODO Documentation
 	public HashMap<String,String[]> getCategories() throws SQLException {
 		boolean exists = false;
 		ResultSet neu = null;
@@ -340,11 +301,11 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				String [] rowStr = new String[4];
+				String [] rowStr = new String[3];
 				rowStr[0] = String.valueOf(neu.getInt("Category_ID"));
 				rowStr[1] = neu.getNString("Title");
-				rowStr[2] = neu.getNString("Parent_Category");
-				rowStr[3] = neu.getNString("Sub_Category_List");
+				rowStr[2] = String.valueOf(neu.getInt("Parent_Category"));
+//				rowStr[3] = neu.getNString("Sub_Category_List"); 
 				
 				hCategoryMap.put(String.valueOf(i), rowStr);
 				i++;
@@ -374,18 +335,19 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
+				//TODO ID needed?
 				//( Assignment_ID, Owner, PositionList , OfferHandler , Description , DateOfCreation , Deadline , Status , Title , DueDate )
-				String [] rowStr = new String[10];
+				String [] rowStr = new String[8];
 				rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
 				rowStr[1] = neu.getNString("Owner");
-				rowStr[2] = neu.getNString("PositionList");
-				rowStr[3] = neu.getNString("OfferHandler");
-				rowStr[4] = neu.getNString("Description");
-				rowStr[5] = neu.getNString("DateOfCreation");
-				rowStr[6] = neu.getNString("Deadline");
-				rowStr[7] = neu.getNString("Status");
-				rowStr[8] = neu.getNString("Title");
-				rowStr[9] = neu.getNString("DueDate");
+//				rowStr[2] = neu.getNString("PositionList");
+//				rowStr[3] = neu.getNString("OfferHandler");
+				rowStr[2] = neu.getNString("Description");
+				rowStr[3] = neu.getNString("DateOfCreation");
+				rowStr[4] = neu.getNString("Deadline");
+				rowStr[5] = neu.getNString("Status");
+				rowStr[6] = neu.getNString("Title");
+				rowStr[7] = neu.getNString("DueDate");
 				
 				hAssignmentMap.put(String.valueOf(i), rowStr);
 				i++;
@@ -395,6 +357,44 @@ public class dbHandler {
 		return hAssignmentMap;
 	}
 	
+	//TODO Documentation
+	public HashMap<String,String[]> getOffer(String Assignment_ID) throws SQLException {
+		boolean exists = false;
+		ResultSet neu = null;
+		HashMap<String,String[]> hOfferMap = new HashMap<>();
+		
+		Connection con = setUpConnection();
+		try {
+				PreparedStatement pst = con.prepareStatement("");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE Assignment_ID=\"" + Assignment_ID + "\"");
+				exists = neu.first();
+				//TODO evaluate exists
+		}
+		catch (SQLException ex) {
+			throw new SQLException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+		}
+		finally { 
+			int i = 0;
+			do {
+				//TODO ID needed?
+				String [] rowStr = new String[7];
+				rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
+				rowStr[1] = neu.getNString("Company");
+				rowStr[2] = String.valueOf(neu.getDouble("Price"));
+				rowStr[3] = neu.getNString("AmountOfTimeNeeded");
+				rowStr[4] = neu.getNString("Description");
+				rowStr[5] = neu.getNString("Date");
+				rowStr[6] = neu.getNString("Status");	
+				
+				hOfferMap.put(String.valueOf(i), rowStr);
+				i++;
+			} while (neu.next());
+			con.close(); 
+		}
+		
+		return hOfferMap;
+	}
+	
 	//TODO DATENBANKTABELLE SIEHT WIE AUS???
 //	
 //	getPositionList
@@ -402,7 +402,7 @@ public class dbHandler {
 	
 	
 	//TODO Documentation 
-	public HashMap<String,String[]> getPositionList(String ids) throws SQLException {
+	public HashMap<String,String[]> getPositionList(String Assingment_ID) throws SQLException {
 		boolean exists = false;
 		ResultSet neu = null;
 		HashMap<String,String[]> hPositionMap = new HashMap<>();
@@ -410,7 +410,7 @@ public class dbHandler {
 		Connection con = setUpConnection();
 		try {
 				PreparedStatement pst = con.prepareStatement("");
-				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + positionTable + " WHERE Owner=\"");// + owner + "\"");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + positionTable + " WHERE Assingment_ID=\"" + Assingment_ID + "\"");
 				exists = neu.first();
 				//TODO evaluate exists
 		}
@@ -420,10 +420,11 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
+				//TODO ID needed?
 				//(`Position_ID`, `Category`, `Description`, `Amount`)
 				String [] rowStr = new String[4];
 				rowStr[0] = String.valueOf(neu.getInt("Position_ID"));
-				rowStr[1] = neu.getNString("Category");
+				rowStr[1] = String.valueOf(neu.getInt("Category_ID"));
 				rowStr[2] = neu.getNString("Description");
 				rowStr[3] = neu.getNString("Amount");
 				
@@ -434,30 +435,85 @@ public class dbHandler {
 		}
 		return hPositionMap;
 	}
-//	TODO 's
-//	createPosition
+	
+	//TODO Documentation
+	public HashMap<String,String[]> getUsers(String Username) throws SQLException {
+		boolean exists = false;
+		ResultSet neu = null;
+		HashMap<String,String[]> hUserMap = new HashMap<>();
+		
+		Connection con = setUpConnection();
+		try {
+				PreparedStatement pst = con.prepareStatement("");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE User_ID=\"" + Username + "\"");
+				exists = neu.first();
+				//TODO evaluate exists
+		}
+		catch (SQLException ex) {
+			throw new SQLException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+		}
+		finally { 
+			int i = 0;
+			do {
+				//TODO ID needed?
+				String [] rowStr = new String[11];
+				rowStr[0] = neu.getNString("User_ID");
+				rowStr[1] = neu.getNString("First_Name");
+				rowStr[2] = neu.getNString("Last_Name");
+				rowStr[3] = neu.getNString("Street");
+				rowStr[4] = neu.getNString("Number");
+				rowStr[5] = String.valueOf(neu.getInt("Post_Code"));
+				rowStr[6] = neu.getNString("City");
+				rowStr[7] = neu.getNString("Email");
+				rowStr[8] = neu.getNString("Phone");
+				rowStr[9] = neu.getNString("Company");
+				rowStr[10] = neu.getNString("Gender");
+				
+				hUserMap.put(String.valueOf(i), rowStr);
+				i++;
+			} while (neu.next());
+			con.close(); 
+		}
+		
+		return hUserMap;
+	}
+		
+
+
+	//TODO Documentation 
+	public boolean createPosition( String category, String description, String  amount) throws SQLException {
+	Connection con = setUpConnection();
+	try {	//TODO fix statement to create database structure
+			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + positionTable + " " +
+														"( Position_ID, Category, Description , Amount )" +
+														//set NULL for ID for auto_increment and automatically generated id
+														" VALUES ( NULL, \"" + category + "\" , \"" + description + "\" , \"" + amount + "\" );");
+			pst.execute();
+	}
+	catch (SQLException ex) {
+		throw new SQLException("Wert konnte nicht eingefügt werden!\n" + ex.getMessage()); //TODO write Errortext
+	}
+	con.close();
+	return true;
+	}
 	
 	
-	
-	//++
-//	IMPLEMENTED
-//	setUpConnection
-//	createUserTable -> just for testing
-//	checkUserExistence
-//	checkLogInData
-//	createUser
-//	updateUser
-//	deleteUser
-//	encryptPW
-// 	getCompanyList
-//  createAssignmentTable -> just for testing
-//	createAssignment	
-//	deleteAssignment	
-//	updateAssignmentStatus
-//  getAssignments
+	//TODO Documentation + untested
+	public boolean deletePosition(String Position_ID) throws SQLException {
+	Connection con = setUpConnection();
+	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
+			PreparedStatement pst = con.prepareStatement("DELETE FROM  " + dbName + "." + positionTable + " WHERE Position_ID=\"" + Position_ID +"\";");
+			pst.execute();
+	}
+	catch (SQLException ex) {
+		throw new SQLException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+	}
+	con.close();
+	return true;
+	}
 	
 	
-	//GETTER AND SETTER
+	//GETTER AND SETTER needed TODO?
 	public String getDbUrl() {
 		return dbUrl;
 	}
@@ -489,6 +545,71 @@ public class dbHandler {
 	public void setDbName(String dbName) {
 		this.dbName = dbName;
 	}
-
+	
+//	//TODO Documentation 
+//	public boolean createUserTable() throws SQLException {
+//		Connection con = setUpConnection();
+//		try {	//TODO fix statement to create database structure
+//				System.out.println();
+//				PreparedStatement pst = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + dbName + "." + userTable + " ( " +
+//															"`Nutzername` varchar(20) COLLATE utf8_unicode_ci NOT NULL,+" +
+//															"`Password` varchar(20) COLLATE utf8_unicode_ci NOT NULL," +
+//															" PRIMARY KEY (`Nutzername`)" +
+//															") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62");
+//				pst.execute();
+//		}
+//		catch (SQLException ex) {
+//			throw new SQLException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+//		}
+//		con.close();
+//		return true;
+//	}
+//
+//	//TODO Documentation 
+//	public boolean createAssignmentTable() throws SQLException {
+//	Connection con = setUpConnection();
+//	try {	//TODO fix statement to create database structure
+//			PreparedStatement pst = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + dbName + "." + assingmentTable + " ( " +
+//														"`Assignment_ID` int(15) NOT NULL AUTO_INCREMENT," +
+//														"`Owner` varchar(100) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`PositionList` varchar(100) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`OfferHandler` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
+//														"`Description` varchar(100) COLLATE utf8_unicode_ci NOT NULL," + 
+//														"`DateOfCreation` varchar(15) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`Deadline` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL," +
+//														"`Status` varchar(15) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`Title` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
+//														"`DueDate` varchar(15) COLLATE utf8_unicode_ci NOT NULL," + 
+//														" PRIMARY KEY (`Assignment_ID`)" +
+//														") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62");
+//			pst.execute();
+//	}
+//	catch (SQLException ex) {
+//		throw new SQLException("Tabelle (Assignment) konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+//	}
+//	con.close();
+//	return true;
+//	}
+//
+//	//TODO Documentation & untested
+//	////SQL = CREATE TABLE categories ( `Category_ID` int(15) NOT NULL AUTO_INCREMENT , `Title` varchar(25) COLLATE utf8_unicode_ci NOT NULL, `Parent_Category` varchar(15) COLLATE utf8_unicode_ci NOT NULL, `Sub_Category_List` varchar(50) COLLATE utf8_unicode_ci NOT NULL, PRIMARY KEY (`Category_ID`)) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=62;
+//	public boolean createCategoryTable() throws SQLException {
+//	Connection con = setUpConnection();
+//	try {	//TODO fix statement to create database structure
+//			PreparedStatement pst = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + dbName + "." + categoryTable + " ( " +
+//														"`Category_ID` int(15) NOT NULL AUTO_INCREMENT," +
+//														"`Title` varchar(25) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`Parent_Category` varchar(15) COLLATE utf8_unicode_ci NOT NULL," +
+//														"`Sub_Category_List` varchar(50) COLLATE utf8_unicode_ci NOT NULL," + 
+//														" PRIMARY KEY (`Category_ID`)" +
+//														") ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13");
+//			pst.execute();
+//	}
+//	catch (SQLException ex) {
+//		throw new SQLException("Tabelle (Assignment) konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+//	}
+//	con.close();
+//	return true;
+//	}
 
 }
