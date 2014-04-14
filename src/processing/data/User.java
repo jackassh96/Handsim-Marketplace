@@ -15,22 +15,22 @@ public class User {
 	private String eMail;
 	private String gender;
 	
-	public User(String userID, String passwd, String firstName,
-			String lastName, String street, String number, int postCode,
-			String city, String company, String phone, String eMail,
-			String gender) {
-		this.userID = userID;
-		this.passwd = passwd;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.street = street;
-		this.number = number;
-		this.postCode = postCode;
-		this.city = city;
-		this.company = company;
-		this.phone = phone;
-		this.eMail = eMail;
-		this.gender = gender;
+	/*
+	 * Constructor. Array must come from data base result set in order for the method to work.
+	 */
+	public User(String[] data) {
+		this.userID = data[0];
+		this.passwd = data[1];
+		this.firstName = data[2];
+		this.lastName = data[3];
+		this.street = data[4];
+		this.number = data[5];
+		this.postCode = Integer.parseInt(data[6]);
+		this.city = data[7];
+		this.company = data[8];
+		this.phone = data[9];
+		this.eMail = data[10];
+		this.gender = data[11];
 	}
 
 	/*
