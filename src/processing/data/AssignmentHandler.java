@@ -1,42 +1,45 @@
 package processing.data;
 
 public class AssignmentHandler {
-	private Assignment[] assignmentList;
-	private String assignmentHandlerID;
 	
-	public AssignmentHandler(Assignment[] assignmentList,
-			String assignmentHandlerID) {
+	
+	/*
+	 * Attributes
+	 */
+	private Assignment[] assignmentList;
+	
+	
+	/*
+	 * Constructor
+	 */
+	public AssignmentHandler(Assignment[] assignmentList) {
 		this.assignmentList = assignmentList;
-		this.assignmentHandlerID = assignmentHandlerID;
 	}
 
-	/*
-	 * Returns specified ID if it exists. 
+	/**
+	 * @param String ID (AssigmentID)
+	 * @return Assignment 
+	 * @throws
+	 * TODO implement Exception correctly
 	 */
 	public Assignment SearchForID (String ID){
-		
-		int i;
+				
 		try{
-			i = Integer.parseInt(ID);
+		for(int i = 0; i < this.assignmentList.length; i++){
+			if (this.assignmentList[i].getAssignmentID() == ID) {return this.assignmentList[i];}
+		}
+		return null;
 		}catch (Exception e){
 			e.printStackTrace();
 			return null;
 		}
-		if (assignmentList[i] == null) return null;
-		else return assignmentList[i];
+		
 	}
+	
 	
 	/*
 	 *Getters and Setters
 	 */
-	
-	public String getAssignmentHandlerID() {
-		return assignmentHandlerID;
-	}
-	public void setAssignmentHandlerID(String assignmentHandlerID) {
-		this.assignmentHandlerID = assignmentHandlerID;
-	}
-
 	public Assignment[] getAssignmentList() {
 		return assignmentList;
 	}

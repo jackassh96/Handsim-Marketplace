@@ -1,6 +1,11 @@
 package processing.data;
 
 public class Company {
+	
+	
+	/*
+	 * Attributes
+	 */
 	private String companyID;
 	private String name;
 	private String street;
@@ -12,9 +17,12 @@ public class Company {
 	private String eMail;
 	private String description;
 
-public Company(String companyID, String name, String street, String number,
-			int postCode, String city, String owner, String phone,
-			String eMail, String description) {
+	
+	/*
+	 * Constructor
+	 */
+	public Company(String companyID, String name, String street, String number, int postCode, String city, 
+				   String owner, String phone, String eMail, String description) {
 		this.companyID = companyID;
 		this.name = name;
 		this.street = street;

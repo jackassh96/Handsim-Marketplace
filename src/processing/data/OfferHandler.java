@@ -1,17 +1,27 @@
 package processing.data;
 
 public class OfferHandler {
-	private String offerHandlerID;
+	
+	
+	/*
+	 * Attributes
+	 */
 	private Offer[] offerList;
 
 	
-	public OfferHandler(String offerHandlerID, Offer[] offerList) {
-		this.offerHandlerID = offerHandlerID;
+	/*
+	 * Constructor
+	 */
+	public OfferHandler(Offer[] offerList) {
 		this.offerList = offerList;
 	}
-
-	/*
-	 * Returns specified ID if it exists. 
+	
+	
+	/**
+	 * @param
+	 * @return
+	 * @ throws
+	 * TODO Implement this SearchForID-Method correctly 
 	 */
 	public Offer SearchForID (String ID){
 		
@@ -26,17 +36,10 @@ public class OfferHandler {
 		else return offerList[i];
 	}
 
+	
 	/*
 	 * Getters and Setters
 	 */
-	public String getOfferHandlerID() {
-		return offerHandlerID;
-	}
-
-	public void setOfferHandlerID(String offerHandlerID) {
-		this.offerHandlerID = offerHandlerID;
-	}
-
 	public Offer[] getOfferList() {
 		return offerList;
 	}

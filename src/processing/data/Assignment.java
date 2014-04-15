@@ -5,7 +5,23 @@ import java.util.Date;
 
 public class Assignment {
 	
+	
+	/*
+	 * Attributes
+	 */
+	private String assignmentID;
+	private Position[] positionList;
+	private OfferHandler offerHandler;
+	private String description;
+	private Date dateOfCreation;
+	private Date deadline;
+	private String status;
+	private String title;
 
+	
+	/*
+	 * Constructor
+	 */
 	public Assignment(String assignmentID, Position[] positionList,
 			OfferHandler offerHandler, String description, Date dateOfCreation,
 			Date deadline, String status, String title) {
@@ -20,16 +36,7 @@ public class Assignment {
 		this.title = title;
 	}
 
-	private String assignmentID;
-	private Position[] positionList;
-	private OfferHandler offerHandler;
-	private String description;
-	private Date dateOfCreation;
-	private Date deadline;
-	private String status;
-	private String title;
-
-
+	
 	/*
 	 * Getters and Setters
 	 */
