@@ -1,15 +1,12 @@
 package dataBase;
 
 import helper.DatumFull;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import sun.misc.BASE64Encoder;
-
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,8 +20,6 @@ public class dbHandler {
 	//	-> Tests 
 	//	-> Comments
 	//
-	//	-> method for changing user profile
-	//	-> method to change status of offer
 	//	-> 
 	
 	
@@ -38,7 +33,7 @@ public class dbHandler {
 	private String companyTable = "tn_teilnehmer";
 	private String assingmentTable = "marketassignments";
 	private String categoryTable = "marketcategories";
-	private String positionTable = "marketposition";
+	private String positionTable = "marketpositions";
 	private String offerTable = "marketoffer";
 	
 	private String rejectStateName = "Abgelehnt";
@@ -106,10 +101,10 @@ public class dbHandler {
 	}
 	
 	//TODO Documentation 
-	public boolean updateUser(String oldUsername, String newUsername, String oldPassword, String newPassword) throws SQLException {
+	public boolean updateUserNamePW(String oldUsername, String newUsername, String oldPassword, String newPassword) throws SQLException {
 		Connection con = setUpConnection();
 		try {
-				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + " SET Nutzername=\"" + newUsername + "\" , Passwort=\"" + newPassword + "\" WHERE Nutzername=\"" + oldUsername +"\" AND Passwort=\"" + oldPassword + "\"");
+				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + " SET User_ID=\"" + newUsername + "\" , Password=\"" + newPassword + "\" WHERE User_ID=\"" + oldUsername +"\" AND Password=\"" + oldPassword + "\"");
 				pst.execute();
 		}
 		catch (SQLException ex) {
@@ -119,7 +114,30 @@ public class dbHandler {
 		return true;
 	}
 	
+//	User_ID	Password	First_Name	Last_Name	Street	Number	Post_Code	City	Email	Phone	Company	Gender
+
 	
+	//TODO Documentation 
+	public boolean updateUser(String Username, String Password, String Vorname, String Nachname, String Straße, String Hausnummer,
+							  int Postleitzahl, String Stadt, String Email, String Telefonnummer, String Firma, String Geschlecht) throws SQLException {
+		Connection con = setUpConnection();
+		try {
+//			UPDATE `marketuser` SET  `User_ID`='peterX',  `Password`='000',  `First_Name`='Peter',  `Last_Name`='Pan',  `Street`='Freidrichstr.',  `Number`='104',  `Post_Code`='13317',  `City`='Berlin',  `Email`='ppan@pan.de',  `Phone`='0190123456',  `Company`='Pan AG',  `Gender`='männlich' WHERE `User_ID` = '';
+				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + 
+						" SET User_ID=\"" + Username + "\" , Password=\"" + Password + "\" , First_Name=\"" + Vorname + 
+						"\" , Last_Name=\"" + Nachname + "\" , Street=\"" + Straße + "\" , Number=\"" + Hausnummer +
+						"\" , Post_Code=\"" + Postleitzahl + "\" , City=\"" + Stadt + "\" , Email=\"" + Email +
+						"\" , Phone=\"" + Telefonnummer + "\" , Company=\"" + Firma + "\" , Gender=\"" + Geschlecht +
+						"\" WHERE User_ID=\"" + Username + "\"");
+				pst.execute();
+
+		}
+		catch (SQLException ex) {
+			throw new SQLException("User update gescheitert! \n" + ex.getMessage()); //TODO write Errortext
+		}
+		con.close();
+		return true;
+	}
 	
 	//TODO Documentation
 	public boolean checkLogInData(String username, String password) throws SQLException {
@@ -276,12 +294,28 @@ public class dbHandler {
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new SQLException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new SQLException("Auftrag konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
 	}
 	con.close();
 	return true;
 	}
 
+	//TODO Documentation 
+	public boolean updateOfferStatus(String Offer_ID, String Status) throws SQLException {
+	Connection con = setUpConnection();
+	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
+			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + Status + "\"" +
+														"WHERE Offer_ID=\"" + Offer_ID +"\";");
+			pst.execute();
+	}
+	catch (SQLException ex) {
+		throw new SQLException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+	}
+	con.close();
+	return true;
+	}
+
+	
 	//TODO Documentation
 	public HashMap<String,String[]> getCategories() throws SQLException {
 		boolean exists = false;
@@ -377,14 +411,15 @@ public class dbHandler {
 			int i = 0;
 			do {
 				//TODO ID needed?
-				String [] rowStr = new String[7];
+				String [] rowStr = new String[8];
 				rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
-				rowStr[1] = neu.getNString("Company");
-				rowStr[2] = String.valueOf(neu.getDouble("Price"));
-				rowStr[3] = neu.getNString("AmountOfTimeNeeded");
-				rowStr[4] = neu.getNString("Description");
-				rowStr[5] = neu.getNString("Date");
-				rowStr[6] = neu.getNString("Status");	
+				rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
+				rowStr[2] = neu.getNString("Company");
+				rowStr[3] = String.valueOf(neu.getDouble("Price"));
+				rowStr[4] = neu.getNString("AmountOfTimeNeeded");
+				rowStr[5] = neu.getNString("Description");
+				rowStr[6] = neu.getNString("Date");
+				rowStr[7] = neu.getNString("Status");	
 				
 				hOfferMap.put(String.valueOf(i), rowStr);
 				i++;
@@ -402,17 +437,18 @@ public class dbHandler {
 	
 	
 	//TODO Documentation 
-	public HashMap<String,String[]> getPositionList(String Assingment_ID) throws SQLException {
+	public HashMap<String,String[]> getPositionList(String Assignment_ID) throws SQLException {
 		boolean exists = false;
 		ResultSet neu = null;
 		HashMap<String,String[]> hPositionMap = new HashMap<>();
 		
 		Connection con = setUpConnection();
-		try {
-				PreparedStatement pst = con.prepareStatement("");
-				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + positionTable + " WHERE Assingment_ID=\"" + Assingment_ID + "\"");
-				exists = neu.first();
-				//TODO evaluate exists
+		try {	
+			PreparedStatement pst = con.prepareStatement("");
+			neu = pst.executeQuery("SELECT * FROM " + dbName + "." + positionTable + " WHERE Assignment_ID=\"" + Assignment_ID + "\"");
+			
+			exists = neu.first();
+			//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new SQLException("Datenbankabfrage (Positionen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -445,7 +481,7 @@ public class dbHandler {
 		Connection con = setUpConnection();
 		try {
 				PreparedStatement pst = con.prepareStatement("");
-				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE User_ID=\"" + Username + "\"");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + Username + "\"");
 				exists = neu.first();
 				//TODO evaluate exists
 		}
