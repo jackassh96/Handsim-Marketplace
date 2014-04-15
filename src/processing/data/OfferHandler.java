@@ -1,42 +1,40 @@
 package processing.data;
 
 public class OfferHandler {
-	
-	
+
 	/*
 	 * Attributes
 	 */
 	private Offer[] offerList;
 
-	
 	/*
 	 * Constructor
 	 */
 	public OfferHandler(Offer[] offerList) {
 		this.offerList = offerList;
 	}
-	
-	
+
 	/**
 	 * @param
-	 * @return
-	 * @ throws
-	 * TODO Implement this SearchForID-Method correctly 
+	 * @return @ throws TODO Implement the Exception for the SearchForID-Method
+	 *         correctly
 	 */
-	public Offer SearchForID (String ID){
-		
-		int i;
-		try{
-			i = Integer.parseInt(ID);
-		}catch (Exception e){
+	public Offer SearchForID(String ID) {
+
+		try {
+			for (int i = 0; i < this.offerList.length; i++) {
+				if (this.offerList[i].getOfferID() == ID) {
+					return this.offerList[i];
+				}
+			}
+			return null;
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		if (offerList[i] == null) return null;
-		else return offerList[i];
+
 	}
 
-	
 	/*
 	 * Getters and Setters
 	 */
@@ -47,7 +45,5 @@ public class OfferHandler {
 	public void setOfferList(Offer[] offerList) {
 		this.offerList = offerList;
 	}
-
-
 
 }

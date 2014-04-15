@@ -1,7 +1,11 @@
 package processing.data;
 
 public class User {
-
+	
+	
+	/*
+	 * Attributes
+	 */
 	private String userID;
 	private String passwd;
 	private String firstName;
@@ -14,6 +18,7 @@ public class User {
 	private String phone;
 	private String eMail;
 	private String gender;
+	
 	
 	/*
 	 * Constructor. Array must come from data base result set in order for the method to work.
@@ -33,6 +38,7 @@ public class User {
 		this.gender = data[11];
 	}
 
+	
 	/*
 	 * Getters and Setters
 	 */
