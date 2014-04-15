@@ -50,34 +50,38 @@ public class Controller {
 	 */
 	public static Controller init(String[] userData, dbHandler dbHandler) {
 		Controller c = getInstance();
-		c.createUser(userData);
+		c.importUser(userData);
 		c.dbHandler = dbHandler;
-		c.createCompanyList();
-		c.createCategories();
 		return c;
 	}
 
 	/**
 	 * Creates the active User from the result coming from the data base.
-	 * 
 	 * @param data
 	 *            The User information
 	 */
-	private void createUser(String[] data) {
+	private void importUser(String[] data) {
 		this.activeUser = new User(data);
 	}
 
 	/**
 	 * TODO
 	 */
-	private void createCategories() {
+	private void importCategories() {
+		// TODO
+	}
+	
+	/**
+	 * TODO
+	 */
+	private void importAssingments(){
 		// TODO
 	}
 
 	/**
 	 * TODO
 	 */
-	private void createCompanyList() {
+	private void importCompanyList() {
 		// TODO
 	}
 
@@ -87,11 +91,11 @@ public class Controller {
 	 * TODO Called by GUI, when user changes their user data. method changes its
 	 * actual user and notifies DBHandler of changes
 	 * 
-	 * @param newUser
+	 * @param updatedUser
 	 *            Updated User item that comes from the GUI
 	 */
-	public void editUser(User newUser) {
-		this.activeUser = newUser;
+	public void editUser(User updatedUser) {
+		this.activeUser = updatedUser;
 		// TODO DBHandler triggern
 	}
 

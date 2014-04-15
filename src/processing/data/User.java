@@ -1,8 +1,7 @@
 package processing.data;
 
 public class User {
-	
-	
+
 	/*
 	 * Attributes
 	 */
@@ -18,10 +17,10 @@ public class User {
 	private String phone;
 	private String eMail;
 	private String gender;
-	
-	
+
 	/*
-	 * Constructor. Array must come from data base result set in order for the method to work.
+	 * Constructor. Array must come from data base result set in order for the
+	 * method to work.
 	 */
 	public User(String[] data) {
 		this.userID = data[0];
@@ -38,7 +37,6 @@ public class User {
 		this.gender = data[11];
 	}
 
-	
 	/*
 	 * Getters and Setters
 	 */
@@ -46,116 +44,93 @@ public class User {
 		return userID;
 	}
 
-
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
-
 
 	public String getPasswd() {
 		return passwd;
 	}
 
-
 	public void setPasswd(String passwd) {
 		this.passwd = passwd;
 	}
-
 
 	public String getFirstName() {
 		return firstName;
 	}
 
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
 
 	public String getLastName() {
 		return lastName;
 	}
 
-
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 
 	public String getStreet() {
 		return street;
 	}
 
-
 	public void setStreet(String street) {
 		this.street = street;
 	}
-
 
 	public String getNumber() {
 		return number;
 	}
 
-
 	public void setNumber(String number) {
 		this.number = number;
 	}
-
 
 	public int getPostCode() {
 		return postCode;
 	}
 
-
 	public void setPostCode(int postCode) {
 		this.postCode = postCode;
 	}
-
 
 	public String getCity() {
 		return city;
 	}
 
-
 	public void setCity(String city) {
 		this.city = city;
 	}
-
 
 	public String getCompany() {
 		return company;
 	}
 
-
 	public void setCompany(String company) {
 		this.company = company;
 	}
-
 
 	public String getPhone() {
 		return phone;
 	}
 
-
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 
 	public String geteMail() {
 		return eMail;
 	}
 
-
 	public void seteMail(String eMail) {
 		this.eMail = eMail;
 	}
 
-
 	public String getGender() {
 		return gender;
 	}
-
 
 	public void setGender(String gender) {
 		this.gender = gender;

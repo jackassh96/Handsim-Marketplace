@@ -3,8 +3,7 @@ package processing.data;
 import java.util.Date;
 
 public class Offer {
-	
-	
+
 	/*
 	 * Attributes
 	 */
@@ -16,12 +15,11 @@ public class Offer {
 	private Date date;
 	private String description;
 
-	
 	/*
 	 * Constructor
 	 */
 	public Offer(String offerID, double price, String amountOfTimeNeeded,
-				 String status, Company company, Date date, String description) {
+			String status, Company company, Date date, String description) {
 		this.offerID = offerID;
 		this.price = price;
 		this.amountOfTimeNeeded = amountOfTimeNeeded;
