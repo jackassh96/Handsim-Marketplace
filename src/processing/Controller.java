@@ -237,7 +237,8 @@ public class Controller {
 	}
 
 	/**
-	 * TODO
+	 * TODO Passiert in CreateAssignment oder...
+	 * TODO Muss Tobi das lösen? Assignment ist da noch nicht erstellt und Position soll zwischengespeichert werden...
 	 */
 	public void savePosition() {
 		// TODO Position in DBHandler speichern
@@ -273,7 +274,8 @@ public class Controller {
 
 	
 // Getters
-
+// No setters needed. Only setting possibility through init method
+	
 	public User getUser() {
 		return activeUser;
 	}
@@ -311,5 +313,5 @@ public class Controller {
 		return dbHandler;
 	}
 
-// Setters TODO
+
 }
