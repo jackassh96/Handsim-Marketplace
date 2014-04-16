@@ -98,9 +98,20 @@ public class Controller {
 		try{
 			HashMap<String,String[]> dataFromDB = this.dbHandler.getAssignments(this.activeUser.getUserID());
 			Assignment[] temporaryAssignmentList = new Assignment[1]; 
+			Assignment temporaryAssignment;
 		/**
 		 * TODO read Data out of the DBdataHashmap
 		 */
+			//for schleife die durch die HashMap läuft 
+			for (int j = 0; j < dataFromDB.size(); j++) { 
+				
+				//holt das array für einen spezifischen datensatz aus der map 
+				String [] buff = dataFromDB.get(String.valueOf(j));
+				temporaryAssignment= new Assignment(buff);	
+			}
+			//! nur falls du einzelne werte aus dem jeweiligen array brauchst muss eine schleife durchs array laufen 
+			// brauchst du aber glaub ich nicht 
+			//int i = 0; for (String x : hCatMap.get(String.valueOf(j))) { String wert = x; i++; } }
 		
 		this.assignmentHandler = new AssignmentHandler(temporaryAssignmentList);
 		}catch (Exception e) {
@@ -184,13 +195,29 @@ public class Controller {
 	public User getUser() {
 		return activeUser;
 	}
-
+	
+	/**
+	 * If the CompanyList has not been imported from the DB yet, it is done during the first call of this Method. 
+	 * That guarantees that the CompanyList is created when an instance really needs it and not during the init()Method (thus DB-Load is optimized)
+	 * @return companyList
+	 */
 	public Company[] getCompanyList() {
-		return companyList;
+		if(this.companyList == null){
+			this.importCompanyList();
+		}
+		return this.companyList;
 	}
-
+	
+	/**
+	 * If the SeviceTree has not been imported from the DB yet, it is done during the first call of this Method. 
+	 * That guarantees that the ServiceTree is created when an instance really needs it and not during the init()Method (thus DB-Load is optimized)
+	 * @return mainCategoryList
+	 */
 	public TreeItem[] getMainCategoryList() {
-		return mainCategoryList;
+		if(this.mainCategoryList==null){
+			this.importCategories();
+		}
+		return this.mainCategoryList;
 	}
 
 	public AssignmentHandler getAssignmentHandler() {

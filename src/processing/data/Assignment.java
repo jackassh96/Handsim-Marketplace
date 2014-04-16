@@ -18,8 +18,19 @@ public class Assignment {
 	private String title;
 
 	/*
-	 * Constructor
+	 * Constructors
 	 */
+	public Assignment(String[] data){
+//		this.assignmentID = ;
+//		this.positionList = ;
+//		this.offerHandler = ;
+//		this.description = ;
+//		this.dateOfCreation = ;
+//		this.deadline = ;
+//		this.status = ;
+//		this.title = ;
+	}
+	
 	public Assignment(String assignmentID, TreeItem[] positionList,
 			OfferHandler offerHandler, String description, Date dateOfCreation,
 			Date deadline, String status, String title) {
