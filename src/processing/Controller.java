@@ -59,12 +59,13 @@ public class Controller {
 	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
 	 */
 	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException {
-		Controller c = Controller.getInstance();
-		c.loginController = loginController;
-		c.importUser(userData);
-		c.dbHandler = dbHandler;
-		c.importAssingments();
-		return c;
+		Controller.getInstance();
+		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
+		instance.loginController = loginController;
+		instance.importUser(userData);
+		instance.dbHandler = dbHandler;
+		instance.importAssingments();
+		return instance;
 	}
 
 	/**
