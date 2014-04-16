@@ -59,15 +59,16 @@ public class Controller {
 	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
 	 * @throws SQLException 
 	 */
-	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
-		Controller c = Controller.getInstance();
-		c.loginController = loginController;
-		c.importUser(userData);
-		c.dbHandler = dbHandler;
-		c.importCategories();
-		c.importCompanyList();
-		c.importAssingments();
-		return c;
+		public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
+		Controller.getInstance();
+		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
+		instance.loginController = loginController;
+		instance.importUser(userData);
+		instance.dbHandler = dbHandler;
+		instance.importCategories();
+		instance.importCompanyList();
+		instance.importAssingments();
+		return instance;
 	}
 
 	/**
@@ -243,7 +244,8 @@ public class Controller {
 	}
 
 	/**
-	 * TODO
+	 * TODO Passiert in CreateAssignment oder...
+	 * TODO Muss Tobi das lösen? Assignment ist da noch nicht erstellt und Position soll zwischengespeichert werden...
 	 */
 	public void savePosition() {
 		// TODO Position in DBHandler speichern
@@ -277,7 +279,8 @@ public class Controller {
 
 	
 // Getters
-
+// No setters needed. Only setting possibility through init method
+	
 	public User getUser() {
 		return activeUser;
 	}
@@ -309,5 +312,5 @@ public class Controller {
 		return dbHandler;
 	}
 
-// Setters TODO
+
 }
