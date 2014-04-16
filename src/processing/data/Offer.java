@@ -16,9 +16,18 @@ public class Offer {
 
 //Constructor
 	public Offer(String[] data){
+		this.offerID = data[0];
+		this.price = Double.parseDouble(data[3]);
+		this.amountOfTimeNeeded = data[4];
+		this.status = data[7];
 		/**
-		 * TODO
+		 * TODO Do we save company as a company instance or as a String?!
+		 * this.company = data[2];
+		 * TODO create Date out of complete String
+		 * this.date = data[6]
 		 */
+		;
+		this.description = data[5];
 	}
 	
 	public Offer(String offerID, double price, String amountOfTimeNeeded,

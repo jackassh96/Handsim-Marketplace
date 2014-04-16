@@ -52,7 +52,7 @@ public class Controller {
 	/**
 	 * Gives the caller the singleton instance and (re)creates the attributes.
 	 * ONLY USE FOR THE INITIAL SETUP OR A WANTED RESET OF THE OBJECT
-	 * 
+	 * Categories and Companies are already imported in the method, because the importAssignment method already needs them!!
 	 * @param userData Data of the active user which is loaded from the data base
 	 * @param dbHandler object that connects to the data base
 	 * @return Returns the controller singleton instance 
@@ -227,16 +227,19 @@ public class Controller {
 	 * @param status
 	 * @param title
 	 */
-	public void createAssignment(String assignmentID, TreeItem[] positionList, OfferHandler offerHandler, 
-								 String description, Date dateOfCreation, Date deadline, String status, String title) {
-		
-		// Creation of the new assignment initialized from the GUI    
-		Assignment newAssignment = new Assignment(assignmentID, positionList, offerHandler, 
-												  description, dateOfCreation,deadline, status, title);
-		
+	public void createAssignment(String assignmentID, TreeItem[] positionList,
+			OfferHandler offerHandler, String description, Date dateOfCreation,
+			Date deadline, String status, String title) {
+
+		// Creation of the new assignment initialized from the GUI
+		Assignment newAssignment = new Assignment(assignmentID, positionList,
+				offerHandler, description, dateOfCreation, deadline, status,
+				title);
+
 		// Add the new assignment to the Controller's AssignmentList
-		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler.getAssignmentList().length + 1];
-		for(int j=0;j<this.assignmentHandler.getAssignmentList().length;j++){
+		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler
+				.getAssignmentList().length + 1];
+		for (int j = 0; j < this.assignmentHandler.getAssignmentList().length; j++) {
 			newAssignmentList[j] = this.assignmentHandler.getAssignmentList()[j];
 		}
 		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
@@ -244,8 +247,8 @@ public class Controller {
 	}
 
 	/**
-	 * TODO Passiert in CreateAssignment oder...
-	 * TODO Muss Tobi das lösen? Assignment ist da noch nicht erstellt und Position soll zwischengespeichert werden...
+	 * TODO Passiert in CreateAssignment oder?
+	 * TODO Muss Tobi das lösen? Assignment ist da noch nicht erstellt und Positionen soll in Gui zwischengespeichert werden.
 	 */
 	public void savePosition() {
 		// TODO Position in DBHandler speichern
@@ -256,9 +259,19 @@ public class Controller {
 	 * 
 	 * @return
 	 */
-	public TreeItem[] createPositionTree() {
-		// TODO
-		return null;
+	public TreeItem[] createPositionTree(String assignmentID) {
+		//Creation of the positionTree
+		TreeItem[] positionTree = new TreeItem[1];
+		//Import positionList from assignment
+		TreeItem[] positionList = this.assignmentHandler.SearchForID(assignmentID).getPositionList();
+		for (int j = 0; j < positionList.length; j++) {
+			TreeItem temporaryPosition = positionList[j];
+			//TODO create an array containing the Position and the Path
+			while(){
+				positionTree[j]=Controller.getInstance().searchForCategory(temporaryPosition.getText(3));
+			}
+		}
+		return positionTree;
 	}
 	
 	/**
@@ -269,9 +282,23 @@ public class Controller {
 	 * @throws SQLException
 	 */
 	public TreeItem searchForCategory(String ID) {
-		for(int j = 0; j<this.companyList.length; j++){
+		for(int j = 0; j<this.mainCategoryList.length; j++){
 			if(this.mainCategoryList[j].getText()==ID){
 				return this.mainCategoryList[j];
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * TODO Finish this method with exception, if it is needed for searching a Company
+	 * @param ID
+	 * @return
+	 */
+	public Company searchForCompany(String ID){
+		for(int j = 0; j<this.companyList.length; j++){
+			if(this.companyList[j].getCompanyID()==ID){
+				return this.companyList[j];
 			}
 		}
 		return null;
@@ -285,21 +312,10 @@ public class Controller {
 		return activeUser;
 	}
 	
-	/**
-	 * If the CompanyList has not been imported from the DB yet, it is done during the first call of this Method. 
-	 * That guarantees that the CompanyList is created when an instance really needs it and not during the init()Method (thus DB-Load is optimized)
-	 * @return companyList
-	 */
 	public Company[] getCompanyList() {
 		return this.companyList;
 	}
 	
-	/**
-	 * If the SeviceTree has not been imported from the DB yet, it is done during the first call of this Method. 
-	 * That guarantees that the ServiceTree is created when an instance really needs it and not during the init()Method (thus DB-Load is optimized)
-	 * @return mainCategoryList
-	 * @throws SQLException TODO
-	 */
 	public TreeItem[] getMainCategoryList() throws SQLException {
 		return this.mainCategoryList;
 	}
