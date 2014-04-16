@@ -1,7 +1,9 @@
 package processing.data;
 
 import org.eclipse.swt.widgets.TreeItem;
+
 import java.util.Date;
+import java.util.HashMap;
 
 public class Assignment {
 
@@ -16,17 +18,61 @@ public class Assignment {
 	private String status;
 	private String title;
 
-//Constructors
+/**
+ * TODO finish this constructor
+ * Constructor for an Assignment from the DB
+ * @param assignmentData
+ * @param positionData
+ * @param offerData
+ */
 	
-	public Assignment(String[] data){
-//		this.assignmentID = ;
-//		this.positionList = ;
-//		this.offerHandler = ;
-//		this.description = ;
-//		this.dateOfCreation = ;
-//		this.deadline = ;
-//		this.status = ;
-//		this.title = ;
+	public Assignment(String[] assignmentData, HashMap<String,String[]> positionData, HashMap<String,String[]> offerData){
+		this.assignmentID = assignmentData[0];
+		this.description = assignmentData[1];
+		/**
+		 * TODO form Date out of complete String
+		 * this.dateOfCreation = assignmentData[2];
+		 * this.deadline = assignmentData[3];
+		 */
+		this.status = assignmentData[4];
+		this.title = assignmentData[5];
+		
+		//Creation of the offerHandler and its offerList
+		this.offerHandler = new OfferHandler(new Offer[1]); 
+		//for loop for parsing the HashMap
+		for (int j = 0; j < offerData.size(); j++) {
+			Offer[] temporaryOfferList = new Offer[j];
+			Offer temporaryOffer;
+			//gets Array from HashMap which represents a data record for an offer
+			String [] offerBuff = offerData.get(String.valueOf(j));
+			//creates object out of new data record
+			temporaryOffer = new Offer(offerBuff);
+			//add new object to offerList
+			for (int i = 0; i < j; i++){
+				temporaryOfferList[i] = this.offerHandler.getOfferList()[i];
+			}
+			temporaryOfferList[j] = temporaryOffer;
+			this.offerHandler.setOfferList(temporaryOfferList);
+		}
+		
+		//Creation of the positionList
+		this.positionList = new TreeItem[1]; 
+		//for loop for parsing the HashMap
+		for (int j = 0; j < positionData.size(); j++) {
+			TreeItem[] temporaryPositionList = new TreeItem[j];
+			TreeItem temporaryPosition;
+			//gets Array from HashMap which represents a data record for a position
+			String [] positionBuff = positionData.get(String.valueOf(j));
+			//TODO creates TreeItem object out of new data record
+			temporaryPosition = new TreeItem(searchForCategory(positionBuff[1]), 0);
+			//add new object to offerList
+			for (int i = 0; i < j; i++){
+				temporaryPositionList[i] = instance.getMainCategoryList()[1];
+			}
+			temporaryPositionList[j] = temporaryPosition;
+			instance.setMainCategoryList(temporaryPositionList);
+		}
+		
 	}
 	
 	public Assignment(String assignmentID, TreeItem[] positionList,

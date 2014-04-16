@@ -69,7 +69,7 @@ public class Controller {
 
 	/**
 	 * Creates the active User from the result coming from the data base.
-	 * 
+	 * TODO@throws??
 	 * @param data The User information
 	 */
 	private void importUser(String[] data) throws ArrayIndexOutOfBoundsException {
@@ -88,55 +88,92 @@ public class Controller {
 	 * @throws SQLException Exception is thrown when an import error from the data base occurs.
 	 */
 	private TreeItem[] importCategories() throws SQLException {
-		
-		try{
-			HashMap<String,String[]> dataFromDB = this.dbHandler.getCategories();
-		/*
-		 * TODO read Data out of the DBdataHashmap
-		 */
-		
-		return null;
-		}catch (SQLException e) {
-			throw new SQLException("Fehler beim Import der Kategorien: " + e.getMessage());
+
+		try {
+			//get HashMaps from DB
+			HashMap<String, String[]> dataFromDB = this.dbHandler.getCategories();
+			this.mainCategoryList = new TreeItem[1];
+			//for loop for parsing the HashMap
+			for (int j = 0; j < dataFromDB.size(); j++) {
+				TreeItem[] temporaryCategoryList = new TreeItem[j];
+				TreeItem temporaryCategory;
+				//gets Array from HashMap which represents a data record for a category
+				String [] buff = dataFromDB.get(String.valueOf(j));
+				//TODO creates TreeItem object out of new data record
+				temporaryCategory = new TreeItem(this.searchForCategory(buff[1]), 0);
+				//add new object to offerList
+				for (int i = 0; i < j; i++){
+					temporaryPositionList[i] = instance.getMainCategoryList()[1];
+				}
+				temporaryPositionList[j] = temporaryPosition;
+				instance.setMainCategoryList(temporaryPositionList);
+		} catch (SQLException e) {
+			throw new SQLException("Fehler beim Import der Kategorien: "
+					+ e.getMessage());
 		}
-		
-		
+
 	}
 
 	/**
-	 * TODO finish this method
 	 * TODO are there any Exceptions thrown? If yes, also add proper exception handling to init 
 	 */
 	private void importAssingments() {
 		try{
-			HashMap<String,String[]> dataFromDB = this.dbHandler.getAssignments(this.activeUser.getUserID());
-			Assignment[] temporaryAssignmentList = new Assignment[1]; 
-			Assignment temporaryAssignment;
-		/*
-		 * TODO read Data out of the DBdataHashmap
-		 */
-			//for schleife die durch die HashMap laeuft 
-			for (int j = 0; j < dataFromDB.size(); j++) { 
-				
-				//holt das array fuer einen spezifischen datensatz aus der map 
-				String [] buff = dataFromDB.get(String.valueOf(j));
-				temporaryAssignment= new Assignment(buff);	
+			this.assignmentHandler = new AssignmentHandler(new Assignment[1]);
+			//get HashMaps from DB
+			HashMap<String,String[]> assignmentDataFromDB = this.dbHandler.getAssignments(this.activeUser.getUserID());
+			
+			//for loop for parsing the HashMap
+			for (int j = 0; j < assignmentDataFromDB.size(); j++) { 
+				Assignment[] temporaryAssignmentList = new Assignment[j+1]; 
+				Assignment temporaryAssignment;
+				//gets Array from HashMap which represents a data record for an assignment
+				String [] buff = assignmentDataFromDB.get(String.valueOf(j));
+				//gets Array from HashMap which represents a data record for an assignment's positionList
+				String temporaryAssignmentID = buff[0];
+				HashMap<String,String[]> positionDataFromDB = this.dbHandler.getPositionList(temporaryAssignmentID);
+				//gets Array from HashMap which represents a data record for an assignment's OfferList
+				HashMap<String,String[]> offerDataFromDB = this.dbHandler.getOffer(temporaryAssignmentID);
+				//creates object out of new data record
+				temporaryAssignment= new Assignment(buff, positionDataFromDB, offerDataFromDB);
+				//add new object to assigmentList
+				for (int i = 0; i < j; i++){
+					temporaryAssignmentList[i] = this.assignmentHandler.getAssignmentList()[i];
+				}
+				temporaryAssignmentList[j] = temporaryAssignment;
+				this.assignmentHandler.setAssignmentList(temporaryAssignmentList);
 			}
-			//! nur falls du einzelne werte aus dem jeweiligen array brauchst muss eine schleife durchs array laufen 
-			// brauchst du aber glaub ich nicht 
-			//int i = 0; for (String x : hCatMap.get(String.valueOf(j))) { String wert = x; i++; } }
-		
-		this.assignmentHandler = new AssignmentHandler(temporaryAssignmentList);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * TODO siehe getCompanyList
+	 * TODO are there any Exceptions thrown? If yes, also add proper exception handling to init 
 	 */
 	private void importCompanyList() {
-		// TODO
+		try{
+			//get HashMap from DB
+			HashMap<String,String[]> dataFromDB = this.dbHandler.getCompanyList();
+			//for loop for parsing the HashMap
+			for (int j = 0; j < dataFromDB.size(); j++) { 
+				Company[] temporaryCompanyList = new Company[j+1]; 
+				Company temporaryCompany;
+				//gets Array from HashMap which represents a data record for a company
+				String [] buff = dataFromDB.get(String.valueOf(j));
+				//creates object out of new data record
+				temporaryCompany= new Company(buff);
+				//add new object to Controller.companyList
+				for (int i = 0; i < j; i++){
+					temporaryCompanyList[i] = this.companyList[i];
+				}
+				temporaryCompanyList[j] = temporaryCompany;
+				this.companyList = temporaryCompanyList;
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 // GUI triggered Methods
@@ -215,6 +252,25 @@ public class Controller {
 		// TODO
 		return null;
 	}
+	
+	/**
+	 * TODO right exception??
+	 * @param ID
+	 * @return TreeItem
+	 * @throws SQLException
+	 */
+	
+	public TreeItem searchForCategory(String ID) throws SQLException{
+		if(this.mainCategoryList==null){
+			this.importCategories();
+		} 
+		for(int j = 0; j<this.companyList.length; j++ ){
+			if(this.mainCategoryList[j].getText()==ID){
+				return this.mainCategoryList[j];
+			}
+		}
+		return null;
+	}
 
 // Not yet assigned
 
@@ -233,6 +289,7 @@ public class Controller {
 	public Company[] getCompanyList() {
 		if(this.companyList == null){
 			this.importCompanyList(); //TODO Halte ich für unschlau, da so bei Verbindungsproblemen das ganze lange dauern könnte. Ich würde das eher direkt im Init aufrufen, wo wir eh ganz viele DB-Verbindungen haben
+										// COM Alex: nein, wir wollen es bewusst nicht im Init machen, weil sonst der Init so viel Zeit und Datenbank Transaktionen in Anspruch nimmt. Die Zeit muss dann beim erstmaligen aufbauen der Company List eben genommen werden.
 		}
 		return this.companyList;
 	}
@@ -245,7 +302,7 @@ public class Controller {
 	 */
 	public TreeItem[] getMainCategoryList() throws SQLException {
 		if(this.mainCategoryList==null){
-			this.importCategories(); //TODO siehe getCompanyList
+			this.importCategories(); //TODO siehe getCompanyList @ Felix siehe COM getCompanyList
 		}
 		return this.mainCategoryList;
 	}
