@@ -1,7 +1,12 @@
 package processing;
 
+import java.util.Date;
+import java.util.HashMap;
+
 import org.eclipse.swt.widgets.TreeItem;
 
+import processing.data.Assignment;
+import processing.data.OfferHandler;
 import processing.data.User;
 import processing.data.Company;
 import processing.data.Category;
@@ -52,11 +57,13 @@ public class Controller {
 		Controller c = getInstance();
 		c.importUser(userData);
 		c.dbHandler = dbHandler;
+		c.importAssingments();
 		return c;
 	}
 
 	/**
 	 * Creates the active User from the result coming from the data base.
+	 * 
 	 * @param data
 	 *            The User information
 	 */
@@ -65,17 +72,40 @@ public class Controller {
 	}
 
 	/**
-	 * TODO
+	 * TODO right Exception, finish Method
+	 * This Method imports all Categories and creates the TreeItem Array
 	 */
-	private void importCategories() {
-		// TODO
+	private TreeItem[] importCategories() {
+		
+		try{
+			HashMap<String,String[]> dataFromDB = this.dbHandler.getCategories();
+		/**
+		 * TODO read Data out of the DBdataHashmap
+		 */
+		
+		return null;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
-	
+
 	/**
-	 * TODO
+	 * TODO finish this method
 	 */
-	private void importAssingments(){
-		// TODO
+	private void importAssingments() {
+		try{
+			HashMap<String,String[]> dataFromDB = this.dbHandler.getAssignments(this.activeUser.getUserID());
+			Assignment[] temporaryAssignmentList = new Assignment[1]; 
+		/**
+		 * TODO read Data out of the DBdataHashmap
+		 */
+		
+		this.assignmentHandler = new AssignmentHandler(temporaryAssignmentList);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -116,8 +146,17 @@ public class Controller {
 	/**
 	 * TODO
 	 */
-	public void createAssignment() {
-		// TODO
+	public void createAssignment(String assignmentID, TreeItem[] positionList, OfferHandler offerHandler, 
+								 String description, Date dateOfCreation, Date deadline, String status, String title) {
+		
+		// Creation of the new assignment initialized from the GUI    
+		Assignment newAssignment = new Assignment(assignmentID, positionList, offerHandler, 
+												  description, dateOfCreation,deadline, status, title);
+		
+		// Add the new assigment to the Controller's AssignmentList
+		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler.getAssignmentList().length + 1];
+		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
+		this.assignmentHandler.setAssignmentList(newAssignmentList);
 	}
 
 	/**
@@ -139,16 +178,7 @@ public class Controller {
 
 	// Not yet assigned
 
-	/**
-	 * TODO
-	 * 
-	 * @return
-	 */
-	private TreeItem[] importServiceTree() {
-		// TODO
-		return null;
-	}
-
+	
 	// Getters
 
 	public User getUser() {
