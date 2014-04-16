@@ -57,12 +57,15 @@ public class Controller {
 	 * @param dbHandler object that connects to the data base
 	 * @return Returns the controller singleton instance 
 	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
+	 * @throws SQLException 
 	 */
-	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException {
+	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
 		Controller c = Controller.getInstance();
 		c.loginController = loginController;
 		c.importUser(userData);
 		c.dbHandler = dbHandler;
+		c.importCategories();
+		c.importCompanyList();
 		c.importAssingments();
 		return c;
 	}
@@ -99,7 +102,7 @@ public class Controller {
 				TreeItem temporaryCategory;
 				//gets Array from HashMap which represents a data record for a category
 				String [] buff = dataFromDB.get(String.valueOf(j));
-				//TODO creates TreeItem object out of new data record
+				// creates TreeItem object out of new data record
 				temporaryCategory = new TreeItem(this.searchForCategory(buff[1]), 0);
 				//add new object to offerList
 				for (int i = 0; i < j; i++){
@@ -230,8 +233,11 @@ public class Controller {
 		Assignment newAssignment = new Assignment(assignmentID, positionList, offerHandler, 
 												  description, dateOfCreation,deadline, status, title);
 		
-		// Add the new assigment to the Controller's AssignmentList TODO Ich hoffe, dir ist klar, dass damit die Daten aus dem alten AssignmentArray nicht übertragen werden. Da brauchst du noch ein for-Schleife. So ist nur im letzten Feld des Arrays das Assignment gespeichert.
+		// Add the new assignment to the Controller's AssignmentList
 		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler.getAssignmentList().length + 1];
+		for(int j=0;j<this.assignmentHandler.getAssignmentList().length;j++){
+			newAssignmentList[j] = this.assignmentHandler.getAssignmentList()[j];
+		}
 		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
 		this.assignmentHandler.setAssignmentList(newAssignmentList);
 	}
@@ -255,15 +261,13 @@ public class Controller {
 	
 	/**
 	 * TODO right exception??
+	 * method searches for a category using its ID
 	 * @param ID
 	 * @return TreeItem
 	 * @throws SQLException
 	 */
-	public TreeItem searchForCategory(String ID) throws SQLException{
-		if(this.mainCategoryList==null){
-			this.importCategories();
-		} 
-		for(int j = 0; j<this.companyList.length; j++ ){
+	public TreeItem searchForCategory(String ID) {
+		for(int j = 0; j<this.companyList.length; j++){
 			if(this.mainCategoryList[j].getText()==ID){
 				return this.mainCategoryList[j];
 			}
@@ -284,9 +288,6 @@ public class Controller {
 	 * @return companyList
 	 */
 	public Company[] getCompanyList() {
-		if(this.companyList == null){
-			this.importCompanyList();
-		}
 		return this.companyList;
 	}
 	
@@ -297,9 +298,6 @@ public class Controller {
 	 * @throws SQLException TODO
 	 */
 	public TreeItem[] getMainCategoryList() throws SQLException {
-		if(this.mainCategoryList==null){
-			this.importCategories(); 
-		}
 		return this.mainCategoryList;
 	}
 
