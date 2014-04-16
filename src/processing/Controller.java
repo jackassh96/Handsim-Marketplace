@@ -259,7 +259,6 @@ public class Controller {
 	 * @return TreeItem
 	 * @throws SQLException
 	 */
-	
 	public TreeItem searchForCategory(String ID) throws SQLException{
 		if(this.mainCategoryList==null){
 			this.importCategories();
@@ -271,8 +270,6 @@ public class Controller {
 		}
 		return null;
 	}
-
-// Not yet assigned
 
 	
 // Getters
@@ -288,8 +285,7 @@ public class Controller {
 	 */
 	public Company[] getCompanyList() {
 		if(this.companyList == null){
-			this.importCompanyList(); //TODO Halte ich für unschlau, da so bei Verbindungsproblemen das ganze lange dauern könnte. Ich würde das eher direkt im Init aufrufen, wo wir eh ganz viele DB-Verbindungen haben
-										// COM Alex: nein, wir wollen es bewusst nicht im Init machen, weil sonst der Init so viel Zeit und Datenbank Transaktionen in Anspruch nimmt. Die Zeit muss dann beim erstmaligen aufbauen der Company List eben genommen werden.
+			this.importCompanyList();
 		}
 		return this.companyList;
 	}
@@ -302,7 +298,7 @@ public class Controller {
 	 */
 	public TreeItem[] getMainCategoryList() throws SQLException {
 		if(this.mainCategoryList==null){
-			this.importCategories(); //TODO siehe getCompanyList @ Felix siehe COM getCompanyList
+			this.importCategories(); 
 		}
 		return this.mainCategoryList;
 	}
