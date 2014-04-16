@@ -30,7 +30,7 @@ public class Assignment {
 		this.assignmentID = assignmentData[0];
 		this.description = assignmentData[1];
 		/**
-		 * TODO form Date out of complete String
+		 * TODO form Date out of complete String. Ask Ben for String composition in DB
 		 * this.dateOfCreation = assignmentData[2];
 		 * this.deadline = assignmentData[3];
 		 */
