@@ -21,7 +21,7 @@ public class Controller {
 // Attributes
 	
 	private User activeUser;
-	private CSPmainWindows mainWindow; //TODO wie wird das erstellt? wird das vom LoginController übergeben oder erstellt der Controller das?
+	private CSPmainWindows mainWindow; //TODO Erstellung in init-Methode
 	private Company[] companyList;
 	private TreeItem[] mainCategoryList;
 	private AssignmentHandler assignmentHandler;
