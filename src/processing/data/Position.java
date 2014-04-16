@@ -2,13 +2,15 @@ package processing.data;
 
 public class Position {
 //	
-//	
+//	//Attributes
 //
 //	private String positionID;
 //	private String description;
 //	private int amount;
 //	private ServiceGroup serviceGroup;
 //	
+//	
+//	//Constructor
 //	
 //	public Position(String positionID, String description, int amount,
 //			ServiceGroup serviceGroup) {
@@ -18,9 +20,8 @@ public class Position {
 //		this.serviceGroup = serviceGroup;
 //	}
 //
-//	/*
-//	 * Getters and Setters
-//	 */
+//	// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//	
 //	public String getPositionID() {
 //		return positionID;
 //	}

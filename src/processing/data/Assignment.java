@@ -5,9 +5,8 @@ import java.util.Date;
 
 public class Assignment {
 
-	/*
-	 * Attributes
-	 */
+//Attributes
+	
 	private String assignmentID;
 	private TreeItem[] positionList;
 	private OfferHandler offerHandler;
@@ -17,9 +16,8 @@ public class Assignment {
 	private String status;
 	private String title;
 
-	/*
-	 * Constructors
-	 */
+//Constructors
+	
 	public Assignment(String[] data){
 //		this.assignmentID = ;
 //		this.positionList = ;
@@ -45,9 +43,7 @@ public class Assignment {
 		this.title = title;
 	}
 
-	/*
-	 * Getters and Setters
-	 */
+// Getters and Setters TODO nicht genutzte Methoden eliminieren
 	public String getAssignmentID() {
 		return assignmentID;
 	}

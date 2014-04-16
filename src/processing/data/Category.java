@@ -2,11 +2,16 @@ package processing.data;
 
 
 public class Category {
+//	//Attributes
+//	
 //	private String categoryID;
 //	private String title;
 //	private Category parentCategory;
 //	private Category[] subCategoryList;
+//		
 //	
+//	// Constructor
+//
 //	public Category(String categoryID, String title, Category parentCategory,
 //			Category[] subCategoryList) {
 //		this.categoryID = categoryID;
@@ -15,9 +20,8 @@ public class Category {
 //		this.subCategoryList = subCategoryList;
 //	}
 //
-//	/*
-//	 * Getters and Setters 
-//	 */
+//	// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//	 
 //	public String getCategoryID() {
 //		return categoryID;
 //	}

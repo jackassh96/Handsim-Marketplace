@@ -2,9 +2,8 @@ package processing.data;
 
 public class Company {
 
-	/*
-	 * Attributes
-	 */
+// Attributes
+	
 	private String companyID;
 	private String name;
 	private String street;
@@ -16,8 +15,12 @@ public class Company {
 	private String eMail;
 	private String description;
 
-	/*
-	 * Constructor
+	
+//Constructor
+	
+	/**
+	 * TODO
+	 * @param data
 	 */
 	public Company(String[] data) {
 		this.companyID = data[1];
@@ -32,9 +35,9 @@ public class Company {
 		this.description = data[10];
 	}
 
-	/*
-	 * Getters and Setters
-	 */
+	
+//Getters and Setters TODO Nicht genutzte Methoden eliminieren
+	 
 	public String getCompanyID() {
 		return companyID;
 	}

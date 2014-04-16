@@ -2,9 +2,8 @@ package processing.data;
 
 public class User {
 
-	/*
-	 * Attributes
-	 */
+// Attributes
+	
 	private String userID;
 	private String passwd;
 	private String firstName;
@@ -18,11 +17,15 @@ public class User {
 	private String eMail;
 	private String gender;
 
-	/*
-	 * Constructor. Array must come from data base result set in order for the
-	 * method to work.
+	
+// Constructor
+	
+	/**
+	 * Creates User object from string array coming from the data base.
+	 * @param data Data coming from the data base
+	 * @throws ArrayIndexOutOfBoundsException Exception that is thrown when the array is too short. If this exception occurs, it should be made sure that the array is properly extracted from the data base.
 	 */
-	public User(String[] data) {
+	public User(String[] data) throws ArrayIndexOutOfBoundsException{
 		this.userID = data[0];
 		this.passwd = data[1];
 		this.firstName = data[2];
@@ -37,9 +40,31 @@ public class User {
 		this.gender = data[11];
 	}
 
-	/*
-	 * Getters and Setters
+	
+// Public Methods
+	/**
+	 * @return Returns a String array of all Attributes. Used to save the object to the data base
 	 */
+	public String[] toStringArray() {
+		String[] s = new String[12];
+		s[0] = this.userID;
+		s[1] = this.passwd;
+		s[2] = this.firstName;
+		s[3] = this.lastName;
+		s[4] = this.street;
+		s[5] = this.number;
+		s[6] = String.valueOf(this.postCode);
+		s[7] = this.city;
+		s[8] = this.company;
+		s[9] = this.phone;
+		s[10] = this.eMail;
+		s[11] = this.gender;
+		
+		return s;
+	}
+	
+//Getters and Setters TODO Nicht genutzte Methoden eliminieren
+	 
 	public String getUserID() {
 		return userID;
 	}

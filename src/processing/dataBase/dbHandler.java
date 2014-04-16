@@ -22,6 +22,12 @@ public class dbHandler {
 	//
 	//	-> 
 	
+	/* TODO's from Felix
+	 *  - Make a method to update users in the data base (controller.editUser)
+	 *  - Make a method to delete users from the data base (controller.deleteUser)
+	 *  - Does the DBHandler need any more information when the logoff occurs?
+	 */
+	
 	
 	//TODO set default URL,USER AND PW
 	private String dbUrl;
@@ -118,14 +124,14 @@ public class dbHandler {
 
 	
 	//TODO Documentation 
-	public boolean updateUser(String Username, String Password, String Vorname, String Nachname, String Straße, String Hausnummer,
+	public boolean updateUser(String Username, String Password, String Vorname, String Nachname, String Strasse, String Hausnummer,
 							  int Postleitzahl, String Stadt, String Email, String Telefonnummer, String Firma, String Geschlecht) throws SQLException {
 		Connection con = setUpConnection();
 		try {
-//			UPDATE `marketuser` SET  `User_ID`='peterX',  `Password`='000',  `First_Name`='Peter',  `Last_Name`='Pan',  `Street`='Freidrichstr.',  `Number`='104',  `Post_Code`='13317',  `City`='Berlin',  `Email`='ppan@pan.de',  `Phone`='0190123456',  `Company`='Pan AG',  `Gender`='männlich' WHERE `User_ID` = '';
+//			UPDATE `marketuser` SET  `User_ID`='peterX',  `Password`='000',  `First_Name`='Peter',  `Last_Name`='Pan',  `Street`='Freidrichstr.',  `Number`='104',  `Post_Code`='13317',  `City`='Berlin',  `Email`='ppan@pan.de',  `Phone`='0190123456',  `Company`='Pan AG',  `Gender`='maennlich' WHERE `User_ID` = '';
 				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + 
 						" SET User_ID=\"" + Username + "\" , Password=\"" + Password + "\" , First_Name=\"" + Vorname + 
-						"\" , Last_Name=\"" + Nachname + "\" , Street=\"" + Straße + "\" , Number=\"" + Hausnummer +
+						"\" , Last_Name=\"" + Nachname + "\" , Street=\"" + Strasse + "\" , Number=\"" + Hausnummer +
 						"\" , Post_Code=\"" + Postleitzahl + "\" , City=\"" + Stadt + "\" , Email=\"" + Email +
 						"\" , Phone=\"" + Telefonnummer + "\" , Company=\"" + Firma + "\" , Gender=\"" + Geschlecht +
 						"\" WHERE User_ID=\"" + Username + "\"");
@@ -264,7 +270,7 @@ public class dbHandler {
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new SQLException("Wert konnte nicht eingefügt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new SQLException("Wert konnte nicht eingefuegt werden!\n" + ex.getMessage()); //TODO write Errortext
 	}
 	con.close();
 	return true;
@@ -364,7 +370,7 @@ public class dbHandler {
 				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
-			throw new SQLException("Datenbankabfrage (Aufträge/Ausschreibungen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new SQLException("Datenbankabfrage (Auftraege/Ausschreibungen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
 		}
 		finally { 
 			int i = 0;
@@ -527,7 +533,7 @@ public class dbHandler {
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new SQLException("Wert konnte nicht eingefügt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new SQLException("Wert konnte nicht eingefuegt werden!\n" + ex.getMessage()); //TODO write Errortext
 	}
 	con.close();
 	return true;

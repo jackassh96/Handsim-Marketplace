@@ -2,18 +2,17 @@ package processing.data;
 
 public class AssignmentHandler {
 
-	/*
-	 * Attributes
-	 */
+// Attributes
+
 	private Assignment[] assignmentList;
 
-	/*
-	 * Constructor
-	 */
+// Constructor
+
 	public AssignmentHandler(Assignment[] assignmentList) {
 		this.assignmentList = assignmentList;
 	}
 
+// Public methods
 	/**
 	 * @param String, ID (AssigmentID)
 	 * @return Assignment
@@ -36,9 +35,8 @@ public class AssignmentHandler {
 
 	}
 
-	/*
-	 * Getters and Setters
-	 */
+// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+	 
 	public Assignment[] getAssignmentList() {
 		return assignmentList;
 	}

@@ -2,22 +2,24 @@ package processing.data;
 
 public class OfferHandler {
 
-	/*
-	 * Attributes
-	 */
+// Attributes
+	 
 	private Offer[] offerList;
 
-	/*
-	 * Constructor
-	 */
+	
+// Constructor
+	 
 	public OfferHandler(Offer[] offerList) {
 		this.offerList = offerList;
 	}
 
+	
+// Public Methods
+	
 	/**
-	 * @param
+	 * @param ID
 	 * @return 
-	 * @ throws 
+	 * @throws 
 	 * TODO Implement the Exception for the SearchForID-Method correctly
 	 */
 	public Offer SearchForID(String ID) {
@@ -36,9 +38,9 @@ public class OfferHandler {
 
 	}
 
-	/*
-	 * Getters and Setters
-	 */
+	
+// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+	 
 	public Offer[] getOfferList() {
 		return offerList;
 	}
