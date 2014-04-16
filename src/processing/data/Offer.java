@@ -15,7 +15,12 @@ public class Offer {
 	private String description;
 
 //Constructor
-	 
+	public Offer(String[] data){
+		/**
+		 * TODO
+		 */
+	}
+	
 	public Offer(String offerID, double price, String amountOfTimeNeeded,
 			String status, Company company, Date date, String description) {
 		this.offerID = offerID;

@@ -35,7 +35,7 @@ public class AssignmentHandler {
 
 	}
 
-// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+// Getters and Setters
 	 
 	public Assignment[] getAssignmentList() {
 		return assignmentList;

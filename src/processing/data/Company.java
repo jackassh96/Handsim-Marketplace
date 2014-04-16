@@ -19,20 +19,20 @@ public class Company {
 //Constructor
 	
 	/**
-	 * TODO
+	 * TODO Exception for INTEGERparsing??!
 	 * @param data
 	 */
 	public Company(String[] data) {
-		this.companyID = data[1];
-		this.name = data[2];
-		this.street = data[3];
-		this.number = data[4];
-		this.postCode = Integer.parseInt(data[5]);
-		this.city = data[6];
-		this.owner = data[7];
-		this.phone = data[8];
-		this.eMail = data[9];
-		this.description = data[10];
+		this.companyID = data[0];
+		this.name = data[1];
+		this.street = data[2];
+		this.number = data[3];
+		this.postCode = Integer.parseInt(data[4]);
+		this.city = data[5];
+		this.owner = data[6];
+		this.phone = data[7];
+		this.eMail = data[8];
+		this.description = data[9];
 	}
 
 	
