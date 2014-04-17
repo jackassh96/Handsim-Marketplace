@@ -21,7 +21,7 @@ public class Controller {
 // Attributes
 	
 	private User activeUser;
-	private CSPmainWindows mainWindow; //TODO Erstellung in init-Methode
+	private CSPmainWindows mainWindow; //TODO Close gui?
 	private Company[] companyList;
 	private TreeItem[] mainCategoryList;
 	private AssignmentHandler assignmentHandler;
