@@ -2,6 +2,7 @@ package processing;
 
 import gui.CSPmainWindows;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -59,7 +60,7 @@ public class Controller {
 	 */
 	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws Exception {
 		Controller.getInstance();
-		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
+		instance.mainWindow = new CSPmainWindows(null);
 		//TODO does the constructor automatically display the GUI?
 		instance.loginController = loginController;
 		instance.importUser(userData);
@@ -72,7 +73,7 @@ public class Controller {
 
 	/**
 	 * Creates the active User from the result coming from the data base.
-	 * @throws ?? TODO
+	 * @throws ArrayIndexOutOfBoundsException thrown if wrong string array is put into the method. If it occurs, ensure proper data base extraction.
 	 * @param data The User information
 	 */
 	private void importUser(String[] data) throws ArrayIndexOutOfBoundsException {
@@ -87,14 +88,21 @@ public class Controller {
 	/**
 	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
 	 * This Method imports all Categories and creates the TreeItem Array
-	 * @return TODO
-	 * @throws SQLException Exception is thrown when an import error from the data base occurs.
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	private void importCategories() throws SQLException {
+	private void importCategories() throws SQLException, IOException {
 
 		try {
 			//get HashMaps from DB
-			HashMap<String, String[]> dataFromDB = this.dbHandler.getCategories();
+			HashMap<String, String[]> dataFromDB;
+			try{
+				dataFromDB = this.dbHandler.getCategories();
+			}catch (SQLException e){
+				throw new SQLException("Fehler beim importieren der Kategorien: " + e.getMessage());
+			}catch (IOException e){
+				throw new IOException("Fehler beim importieren der Kategorien: " + e.getMessage());
+			}
 			this.mainCategoryList = new TreeItem[1];
 			//for loop for parsing the HashMap
 			for (int j = 0; j < dataFromDB.size(); j++) {
@@ -120,9 +128,10 @@ public class Controller {
 
 	/**
 	 * TODO purpose of this method
-	 * @throws Exception 
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	private void importAssingments() throws Exception {
+	private void importAssingments() throws SQLException, IOException {
 		try{
 			this.assignmentHandler = new AssignmentHandler(new Assignment[1]);
 			//get HashMaps from DB
@@ -140,7 +149,7 @@ public class Controller {
 				//gets Array from HashMap which represents a data record for an assignment's OfferList
 				HashMap<String,String[]> offerDataFromDB = this.dbHandler.getOffer(temporaryAssignmentID);
 				//creates object out of new data record
-				temporaryAssignment= new Assignment(buff, positionDataFromDB, offerDataFromDB);
+				temporaryAssignment= new Assignment(buff, positionDataFromDB, offerDataFromDB);//TODO Exception spezifizieren, siehe Assignment Constructor
 				//add new object to assigmentList
 				for (int i = 0; i < j; i++){
 					temporaryAssignmentList[i] = this.assignmentHandler.getAssignmentList()[i];
@@ -150,14 +159,17 @@ public class Controller {
 			}
 		}catch (SQLException e) {
 			throw new SQLException("Datenbankfehler beim Importieren der Ausschreibungen: " + e.getMessage());
+		}catch (IOException e) {
+			throw new IOException("Datenbankfehler beim Importieren der Ausschreibungen: " + e.getMessage());
 		}
 	}
 
 	/**
 	 * TODO purpose of this method
-	 * @throws SQLException Throws SQLException if problems with loading the data from the data base occur.
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	private void importCompanyList() throws SQLException {
+	private void importCompanyList() throws SQLException, IOException {
 		try{
 			//get HashMap from DB
 			HashMap<String,String[]> dataFromDB = this.dbHandler.getCompanyList();
@@ -190,21 +202,24 @@ public class Controller {
 	 * 
 	 * @return Returns true when User update was successful
 	 * @param updatedUser Updated User item that comes from the GUI
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	public boolean editUser(User updatedUser) {
+	public void editUser(User updatedUser) throws SQLException, IOException {
 		this.activeUser = updatedUser;
-		// TODO DB speicherung triggern
+		dbHandler.updateUser(activeUser.getUserID(), activeUser.getPasswd(), activeUser.getFirstName(), activeUser.getLastName(), activeUser.getStreet(), activeUser.getNumber(), String.valueOf(activeUser.getPostCode()), activeUser.getCity(), activeUser.geteMail(), activeUser.getPhone(), activeUser.getCompany(), activeUser.getGender());
 		dbHandler.setDbUser(activeUser.getUserID());
 		dbHandler.setDbPw(activeUser.getPasswd());
-		return true;
 	}
 
 	/**
 	 * Called by GUI when User selects to delete his Account. 
 	 * The user will automatically get logged off and will return to the Login Screen. 
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	public void deleteUser() {
-		// TODO DBHandler: User aus DB löschen
+	public void deleteUser() throws SQLException, IOException {
+		dbHandler.deleteUser(activeUser.getUserID());
 		logOff();
 	}
 	
@@ -220,7 +235,7 @@ public class Controller {
 
 	/**
 	 * This method creates a new Assignment from data entered into the GUI and appends it to the assignmentHandler's list.
-	 * @TODO Tobi - implement the assignment creation in GUI (also with positionList)
+	 * TODO Tobi - implement the assignment creation in GUI (also with positionList)
 	 * @param assignmentID All parameters according to the attributes of the assignment object.
 	 * @param positionList
 	 * @param offerHandler
@@ -273,7 +288,7 @@ public class Controller {
 	}
 	
 	/**
-	 * TODO right exception??
+	 * TODO right exception?? - Felix: which exception?
 	 * method searches for a category using its ID
 	 * @param ID
 	 * @return TreeItem
@@ -289,7 +304,7 @@ public class Controller {
 	}
 	
 	/**
-	 * TODO Finish this method with exception, if it is needed for searching a Company
+	 * TODO Finish this method with exception, if it is needed for searching a Company - Felix: which exception??
 	 * @param ID
 	 * @return
 	 */

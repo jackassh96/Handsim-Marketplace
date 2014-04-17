@@ -29,12 +29,11 @@ public class Assignment {
  * @param offerData
  * @throws Exception 
  */
-	
 	public Assignment(String[] assignmentData, HashMap<String,String[]> positionData, HashMap<String,String[]> offerData) throws Exception{
 		this.assignmentID = assignmentData[0];
 		this.description = assignmentData[1];
 		String[] dateData = assignmentData[2].split(".");
-		this.dateOfCreation = new DatumFull(dateData[2], dateData[1], dateData[0]);
+		this.dateOfCreation = new DatumFull(dateData[2], dateData[1], dateData[0]);//TODO Specify exception type in DatumFull, implement here and in Controller.importAssignments
 		dateData = assignmentData[3].split(".");
 		this.deadline = new DatumFull(dateData[2], dateData[1], dateData[0]);
 		this.status = assignmentData[4];
