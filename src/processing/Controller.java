@@ -59,6 +59,19 @@ public class Controller {
 	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
 	 * @throws SQLException 
 	 */
+	
+	
+	/**
+	 * Gives the caller the singleton instance and (re)creates the attributes.
+	 * ONLY USE FOR THE INITIAL SETUP OR A WANTED RESET OF THE OBJECT
+	 * Categories and Companies are already imported in the method, because the importAssignment method already needs them!!
+	 * @param userData Data of the active user which is loaded from the data base
+	 * @param dbHandler object that connects to the data base
+	 * @param loginController
+	 * @return Returns the controller singleton instance
+	 * @throws ArrayIndexOutOfBoundsException TODO
+	 * @throws SQLException TODO
+	 */
 	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
 		Controller.getInstance();
 		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
@@ -74,7 +87,7 @@ public class Controller {
 
 	/**
 	 * Creates the active User from the result coming from the data base.
-	 * TODO@throws??
+	 * @throws ?? TODO
 	 * @param data The User information
 	 */
 	private void importUser(String[] data) throws ArrayIndexOutOfBoundsException {
@@ -122,7 +135,7 @@ public class Controller {
 
 	/**
 	 * TODO purpose of this method
-	 * @throws SQLException THrows SQLException if problems with loading the data from the data base occur.
+	 * @throws SQLException Throws SQLException if problems with loading the data from the data base occur.
 	 */
 	private void importAssingments() throws SQLException {
 		try{
@@ -157,7 +170,7 @@ public class Controller {
 
 	/**
 	 * TODO purpose of this method
-	 * @throws SQLException THrows SQLException if problems with loading the data from the data base occur.
+	 * @throws SQLException Throws SQLException if problems with loading the data from the data base occur.
 	 */
 	private void importCompanyList() throws SQLException {
 		try{
@@ -259,7 +272,7 @@ public class Controller {
 	}
 
 	/**
-	 * TODO finish this Method
+	 * TODO finish this Method and JavaDoc
 	 * @param assignmentID
 	 * @return
 	 */
