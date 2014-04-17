@@ -3,6 +3,7 @@ package processing.data;
 import org.eclipse.swt.widgets.TreeItem;
 
 import processing.Controller;
+import processing.helper.DatumFull;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,26 +16,27 @@ public class Assignment {
 	private TreeItem[] positionList;
 	private OfferHandler offerHandler;
 	private String description;
-	private Date dateOfCreation;
-	private Date deadline;
+	private DatumFull dateOfCreation;
+	private DatumFull deadline;
 	private String status;
 	private String title;
 
 /**
  * Constructor for an Assignment from the DB
+ * TODO @Exception
  * @param assignmentData
  * @param positionData
  * @param offerData
+ * @throws Exception 
  */
 	
-	public Assignment(String[] assignmentData, HashMap<String,String[]> positionData, HashMap<String,String[]> offerData){
+	public Assignment(String[] assignmentData, HashMap<String,String[]> positionData, HashMap<String,String[]> offerData) throws Exception{
 		this.assignmentID = assignmentData[0];
 		this.description = assignmentData[1];
-		/**
-		 * TODO form Date out of complete String. Ask Ben for String composition in DB
-		 * this.dateOfCreation = assignmentData[2];
-		 * this.deadline = assignmentData[3];
-		 */
+		String[] dateData = assignmentData[2].split(".");
+		this.dateOfCreation = new DatumFull(dateData[2], dateData[1], dateData[0]);
+		dateData = assignmentData[3].split(".");
+		this.deadline = new DatumFull(dateData[2], dateData[1], dateData[0]);
 		this.status = assignmentData[4];
 		this.title = assignmentData[5];
 		
@@ -78,8 +80,8 @@ public class Assignment {
 	}
 	
 	public Assignment(String assignmentID, TreeItem[] positionList,
-			OfferHandler offerHandler, String description, Date dateOfCreation,
-			Date deadline, String status, String title) {
+			OfferHandler offerHandler, String description, DatumFull dateOfCreation,
+			DatumFull deadline, String status, String title) {
 
 		this.assignmentID = assignmentID;
 		this.positionList = positionList;
@@ -116,19 +118,19 @@ public class Assignment {
 		this.description = description;
 	}
 
-	public Date getDateOfCreation() {
+	public DatumFull getDateOfCreation() {
 		return dateOfCreation;
 	}
 
-	public void setDateOfCreation(Date dateOfCreation) {
+	public void setDateOfCreation(DatumFull dateOfCreation) {
 		this.dateOfCreation = dateOfCreation;
 	}
 
-	public Date getDeadline() {
+	public DatumFull getDeadline() {
 		return deadline;
 	}
 
-	public void setDeadline(Date deadline) {
+	public void setDeadline(DatumFull deadline) {
 		this.deadline = deadline;
 	}
 

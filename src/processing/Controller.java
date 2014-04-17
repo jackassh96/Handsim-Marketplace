@@ -222,6 +222,7 @@ public class Controller {
 
 	/**
 	 * This method creates a new Assignment from data entered into the GUI and appends it to the assignmentHandler's list.
+	 * @TODO Tobi - implement the assignment creation in GUI (also with positionList)
 	 * @param assignmentID All parameters according to the attributes of the assignment object.
 	 * @param positionList
 	 * @param offerHandler
@@ -248,14 +249,6 @@ public class Controller {
 		}
 		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
 		this.assignmentHandler.setAssignmentList(newAssignmentList);
-	}
-
-	/**
-	 * TODO Passiert in CreateAssignment oder?
-	 * TODO Muss Tobi das lösen? Assignment ist da noch nicht erstellt und Positionen soll in Gui zwischengespeichert werden.
-	 */
-	public void savePosition() {
-		// TODO Position in DBHandler speichern
 	}
 
 	/**

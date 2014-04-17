@@ -1,6 +1,7 @@
 package processing.data;
 
-import java.util.Date;
+import processing.Controller;
+import processing.helper.DatumFull;
 
 public class Offer {
 
@@ -11,27 +12,28 @@ public class Offer {
 	private String amountOfTimeNeeded;
 	private String status;
 	private Company company;
-	private Date date;
+	private DatumFull date;
 	private String description;
 
 //Constructor
-	public Offer(String[] data){
+	/**
+	 * TODO @Exception
+	 * @param data
+	 * @throws Exception
+	 */
+	public Offer(String[] data) throws Exception{
 		this.offerID = data[0];
 		this.price = Double.parseDouble(data[3]);
 		this.amountOfTimeNeeded = data[4];
 		this.status = data[7];
-		/**
-		 * TODO Do we save company as a company instance or as a String?!
-		 * this.company = data[2];
-		 * TODO create Date out of complete String
-		 * this.date = data[6]
-		 */
-		;
+		this.company = Controller.getInstance().searchForCompany(data[2]);
+		String[] dateData = data[6].split(".");
+		this.date = new DatumFull(dateData[2], dateData[1], dateData[0]);
 		this.description = data[5];
 	}
 	
 	public Offer(String offerID, double price, String amountOfTimeNeeded,
-			String status, Company company, Date date, String description) {
+			String status, Company company, DatumFull date, String description) {
 		this.offerID = offerID;
 		this.price = price;
 		this.amountOfTimeNeeded = amountOfTimeNeeded;
@@ -83,11 +85,11 @@ public class Offer {
 		this.company = company;
 	}
 
-	public Date getDate() {
+	public DatumFull getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(DatumFull date) {
 		this.date = date;
 	}
 
