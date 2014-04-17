@@ -77,7 +77,18 @@ public class Assignment {
 		}
 		
 	}
-	
+
+/**
+ * TODO
+ * @param assignmentID
+ * @param positionList
+ * @param offerHandler
+ * @param description
+ * @param dateOfCreation
+ * @param deadline
+ * @param status
+ * @param title
+ */
 	public Assignment(String assignmentID, TreeItem[] positionList,
 			OfferHandler offerHandler, String description, DatumFull dateOfCreation,
 			DatumFull deadline, String status, String title) {
@@ -92,7 +103,7 @@ public class Assignment {
 		this.title = title;
 	}
 
-// Getters and Setters TODO nicht genutzte Methoden eliminieren
+// Getters and Setters
 	public String getAssignmentID() {
 		return assignmentID;
 	}

@@ -19,24 +19,29 @@ public class Company {
 //Constructor
 	
 	/**
-	 * TODO Exception for INTEGERparsing??!
-	 * @param data
+	 * @param data TODO
+	 * @throws NumberFormatException Thrown when String can not be converted to postCode Integer
 	 */
-	public Company(String[] data) {
-		this.companyID = data[0];
-		this.name = data[1];
-		this.street = data[2];
-		this.number = data[3];
-		this.postCode = Integer.parseInt(data[4]);
-		this.city = data[5];
-		this.owner = data[6];
-		this.phone = data[7];
-		this.eMail = data[8];
-		this.description = data[9];
+	public Company(String[] data) throws NumberFormatException{
+		try{
+			this.companyID = data[0];
+			this.name = data[1];
+			this.street = data[2];
+			this.number = data[3];
+			this.postCode = Integer.parseInt(data[4]);
+			this.city = data[5];
+			this.owner = data[6];
+			this.phone = data[7];
+			this.eMail = data[8];
+			this.description = data[9];
+		}catch(NumberFormatException e){
+			throw new NumberFormatException("String im Array kann nicht in Integer umgewandelt werden. Datenkonsistenz checken" + e.getMessage());
+		}
+
 	}
 
 	
-//Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//Getters and Setters
 	 
 	public String getCompanyID() {
 		return companyID;

@@ -13,11 +13,11 @@ public class AssignmentHandler {
 	}
 
 // Public methods
+	
 	/**
 	 * @param String, ID (AssigmentID)
 	 * @return Assignment
-	 * @throws TODO
-	 *             implement Exception correctly
+	 * @throws TODO implement Exception correctly - Felix: wo braucht man da eine exception?? Finde keine Methode dafuer
 	 */
 	public Assignment SearchForID(String ID) {
 

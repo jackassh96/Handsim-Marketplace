@@ -17,7 +17,7 @@ public class Offer {
 
 //Constructor
 	/**
-	 * TODO @Exception
+	 * @Exception TODO 
 	 * @param data
 	 * @throws Exception
 	 */
@@ -43,7 +43,7 @@ public class Offer {
 		this.description = description;
 	}
 
-//Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//Getters and Setters
 	 
 	public String getOfferID() {
 		return offerID;
