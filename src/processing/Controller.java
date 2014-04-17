@@ -3,7 +3,6 @@ package processing;
 import gui.CSPmainWindows;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.eclipse.swt.widgets.TreeItem;
@@ -12,9 +11,9 @@ import processing.data.Assignment;
 import processing.data.OfferHandler;
 import processing.data.User;
 import processing.data.Company;
-import processing.data.Category;
 import processing.data.AssignmentHandler;
 import processing.dataBase.dbHandler;
+import processing.helper.DatumFull;
 
 public class Controller {
 
@@ -56,10 +55,9 @@ public class Controller {
 	 * @param userData Data of the active user which is loaded from the data base
 	 * @param dbHandler object that connects to the data base
 	 * @return Returns the controller singleton instance 
-	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
-	 * @throws SQLException 
+	 * @throws Exception 
 	 */
-	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
+	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws Exception {
 		Controller.getInstance();
 		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
 		//TODO does the constructor automatically display the GUI?
@@ -122,9 +120,9 @@ public class Controller {
 
 	/**
 	 * TODO purpose of this method
-	 * @throws SQLException Throws SQLException if problems with loading the data from the data base occur.
+	 * @throws Exception 
 	 */
-	private void importAssingments() throws SQLException {
+	private void importAssingments() throws Exception {
 		try{
 			this.assignmentHandler = new AssignmentHandler(new Assignment[1]);
 			//get HashMaps from DB
@@ -233,8 +231,8 @@ public class Controller {
 	 * @param title
 	 */
 	public void createAssignment(String assignmentID, TreeItem[] positionList,
-			OfferHandler offerHandler, String description, Date dateOfCreation,
-			Date deadline, String status, String title) {
+			OfferHandler offerHandler, String description, DatumFull dateOfCreation,
+			DatumFull deadline, String status, String title) {
 
 		// Creation of the new assignment initialized from the GUI
 		Assignment newAssignment = new Assignment(assignmentID, positionList,
