@@ -2,6 +2,8 @@ package processing.data;
 
 import org.eclipse.swt.widgets.TreeItem;
 
+import processing.Controller;
+
 import java.util.Date;
 import java.util.HashMap;
 
@@ -63,14 +65,15 @@ public class Assignment {
 			TreeItem temporaryPosition;
 			//gets Array from HashMap which represents a data record for a position
 			String [] positionBuff = positionData.get(String.valueOf(j));
-			//TODO creates TreeItem object out of new data record
-			temporaryPosition = new TreeItem(searchForCategory(positionBuff[1]), 0);
-			//add new object to offerList
+			// creates TreeItem object out of new data record
+			temporaryPosition = new TreeItem(Controller.getInstance().searchForCategory(positionBuff[1]), 0);
+			temporaryPosition.setText(new String[] {positionBuff[3],positionBuff[2],positionBuff[0],positionBuff[1]});
+			//add new object to positionList
 			for (int i = 0; i < j; i++){
-				temporaryPositionList[i] = instance.getMainCategoryList()[1];
+				temporaryPositionList[i] = this.positionList[i];
 			}
 			temporaryPositionList[j] = temporaryPosition;
-			instance.setMainCategoryList(temporaryPositionList);
+			this.positionList = temporaryPositionList;
 		}
 		
 	}
