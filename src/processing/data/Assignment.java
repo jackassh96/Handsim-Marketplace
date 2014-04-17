@@ -21,7 +21,6 @@ public class Assignment {
 	private String title;
 
 /**
- * TODO finish this constructor
  * Constructor for an Assignment from the DB
  * @param assignmentData
  * @param positionData

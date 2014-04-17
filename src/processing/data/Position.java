@@ -20,7 +20,7 @@ public class Position {
 //		this.serviceGroup = serviceGroup;
 //	}
 //
-//	// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//	// Getters and Setters
 //	
 //	public String getPositionID() {
 //		return positionID;

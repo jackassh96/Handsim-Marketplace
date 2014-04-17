@@ -20,7 +20,7 @@ public class Category {
 //		this.subCategoryList = subCategoryList;
 //	}
 //
-//	// Getters and Setters TODO Nicht genutzte Methoden eliminieren
+//	// Getters and Setters 
 //	 
 //	public String getCategoryID() {
 //		return categoryID;
