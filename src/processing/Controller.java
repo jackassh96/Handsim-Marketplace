@@ -86,12 +86,12 @@ public class Controller {
 	}
 
 	/**
-	 * TODO finish Method
+	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
 	 * This Method imports all Categories and creates the TreeItem Array
 	 * @return TODO
 	 * @throws SQLException Exception is thrown when an import error from the data base occurs.
 	 */
-	private TreeItem[] importCategories() throws SQLException {
+	private void importCategories() throws SQLException {
 
 		try {
 			//get HashMaps from DB
@@ -107,10 +107,11 @@ public class Controller {
 				temporaryCategory = new TreeItem(this.searchForCategory(buff[1]), 0);
 				//add new object to offerList
 				for (int i = 0; i < j; i++){
-					temporaryPositionList[i] = instance.getMainCategoryList()[1];
+					temporaryCategoryList[i] = this.mainCategoryList[1];
 				}
-				temporaryPositionList[j] = temporaryPosition;
-				instance.setMainCategoryList(temporaryPositionList);
+				temporaryCategoryList[j] = temporaryCategory;
+				this.mainCategoryList = temporaryCategoryList;
+			}
 		} catch (SQLException e) {
 			throw new SQLException("Fehler beim Import der Kategorien: "
 					+ e.getMessage());
@@ -255,8 +256,8 @@ public class Controller {
 	}
 
 	/**
-	 * TODO
-	 * 
+	 * TODO finish this Method
+	 * @param assignmentID
 	 * @return
 	 */
 	public TreeItem[] createPositionTree(String assignmentID) {
@@ -266,9 +267,12 @@ public class Controller {
 		TreeItem[] positionList = this.assignmentHandler.SearchForID(assignmentID).getPositionList();
 		for (int j = 0; j < positionList.length; j++) {
 			TreeItem temporaryPosition = positionList[j];
+			TreeItem temporaryCategory = Controller.getInstance().searchForCategory(temporaryPosition.getText(3));
 			//TODO create an array containing the Position and the Path
-			while(){
-				positionTree[j]=Controller.getInstance().searchForCategory(temporaryPosition.getText(3));
+			//Stopping to pick Categories into the PositionTree when they have already been picked!
+			while(temporaryCategory.getText()==null){
+				
+				 
 			}
 		}
 		return positionTree;
