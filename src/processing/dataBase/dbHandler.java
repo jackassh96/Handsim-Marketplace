@@ -23,13 +23,17 @@ public class dbHandler {
 	//	-> 
 	
 	/* TODO's from Felix
-	 *  - Make a method to update users in the data base (controller.editUser)
-	 *  - Make a method to delete users from the data base (controller.deleteUser)
-	 *  - Does the DBHandler need any more information when the logoff occurs?
+	 *  - Make a method to update users in the data base (controller.editUser)		--> schon implementiert siehe code!
+	 *  - Make a method to delete users from the data base (controller.deleteUser)	--> schon implementiert siehe code!
+	 *  - Does the DBHandler need any more information when the logoff occurs?		--> nope, objekt stirbt mit der
+	 *  																				referenzierten klasse (entweder COntroller
+	 *  																				oder LoginCOntroller !
 	 */
 	
 	
-	//TODO set default URL,USER AND PW
+	/* 
+	  * attributes
+	  */
 	private String dbUrl;
 	private String dbUser;
 	private String dbPw;
@@ -44,21 +48,32 @@ public class dbHandler {
 	
 	private String rejectStateName = "Abgelehnt";
 			
-	//default constructor (hard coded)
+	/**
+	 * default constructor	-	uses hard coded parameter for database connection 
+	 * 
+	 */
 	public dbHandler() {
 		this.dbUrl = "jdbc:mysql://localhost:3306";	//TODO
 		this.dbUser = "root";	//TODO
 		this.dbPw = "";		//TODO
 	}
 	
-	//specific constructor 
+	/**
+	 * specific constructor	-	possibility to change database connection while client is running 
+	 * 
+	 */  
 	public dbHandler(String serverUrl, String databaseUser, String userPassword, String Databasename) {
 		this.dbUrl = serverUrl;
 		this.dbUser = databaseUser;
 		this.dbPw = userPassword;
 	}
 
-	//TODO Documentation 
+	/**
+	 * Creates database connection 
+	 * 
+	 * @throws SQLException
+	 *            if object can't get connection with a maximum of 3 tries 
+	 */
 	private Connection setUpConnection() throws SQLException {
 		Connection con = null;
 		int tries = 0;
@@ -78,7 +93,14 @@ public class dbHandler {
 		return con;
 	}
 	
-	//TODO Documentation 
+	/**
+	 * Creates user entry in database table
+	 *  
+	 *  TODO params String [] or individual strings? 
+	 *  
+	 * @throws IOException		input data or output statement is corrupt 
+	 * @throws SQLException		if object can't get connection with a maximum of 3 tries 
+	 */
 	public boolean createUser(String username, String password) throws SQLException {
 		Connection con = setUpConnection();
 		try {
