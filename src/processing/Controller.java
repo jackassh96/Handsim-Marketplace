@@ -21,7 +21,7 @@ public class Controller {
 // Attributes
 	
 	private User activeUser;
-	private CSPmainWindows mainWindow; //TODO Close gui?
+	private CSPmainWindows mainWindow;
 	private Company[] companyList;
 	private TreeItem[] mainCategoryList;
 	private AssignmentHandler assignmentHandler;
@@ -59,9 +59,10 @@ public class Controller {
 	 * @throws ArrayIndexOutOfBoundsException Forwards exception from User import
 	 * @throws SQLException 
 	 */
-		public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
+	public static Controller init(String[] userData, dbHandler dbHandler, LoginController loginController) throws ArrayIndexOutOfBoundsException, SQLException {
 		Controller.getInstance();
 		instance.mainWindow = new CSPmainWindows(null); // TODO Ask Tobi about argument
+		//TODO does the constructor automatically display the GUI?
 		instance.loginController = loginController;
 		instance.importUser(userData);
 		instance.dbHandler = dbHandler;
@@ -119,9 +120,10 @@ public class Controller {
 	}
 
 	/**
-	 * TODO are there any Exceptions thrown? If yes, also add proper exception handling to init 
+	 * TODO purpose of this method
+	 * @throws SQLException THrows SQLException if problems with loading the data from the data base occur.
 	 */
-	private void importAssingments() {
+	private void importAssingments() throws SQLException {
 		try{
 			this.assignmentHandler = new AssignmentHandler(new Assignment[1]);
 			//get HashMaps from DB
@@ -147,15 +149,16 @@ public class Controller {
 				temporaryAssignmentList[j] = temporaryAssignment;
 				this.assignmentHandler.setAssignmentList(temporaryAssignmentList);
 			}
-		}catch (Exception e) {
-			e.printStackTrace();
+		}catch (SQLException e) {
+			throw new SQLException("Datenbankfehler beim Importieren der Ausschreibungen: " + e.getMessage());
 		}
 	}
 
 	/**
-	 * TODO are there any Exceptions thrown? If yes, also add proper exception handling to init 
+	 * TODO purpose of this method
+	 * @throws SQLException THrows SQLException if problems with loading the data from the data base occur.
 	 */
-	private void importCompanyList() {
+	private void importCompanyList() throws SQLException {
 		try{
 			//get HashMap from DB
 			HashMap<String,String[]> dataFromDB = this.dbHandler.getCompanyList();
@@ -175,8 +178,8 @@ public class Controller {
 				this.companyList = temporaryCompanyList;
 			}
 			
-		}catch (Exception e) {
-			e.printStackTrace();
+		}catch (SQLException e) {
+			throw new SQLException("Datenbankfehler beim Importieren der Firmenliste: " + e.getMessage());
 		}
 	}
 
@@ -279,7 +282,7 @@ public class Controller {
 
 	
 // Getters
-// No setters needed. Only setting possibility through init method
+// No setters needed. Only setting possibility is through the init method
 	
 	public User getUser() {
 		return activeUser;
