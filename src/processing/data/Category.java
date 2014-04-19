@@ -11,6 +11,7 @@ public class Category {
 	private String categoryID;
 	private String title;
 	private String parentCategory;
+	private Category [] subCategories;
 		
 	
 	// Constructor
@@ -23,6 +24,7 @@ public class Category {
 	
 	public TreeItem toMajorTreeItem(Tree tree) {
 		TreeItem trItem = new TreeItem(tree, SWT.NONE);
+		trItem.setText(title);
 		//TODO set correct data depending on columns
 		String [] tem = new String [3];
 		tem[0] = categoryID;
@@ -33,6 +35,7 @@ public class Category {
 	}
 	
 	public TreeItem toSubTreeItem(TreeItem treeitem) {
+		System.out.println("treeitem: " +treeitem);
 		TreeItem trItem = new TreeItem(treeitem, SWT.NONE);
 		//TODO set correct data depending on columns
 		String [] tem = new String [3];
@@ -40,6 +43,7 @@ public class Category {
 		tem[1] = title;
 		tem[2] = parentCategory;
 		trItem.setData(tem);
+		trItem.setText(title);
 		return trItem;
 	}
 	
@@ -68,6 +72,14 @@ public class Category {
 
 	public void setParentCategory(String parentCategory) {
 		this.parentCategory = parentCategory;
+	}
+
+	public Category [] getSubCategories() {
+		return subCategories;
+	}
+
+	public void setSubCategories(Category [] subCategories) {
+		this.subCategories = subCategories;
 	}
 
 

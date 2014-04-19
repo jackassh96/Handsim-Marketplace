@@ -5,6 +5,8 @@ import gui.CSPmainWindows;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -33,10 +35,18 @@ public class Controller {
 	//WOZU? GUI MUSS NUR DEN CONTROLLER KENNEN
 //	private CSPmainWindows mainWindow;	TODO
 	private Company[] companyList;
-	private Category[] mainCategoryList;
+	private Category[] categoryList;
+	private Category[] majorCategoryList;
+	private ArrayList<Category> neededCategoryList;
 	private Position[] positionList;
 	private AssignmentHandler assignmentHandler;
 	private dbHandler dbHandler;
+	private ArrayList<TreeItem> serviceTreeList;
+	private ArrayList<TreeItem> positionTreeList;
+	
+	ArrayList<String> idspuffer = new ArrayList<>();
+	ArrayList<Category> catpuffer = new ArrayList<>();
+	
 	//WARUM ? KEIN ATTRIBUT DES CONTROLLER! TODO
 //	private LoginController loginController;
 
@@ -78,32 +88,46 @@ public class Controller {
 	//TODO warum den dbHandler Ã¼bergeben???
 	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
 		instance = Controller.getInstance();
+		instance.serviceTreeList = new ArrayList<>();
+		instance.positionTreeList = new ArrayList<>(); //TODO
+		instance.neededCategoryList = new ArrayList<>();
 		instance.dbHandler = dbHandler;
-		instance.activeUser = instance.importUser("max32"); 
+		instance.activeUser = instance.importUser("max32");  //TODO
 
-		instance.mainCategoryList = instance.importCategories();
+		Category [] buf = instance.importCategories();
+		instance.categoryList = instance.generateSubCategories(buf);
+		instance.majorCategoryList = instance.seperateMajorCategories(buf);
+		
+//		for (Category ca : instance.majorCategoryList) {
+//			System.out.println("ca - >  " +ca.getTitle());
+//		}
+		
 		instance.importCompanyList();
 		instance.importAssingments(instance.activeUser.getUserID());
 		
 		//TODO remove test stuff
-		for (Category c : instance.mainCategoryList) {
-			System.out.println(c.getTitle());
-		}
+//		for (Category c : instance.categoryList) {
+//			System.out.println(c.getTitle());
+//			System.out.println(c.getSubCategories().length);
+//			if (c.getSubCategories().length != 0) {
+//				System.out.println("[0]" + c.getSubCategories()[0].getTitle());
+//			}
+//		}
 		
-		System.out.println("--------------------------------");
-		
-		for (Company co : instance.companyList) {
-			System.out.println(co.getName());
-		}
-		
-		System.out.println("--------------------------------");
-		
-		for (Assignment a : instance.assignmentHandler.getAssignmentList()) {
-			System.out.println(a.getTitle());
-			for (Position p : a.getPositionList()) {
-				System.out.println(p.getDescription());
-			}
-		}
+//		System.out.println("--------------------------------");
+//		
+//		for (Company co : instance.companyList) {
+//			System.out.println(co.getName());
+//		}
+//		
+//		System.out.println("--------------------------------");
+//		
+//		for (Assignment a : instance.assignmentHandler.getAssignmentList()) {
+//			System.out.println(a.getTitle());
+//			for (Position p : a.getPositionList()) {
+//				System.out.println(p.getDescription());
+//			}
+//		}
 		//insatnce of cotroller must be input! TODO!
 //		CSPmainWindows.main(null);
 		return instance;
@@ -151,6 +175,210 @@ public class Controller {
 			}
 			return result;
 	}
+	
+	/**
+	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
+	 * This Method imports all Categories and creates the TreeItem Array
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	 */
+	private Category [] generateSubCategories(Category [] Categories) throws SQLException, IOException { 
+//		ArrayList<Category> buf = new ArrayList<>();
+		Category [] result = Categories;
+		int j = 0;
+		//durch das gesamte array laufen
+		for (Category c : Categories) {
+			ArrayList<Category> buf = new ArrayList<>();
+			//pro categorien subcategorien zusammensammeln
+			for (Category c2 : Categories) {
+				if (c2.getParentCategory().equals(c.getCategoryID())) {
+					buf.add(c2);
+				}
+			}
+			Category [] subCats = new Category[buf.size()];
+			//gemerkte Arraylist in array überführen
+			for (int i = 0; i < buf.size(); i++) {
+				subCats[i] = buf.get(i);
+			}
+			//ermittelte subcategory liste ins finale array schreiben 
+			result[j].setSubCategories(subCats);
+			j++;
+		}
+		return result;
+	}
+	
+	/**
+	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
+	 * This Method imports all Categories and creates the TreeItem Array
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	 */
+	private Category [] seperateMajorCategories(Category [] Categories) throws SQLException, IOException { 
+		ArrayList<Category> buf = new ArrayList<>();
+		Category [] result = Categories;
+		int j = 0;
+		//durch das gesamte array laufen
+		for (Category c : Categories) {
+			
+			if (c.getParentCategory().equals("-1")) {
+				buf.add(c);
+			}
+		}
+		Category [] majorCats = new Category[buf.size()];
+		//gemerkte Arraylist in array überführen
+		for (int i = 0; i < buf.size(); i++) {
+			majorCats[i] = buf.get(i);
+		}
+		//ermittelte subcategory liste ins finale array schreiben 
+		result = majorCats;
+		j++;
+		
+		return result;
+	}
+	
+	/**
+	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
+	 * This Method imports all Categories and creates the TreeItem Array
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	 */
+	private Category [] seperateSubCategories(Category [] Categories) throws SQLException, IOException { 
+		ArrayList<Category> buf = new ArrayList<>();
+		Category [] result = Categories;
+		int j = 0;
+		//durch das gesamte array laufen
+		for (Category c : Categories) {
+			
+			if (!(c.getParentCategory().equals("-1"))) {
+				buf.add(c);
+			}
+		}
+		Category [] majorCats = new Category[buf.size()];
+		//gemerkte Arraylist in array überführen
+		for (int i = 0; i < buf.size(); i++) {
+			majorCats[i] = buf.get(i);
+		}
+		//ermittelte subcategory liste ins finale array schreiben 
+		result = majorCats;
+		j++;
+		
+		return result;
+	}
+	
+	/**
+	 * TODO Treebuilder
+	 * This Method imports all Categories and creates the TreeItem Array
+	 * @throws SQLException Exception is thrown when a data base connection error occurs.
+	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	 */
+	public void buildTreeFromMajorCategories(Tree tree) throws SQLException, IOException { 
+		Category [] majCats = instance.majorCategoryList;
+		//durch major categories laufen um subkategorien zu erhalten
+		for (Category c : majCats) {
+			//Treeitem erzeugen für major categories
+			TreeItem x = c.toMajorTreeItem(tree);
+			serviceTreeList.add(x);
+			for (Category ca : c.getSubCategories()) {
+				createSubTreeItems(ca, x);
+			}
+		}
+	}
+	
+	private void createSubTreeItems(Category category, TreeItem treeitem) throws SQLException, IOException { 
+		Category [] cats = category.getSubCategories();
+//		TreeItem tI = new TreeItem(treeitem, SWT.NONE);
+		TreeItem tI = category.toSubTreeItem(treeitem);
+		serviceTreeList.add(tI);
+		for (Category c : category.getSubCategories()) {
+			createSubTreeItems(c, tI);
+		}
+	}
+	
+	public void builTreeWithPositons(String Assignment_ID, Tree tree) throws SQLException, IOException { 
+		Assignment assign = instance.searchForID(Assignment_ID);
+		Position [] positions = assign.getPositionList();
+		
+
+		
+		for (Position p : positions) {
+				String id = p.getCategory_ID();
+				idspuffer.add(id);
+				Category c = instance.searchForCategory(id);
+				catpuffer.add(c);
+				findParentCategory(c.getParentCategory());
+		}
+		//TODO baum bauen
+
+		//arrayList in Array überführen
+		Category [] buffer = new Category[catpuffer.size()];
+		int i = 0;
+		for (Category c : catpuffer) {
+			buffer[i] = c;
+			i++;
+		}
+		
+//		for (Category c : buffer) {
+//			System.out.println(c.getCategoryID());
+//		}
+		
+		Category [] majC = instance.seperateMajorCategories(buffer);
+		for (Category c : majC) {
+			positionTreeList.add(c.toMajorTreeItem(tree));
+			System.out.println(c.getCategoryID());
+		}
+		Category [] subC = instance.seperateSubCategories(buffer);
+		//TODO sort by id
+		subC = sortCategoryByID(subC);
+		for (Category c : subC) {
+			System.out.println(c.getCategoryID());
+		}
+		
+		
+		for (Category c : subC) {
+			
+			positionTreeList.add(c.toSubTreeItem(findTreeItemWithID(c.getParentCategory())));
+		}
+		
+//		for (String s : idspuffer) {
+//			System.out.println("-->" + s);
+//		}
+		
+	}
+	
+	private void findParentCategory(String Parent_ID) {
+		Category cat = instance.searchForCategory(Parent_ID);
+		//category in liste aufnehmen
+		if (!(catpuffer.contains(cat))) {
+			instance.catpuffer.add(cat);
+		}
+		//rekursive Suche nach Parent bis Kategorie keinen mehr hat
+		if (!(cat.getParentCategory().equals("-1"))) {
+//			System.out.println("xxx" + cat.getParentCategory());
+			findParentCategory(cat.getParentCategory());
+		}
+	}
+	
+	private TreeItem findTreeItemWithID(String Category_ID) {
+		for (TreeItem t : instance.positionTreeList) {
+			
+			String [] buf = (String[]) t.getData();
+			if (buf[0].equals(Category_ID)) {
+//				System.out.println("buf[0]  " + buf[0]);
+				return t;
+				
+				
+//				System.out.println("buf[0]  " + buf[0]);
+//				System.out.println("buf[1]  " + buf[1]);
+//				System.out.println("buf[2]  " + buf[2]);
+//				System.out.println("CatID  " + Category_ID);
+
+			}
+		}
+		System.out.println("---" +Category_ID);
+		System.out.println("fekvblkgrdvhk");
+		return null;
+	}
+	
 	
 	/**
 	 * TODO finish Method, Treeitems has to be build top-down, therefore a StringArray is needed or the hashMap must be used correctly
@@ -259,6 +487,8 @@ public class Controller {
 			throw new SQLException("Datenbankfehler beim Importieren der Firmenliste: " + e.getMessage());
 		}
 	}
+	
+	
 
 // GUI triggered Methods
 
@@ -353,34 +583,66 @@ public class Controller {
 		return positionTree;
 	}
 	
-	/**
-	 * TODO right exception?? - Felix: which exception?
-	 * method searches for a category using its ID
-	 * @param ID
-	 * @return TreeItem
-	 * @throws SQLException
-	 */
-	public TreeItem searchForCategory(String ID) {
-		for(int j = 0; j<this.mainCategoryList.length; j++){
-//			if(this.mainCategoryList[j].getText()==ID){
-////				return this.mainCategoryList[j];
-//			}
-		}
-		return null;
-	}
 	
 	/**
 	 * TODO Finish this method with exception, if it is needed for searching a Company - Felix: which exception??
 	 * @param ID
 	 * @return
 	 */
-	public Company searchForCompany(String ID){
-		for(int j = 0; j<this.companyList.length; j++){
-			if(this.companyList[j].getCompanyID()==ID){
-				return this.companyList[j];
+	public Category searchForCategory(String Cat_ID){
+		for (Category a : instance.categoryList) {
+			if (a.getCategoryID().equals(Cat_ID)) {
+				return a;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * TODO 
+	 * @param 
+	 * @return
+	 */
+	public Assignment searchForID(String Assingtment_ID){
+		for (Assignment a : instance.assignmentHandler.getAssignmentList()) {
+			if (a.getAssignmentID().equals(Assingtment_ID)) {
+				return a;
+			}
+		}
+		return null;
+	}
+	
+	private Category [] sortCategoryByID(Category [] cats) {
+	
+//		
+//		Category [] buf = new Category [cats.length];
+//		int temp = 0;
+//		int smallest = -1;
+//		for (int x = 0; 0 < buf.length; x++) {
+//			for (Category c : cats) {
+//				if (smallest == -1) {
+//					smallest = Integer.parseInt(c.getCategoryID());
+//				}
+//				else {
+//					if (Integer.parseInt(c.getCategoryID()) < smallest) {
+//						smallest = Integer.parseInt(c.getCategoryID());
+//						buf[x] = c;
+//					}
+//				}
+//			}
+//		}
+//		
+		Arrays.sort(cats, new Comparator<Category>(){
+
+			@Override
+			public int compare(Category arg0, Category arg1) {
+				return arg0.getCategoryID().compareTo(arg1.getCategoryID());
+			}
+			
+		});
+		
+		return cats;	
+		
 	}
 
 	
@@ -405,6 +667,26 @@ public class Controller {
 
 	public dbHandler getDbHandler() {
 		return dbHandler;
+	}
+
+
+	public ArrayList<TreeItem> getPositionTreeList() {
+		return positionTreeList;
+	}
+
+
+	public void setPositionTreeList(ArrayList<TreeItem> positionTreeList) {
+		this.positionTreeList = positionTreeList;
+	}
+
+
+	public ArrayList<Category> getNeededCategoryList() {
+		return neededCategoryList;
+	}
+
+
+	public void setNeededCategoryList(ArrayList<Category> neededCategoryList) {
+		this.neededCategoryList = neededCategoryList;
 	}
 
 

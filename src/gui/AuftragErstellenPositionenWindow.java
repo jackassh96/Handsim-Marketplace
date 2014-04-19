@@ -1,9 +1,15 @@
 package gui;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
+
 import swing2swt.layout.BorderLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
@@ -21,15 +27,24 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import processing.Controller;
+import processing.data.Category;
+import processing.dataBase.dbHandler;
+
 public class AuftragErstellenPositionenWindow extends Shell {
 
 	/**
 	 * Create the shell.
 	 * @param display
+	 * @throws Exception 
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public AuftragErstellenPositionenWindow() {
+	public AuftragErstellenPositionenWindow() throws SQLException, IOException, Exception {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
+		
+		Controller controller = Controller.getInstance();
 		
 		Composite LowContainer = new Composite(this, SWT.NONE);
 		LowContainer.setLayoutData(BorderLayout.SOUTH);
@@ -142,6 +157,19 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Tree InputTree = new Tree(MiddleMainContainer, SWT.BORDER);
 		InputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+//		TreeColumn tc = new TreeColumn(InputTree, SWT.NORMAL);
+		
+		//TODO userdata
+		controller = controller.init(null, new dbHandler());
+		controller.buildTreeFromMajorCategories(InputTree);
+//		test.builTreeWithPositons("12345", InputTree);
+//		for (TreeItem t : test.getPositionTreeList()) {
+//			System.out.println(t.getText());
+//		}
+//		
+//		for (Category t : test.getNeededCategoryList()) {
+//			System.out.println(t.getTitle());
+//		}
 		
 		Tree OutputTree = new Tree(MiddleMainContainer, SWT.BORDER);
 		OutputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
