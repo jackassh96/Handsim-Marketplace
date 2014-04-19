@@ -29,11 +29,10 @@ public class Company {
 			this.street = data[2];
 			this.number = data[3];
 			this.postCode = Integer.parseInt(data[4]);
-			this.city = data[5];
-			this.owner = data[6];
-			this.phone = data[7];
-			this.eMail = data[8];
-			this.description = data[9];
+			this.owner = data[5];
+			this.phone = data[6];
+			this.eMail = data[7];
+			this.description = data[8];
 		}catch(NumberFormatException e){
 			throw new NumberFormatException("String im Array kann nicht in Integer umgewandelt werden. Datenkonsistenz checken" + e.getMessage());
 		}

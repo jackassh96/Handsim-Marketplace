@@ -8,12 +8,14 @@ public class Offer {
 //Attributes
 	
 	private String offerID;
+	private String assignmentID;
+	private String companyID;
 	private double price;
 	private String amountOfTimeNeeded;
-	private String status;
-	private Company company;
-	private DatumFull date;
 	private String description;
+	private String date;
+	private String status;
+	
 
 //Constructor
 	/**
@@ -23,24 +25,25 @@ public class Offer {
 	 */
 	public Offer(String[] data) throws Exception{
 		this.offerID = data[0];
+		this.assignmentID = data[1];
+		this.companyID = data[2];
 		this.price = Double.parseDouble(data[3]);
 		this.amountOfTimeNeeded = data[4];
-		this.status = data[7];
-		this.company = Controller.getInstance().searchForCompany(data[2]);
-		String[] dateData = data[6].split(".");
-		this.date = new DatumFull(dateData[2], dateData[1], dateData[0]);
 		this.description = data[5];
+		this.date = data[6];
+		this.status = data[7];
 	}
 	
-	public Offer(String offerID, double price, String amountOfTimeNeeded,
-			String status, Company company, DatumFull date, String description) {
+	public Offer(String offerID, String companyID, double price, String amountOfTimeNeeded,
+			String status, String date, String description, String state) {
 		this.offerID = offerID;
+		this.companyID = companyID;
 		this.price = price;
 		this.amountOfTimeNeeded = amountOfTimeNeeded;
-		this.status = status;
-		this.company = company;
+		this.status = state;
 		this.date = date;
 		this.description = description;
+		this.status = status;
 	}
 
 //Getters and Setters
@@ -77,19 +80,11 @@ public class Offer {
 		this.status = status;
 	}
 
-	public Company getCompany() {
-		return company;
-	}
-
-	public void setCompany(Company company) {
-		this.company = company;
-	}
-
-	public DatumFull getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(DatumFull date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

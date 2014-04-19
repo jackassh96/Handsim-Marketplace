@@ -1,22 +1,25 @@
-package dataBase;
-
-import helper.DatumFull;
+package processing.dataBase;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import sun.misc.BASE64Encoder;
-import java.security.MessageDigest;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.swing.text.Position;
 
-import org.apache.commons.codec.EncoderException;
-import org.eclipse.jface.bindings.keys.ParseException;
+import processing.data.OfferHandler;
+import processing.helper.DatumFull;
+import sun.misc.BASE64Encoder;
+import sun.security.pkcs.EncodingException;
+
 
 public class dbHandler {
 
@@ -238,8 +241,8 @@ public class dbHandler {
 		Connection con = setUpConnection();
 		boolean correct = false; 
 		try {
-				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE Nutzername=\"" + username + "\" AND Passwort =\"" + password + "\"");
-				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE Nutzername=\"" + username + "\" AND Passwort =\"" + password + "\"");
+				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Passwort =\"" + password + "\"");
+				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Passwort =\"" + password + "\"");
 				correct = neu.first();
 		}
 		catch (SQLException ex) {
@@ -265,8 +268,8 @@ public class dbHandler {
 		boolean exists = false;
 		Connection con = setUpConnection();
 		try {
-				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE Nutzername=\"" + username  + "\"");
-				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE Nutzername=\"" + username + "\"");
+				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username  + "\"");
+				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\"");
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
@@ -274,6 +277,53 @@ public class dbHandler {
 		}
 		finally { con.close(); }
 		return exists;
+	}
+	
+	/**
+	 * Loads specific user data from database table
+	 *  
+	 * @param  Username		
+	 * @param  Password		
+	 * 
+	 * @return boolean			returns true if user already exists, otherwise false
+	 *  
+	 * @throws IOException		input data or output statement is corrupt 
+	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 */ 
+	public String [] loadUserData(String User_id) throws SQLException, IOException {
+		boolean exists = false;
+		ResultSet neu = null;
+		String [] rowStr = null;
+		
+		Connection con = setUpConnection();
+		try {
+				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + User_id  + "\"");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + User_id + "\"");
+				exists = neu.first();
+				//TODO evaluate exists
+		}
+		catch (SQLException ex) {
+			throw new IOException("Datenbankabfrage gescheitert :(!\n" + ex.getMessage()); //TODO write Errortext
+		}
+		finally { 
+			
+			
+			rowStr = new String[12];
+			rowStr[0] = neu.getNString("User_ID");
+			rowStr[1] = neu.getNString("Password");
+			rowStr[2] = neu.getNString("First_Name");
+			rowStr[3] = neu.getNString("Last_Name");
+			rowStr[4] = neu.getNString("Street");
+			rowStr[5] = neu.getNString("Number");
+			rowStr[6] = String.valueOf(neu.getInt("Post_Code"));
+			rowStr[7] = neu.getNString("City");
+			rowStr[8] = neu.getNString("Email");
+			rowStr[9] = neu.getNString("Phone");
+			rowStr[10] = neu.getNString("Company");
+			rowStr[11] = neu.getNString("Gender");
+			con.close();
+			 }
+		return rowStr;
 	}
 
 	/**
@@ -285,10 +335,9 @@ public class dbHandler {
 	 * 
 	 * @throws EncoderException		if encoding didn't work 
 	 */ 
-	public String encodePw(String password) throws ParseException, EncoderException {
+	public String encodePw(String password) throws ParseException, EncodingException {
 		
 		String randomString = "RaJzEkTSFRbW54oBwkfryQ"; 
-		
 		try {
 		      // byte-Array erzeugen
 		      byte[] key = (randomString).getBytes("UTF-8");
@@ -315,7 +364,7 @@ public class dbHandler {
 	      }
 	      catch (Exception ex) {
 	    	  //TODO throw new WasAuchImmerException -> nothing to do hard error!
-	    	  throw new EncoderException(""); //TODO fix error msg
+	    	  throw new EncodingException(""); //TODO fix error msg
 	      }
 		
 		return randomString;
@@ -626,11 +675,12 @@ public class dbHandler {
 			do {
 				//TODO ID needed?
 				//(`Position_ID`, `Category`, `Description`, `Amount`)
-				String [] rowStr = new String[4];
+				String [] rowStr = new String[5];
 				rowStr[0] = String.valueOf(neu.getInt("Position_ID"));
 				rowStr[1] = String.valueOf(neu.getInt("Category_ID"));
-				rowStr[2] = neu.getNString("Description");
-				rowStr[3] = neu.getNString("Amount");
+				rowStr[2] = String.valueOf(neu.getInt("Assignment_ID"));
+				rowStr[3] = neu.getNString("Description");
+				rowStr[4] = neu.getNString("Amount");
 				
 				hPositionMap.put(String.valueOf(i), rowStr);
 				i++;
