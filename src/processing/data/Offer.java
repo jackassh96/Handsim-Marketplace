@@ -8,8 +8,8 @@ public class Offer {
 //Attributes
 	
 	private String offerID;
-	private String assignmentID;
-	private String companyID;
+	private String assignmentID;//Felix: Getter / Setter
+	private String companyID; //Felix: Getter / Setter
 	private double price;
 	private String amountOfTimeNeeded;
 	private String description;

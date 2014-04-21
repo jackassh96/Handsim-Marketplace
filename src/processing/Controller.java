@@ -33,7 +33,7 @@ public class Controller {
 	
 	private User activeUser;
 	//WOZU? GUI MUSS NUR DEN CONTROLLER KENNEN
-//	private CSPmainWindows mainWindow;	TODO
+//	private CSPmainWindows mainWindow;	TODO --> Felix: gute Frage, fällt mir gerade auch kein Anwendungsfall ein. Wahrscheinlich wirklich unnötig...
 	private Company[] companyList;
 	private Category[] categoryList;
 	private Category[] majorCategoryList;
@@ -47,7 +47,7 @@ public class Controller {
 	ArrayList<String> idspuffer = new ArrayList<>();
 	ArrayList<Category> catpuffer = new ArrayList<>();
 	
-	//WARUM ? KEIN ATTRIBUT DES CONTROLLER! TODO
+	//WARUM ? KEIN ATTRIBUT DES CONTROLLER! TODO --> Felix: ich dachte das wird benötigt, um den LoginController zu triggern, wenn der User sich ausloggt oder löscht...
 //	private LoginController loginController;
 
 // Singleton methods and attributes
@@ -55,7 +55,7 @@ public class Controller {
 	private static Controller instance;
 
 	
-	//TODO WARUM? WOZU SOLLTE DAS BENÖTIGT WERDEN? 
+	//TODO WARUM? WOZU SOLLTE DAS BENÖTIGT WERDEN? --> Felix: Man macht bei Singletons einen privaten Constructor, weil ansonsten der Constructor von der Vaterklasse genommen wird und der Constructor von Object ist public, das ist für ein Singleton aber eben nicht gewollt, da sonst mehrere Instanzen erzeugt werden könnten. Deswegen gibt es einen Constructor, auch wenn er leer ist.
 	/**
 	 * Constructor is private (Singleton).
 	 */
@@ -72,7 +72,7 @@ public class Controller {
 		return instance;
 	}
 
-	// Init methods
+// Init methods
 
 	/**
 	 * Gives the caller the singleton instance and (re)creates the attributes.
@@ -85,7 +85,7 @@ public class Controller {
 	 * @throws SQLException
 	 * @throws Exception  
 	 */
-	//TODO warum den dbHandler übergeben???
+	//TODO warum den dbHandler übergeben??? --> Felix: Irgendwo her muss der ja kommen und wir hatten gesagt, dass es wahrscheinlich besser ist, das gleiche Objekt für LoginController und Controller zu nehmen (wegen Konsistenzgeschichten, etc.). Daher erzeugt der Controller den DBHandler nicht selbst sondern bekommt ihn vom LoginController.
 	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
 		instance = Controller.getInstance();
 		instance.serviceTreeList = new ArrayList<>();
@@ -196,7 +196,7 @@ public class Controller {
 				}
 			}
 			Category [] subCats = new Category[buf.size()];
-			//gemerkte Arraylist in array �berf�hren
+			//gemerkte Arraylist in array �berf�hren
 			for (int i = 0; i < buf.size(); i++) {
 				subCats[i] = buf.get(i);
 			}
@@ -214,26 +214,39 @@ public class Controller {
 	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
 	private Category [] seperateMajorCategories(Category [] Categories) throws SQLException, IOException { 
+//		ArrayList<Category> buf = new ArrayList<>();
+//		Category [] result = Categories; //Was macht das genau? sehe da den Sinn nicht sonderlich...
+//		int j = 0;
+//		//durch das gesamte array laufen
+//		for (Category c : Categories) {
+//			
+//			if (c.getParentCategory().equals("-1")) {
+//				buf.add(c);
+//			}
+//		}
+//		Category [] majorCats = new Category[buf.size()];
+//		//gemerkte Arraylist in array �berf�hren --> Felix: Tipp: ArrayList hat auch eine Methode, die die ArrayList in ein Array verwandelt ;)
+//		for (int i = 0; i < buf.size(); i++) {
+//			majorCats[i] = buf.get(i);
+//		}
+//		//ermittelte subcategory liste ins finale array schreiben 
+//		result = majorCats;
+//		j++;
+//		
+//		return result;
+		
+//Felix: habe mal meine Lösung drunter gesetzt. Macht nichts anderes, sieht aber etwas schöner aus ;)
+//Felix: Aber natürlich sind da noch die ToDo's. Über die habe ich nicht so den Überblick, kann sein dass wir da das alte noch brauchen...
 		ArrayList<Category> buf = new ArrayList<>();
-		Category [] result = Categories;
-		int j = 0;
+		
 		//durch das gesamte array laufen
 		for (Category c : Categories) {
 			
 			if (c.getParentCategory().equals("-1")) {
 				buf.add(c);
-			}
-		}
-		Category [] majorCats = new Category[buf.size()];
-		//gemerkte Arraylist in array �berf�hren
-		for (int i = 0; i < buf.size(); i++) {
-			majorCats[i] = buf.get(i);
-		}
-		//ermittelte subcategory liste ins finale array schreiben 
-		result = majorCats;
-		j++;
-		
-		return result;
+		}	}
+		//ArrayList als Category Array zurückgeben. die toArray-Methode gibt ein Object-Array zurück, deswegen muss das gecastet werden.
+		return (Category[]) buf.toArray();
 	}
 	
 	/**
@@ -254,7 +267,7 @@ public class Controller {
 			}
 		}
 		Category [] majorCats = new Category[buf.size()];
-		//gemerkte Arraylist in array �berf�hren
+		//gemerkte Arraylist in array �berf�hren
 		for (int i = 0; i < buf.size(); i++) {
 			majorCats[i] = buf.get(i);
 		}
@@ -275,7 +288,7 @@ public class Controller {
 		Category [] majCats = instance.majorCategoryList;
 		//durch major categories laufen um subkategorien zu erhalten
 		for (Category c : majCats) {
-			//Treeitem erzeugen f�r major categories
+			//Treeitem erzeugen f�r major categories
 			TreeItem x = c.toMajorTreeItem(tree);
 			serviceTreeList.add(x);
 			for (Category ca : c.getSubCategories()) {
@@ -284,6 +297,13 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * TODO documentation
+	 * @param category
+	 * @param treeitem
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	private void createSubTreeItems(Category category, TreeItem treeitem) throws SQLException, IOException { 
 		Category [] cats = category.getSubCategories();
 //		TreeItem tI = new TreeItem(treeitem, SWT.NONE);
@@ -294,6 +314,13 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * TODO documentation
+	 * @param Assignment_ID
+	 * @param tree
+	 * @throws SQLException
+	 * @throws IOException
+	 */
 	public void builTreeWithPositons(String Assignment_ID, Tree tree) throws SQLException, IOException { 
 		Assignment assign = instance.searchForID(Assignment_ID);
 		Position [] positions = assign.getPositionList();
@@ -309,7 +336,7 @@ public class Controller {
 		}
 		//TODO baum bauen
 
-		//arrayList in Array �berf�hren
+		//arrayList in Array �berf�hren
 		Category [] buffer = new Category[catpuffer.size()];
 		int i = 0;
 		for (Category c : catpuffer) {
@@ -345,6 +372,10 @@ public class Controller {
 		
 	}
 	
+	/**
+	 * TODO documentation
+	 * @param Parent_ID
+	 */
 	private void findParentCategory(String Parent_ID) {
 		Category cat = instance.searchForCategory(Parent_ID);
 		//category in liste aufnehmen
@@ -358,6 +389,11 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * TODO documentation
+	 * @param Category_ID
+	 * @return
+	 */
 	private TreeItem findTreeItemWithID(String Category_ID) {
 		for (TreeItem t : instance.positionTreeList) {
 			
@@ -385,8 +421,7 @@ public class Controller {
 	 * This Method imports all Positions 
 	 * @throws SQLException Exception is thrown when a data base connection error occurs.
 	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
-	 */
-	
+	 */	
 	private Position [] importPositionsForAssignment(String Assignment_ID) throws SQLException, IOException { 
 		HashMap<String, String[]> dataFromDB = dbHandler.getPositionList(Assignment_ID);
 		Position [] result = new Position[dataFromDB.size()];
@@ -545,6 +580,8 @@ public class Controller {
 			OfferHandler offerHandler, String description, DatumFull dateOfCreation,
 			DatumFull deadline, String status, String title) {
 
+		//TODO Felix: Wäre fast auch schöner in der Verarbeitungsschicht mit einer Arraylist zu arbeiten?!
+		
 //		// Creation of the new assignment initialized from the GUI
 //		Assignment newAssignment = new Assignment(assignmentID, positionList,
 //				offerHandler, description, dateOfCreation, deadline, status,

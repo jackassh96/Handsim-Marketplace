@@ -21,6 +21,9 @@ public class Category {
 		this.title = title;
 		this.parentCategory = parentCategory;
 	}
+
+	
+	//Public Methods
 	
 	public TreeItem toMajorTreeItem(Tree tree) {
 		TreeItem trItem = new TreeItem(tree, SWT.NONE);
