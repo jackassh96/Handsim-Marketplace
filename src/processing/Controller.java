@@ -25,6 +25,41 @@ import processing.helper.DatumFull;
 
 public class Controller {
 
+	/**
+	 * GENERAL TODO's: (NEEDS DISCUSSION AND AGREEMENT)
+	 * 
+	 ********** GUI
+	 * 
+	 * -> triggering gui:
+	 * 			o start man window
+	 * 			o close main window
+	 * 			o close main window and start login again
+	 * 
+	 * -> generate TableItems:
+	 * 			o my Assignments (short version for dashboard)
+	 * 			o next Dates
+	 * 			o companies
+	 * 			o my Assignments (detailed list)
+	 * 			
+	 * -> generate Strings:
+	 * 			o my Profile
+	 * 
+	 * 
+	 *************** DB 
+	 * 
+	 * -> triggering db actions
+	 * 			o create User
+	 * 			o update User
+	 * 			o delete User
+	 * 			o create Assignment
+	 * 			o updateAssignmen
+	 * 			o delete Assignment
+	 * 			o updateOffer
+	 * 			o createPosition
+	 */
+	
+	
+	
    /*
 	* Attributes
 	*/
@@ -80,9 +115,9 @@ public class Controller {
 	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
 		instance = Controller.getInstance();
 		//initialize helper lists
-		instance.serviceTreeList = new ArrayList<>(); //TODO
-		instance.positionTreeList = new ArrayList<>(); //TODO
-		instance.neededCategoryList = new ArrayList<>(); //TODO
+		instance.serviceTreeList = new ArrayList<>(); //TODO reset when method is called
+		instance.positionTreeList = new ArrayList<>(); //TODO reset when method is called
+		instance.neededCategoryList = new ArrayList<>(); //TODO reset when method is called
 		
 		instance.dbHandler = dbHandler;
 		instance.activeUser = instance.importUser("max32");  //TODO remove hard coded name when login is implemented
