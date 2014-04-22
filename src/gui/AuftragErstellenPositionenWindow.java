@@ -183,7 +183,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				TreeItem[] selectedItems = inputTree.getSelection();
 				for(TreeItem item : selectedItems){
-					System.out.println(item.getText());
+					
 				}
 			}
 		});
