@@ -24,14 +24,28 @@ public class ControllerTest {
 	public static void main(String[] args) throws SQLException, IOException, Exception {
 		// TODO Auto-generated method stub
 
+		
 		Controller neu = Controller.getInstance();
 		dbHandler ner = new dbHandler();
-		String [] x = ner.loadUserData("max32");
 		
+		/**
+		 * 
+		 * 
+		 * 
+		 */
+		
+		
+		
+//		PRINT ALL USER INFOS
+//		
+//		String [] x = ner.loadUserData("max32");
+//		
 //		for (String a : x ) {
 //			System.out.println(a);
 //		}
-		neu.init(x, new dbHandler());
+//		
+//		
+//		neu.init(x, new dbHandler());
 		
 		
 		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();

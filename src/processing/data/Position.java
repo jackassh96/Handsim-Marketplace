@@ -13,9 +13,8 @@ public class Position {
 
 //Constructor	
 	
-	public Position(String positionID, String category_ID,
-			String assignment_ID, String description, String amount) {
-		this.positionID = positionID;
+	public Position(String category_ID, String assignment_ID, String description, String amount) {
+//		this.positionID = positionID;
 		this.category_ID = category_ID;
 		this.assignment_ID = assignment_ID;
 		this.description = description;

@@ -16,7 +16,7 @@ public class Offer {
 	private String date;
 	private String status;
 	
-
+		
 //Constructor
 	/**
 	 * @Exception TODO 
@@ -35,12 +35,11 @@ public class Offer {
 	}
 	
 	public Offer(String offerID, String companyID, double price, String amountOfTimeNeeded,
-			String status, String date, String description, String state) {
+			String status, String date, String description) {
 		this.offerID = offerID;
 		this.companyID = companyID;
 		this.price = price;
 		this.amountOfTimeNeeded = amountOfTimeNeeded;
-		this.status = state;
 		this.date = date;
 		this.description = description;
 		this.status = status;
