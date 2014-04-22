@@ -31,7 +31,7 @@ public class AuftragsansichtWindow extends Shell {
 	public AuftragsansichtWindow(String assignmentID) {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
-		
+//		
 		Controller controller = Controller.getInstance();
 		controller.searchForID(assignmentID);//TODO sollte nicht Assignment kennen
 		
