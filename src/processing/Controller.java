@@ -9,11 +9,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import processing.data.Assignment;
 import processing.data.Category;
+import processing.data.Offer;
 import processing.data.OfferHandler;
 import processing.data.Position;
 import processing.data.User;
@@ -31,31 +33,45 @@ public class Controller {
 	 ********** GUI
 	 * 
 	 * -> triggering gui:
-	 * 		Tobi	o start main window
-	 * 		Tobi	o close main window
-	 * 		Tobi	o close main window and start login again
+	 * 	Tobi	o start main window
+	 * 	TOBI	o close main window
+	 * 	TOBI	o close main window and start login again
+	 * 
+	 * ----------------------
 	 * 
 	 * -> generate TableItems:
-	 * 			o my Assignments (short version for dashboard)
-	 * 			o next Dates
-	 * 			o companies
+	 * 			o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
+	 * 			o next Dates											-> 
+	 * 			o companies												
 	 * 			o my Assignments (detailed list)
+	 * 			o generate offer list (database action)
+	 * 
 	 * 			
 	 * -> generate Strings:
 	 * 			o my Profile
+	 * 			o specific Assignment
+	 * 			o specific Offer
+	 * 			o specific Company
 	 * 
 	 * 
 	 *************** DB 
 	 * 
-	 * -> triggering db actions
-	 * 			o create User
-	 * 			o update User
-	 * 			o delete User
-	 * 			o create Assignment
-	 * 			o updateAssignmen
-	 * 			o delete Assignment
-	 * 			o updateOffer
-	 * 			o createPosition
+	 * -> triggering database actions
+	 * 			o create User  			->login controller
+	 * 	nT	x	o update User
+	 * 			o delete User			->login controller
+	 * 	nT	x	o create Assignment
+	 * 	nT	x	o update Assignment
+	 * 	nT	x	o delete Assignment
+	 * 	nT	x	o update Offer
+	 * 	nT  x	o generate Offer list
+	 * 		x	o create Position
+	 * 
+	 * 
+	 * 	x = implemented
+	 * nT = not tested yet
+	 *  
+	 * 
 	 */
 	
 	
@@ -69,7 +85,6 @@ public class Controller {
 	private Company[] companyList;
 	private Category[] categoryList;
 	private Category[] majorCategoryList;
-	private ArrayList<Category> neededCategoryList;
 	private AssignmentHandler assignmentHandler;
 	private dbHandler dbHandler;
 	private ArrayList<TreeItem> serviceTreeList;
@@ -117,7 +132,6 @@ public class Controller {
 		//initialize helper lists
 		instance.serviceTreeList = new ArrayList<>(); //TODO reset when method is called
 		instance.positionTreeList = new ArrayList<>(); //TODO reset when method is called
-		instance.neededCategoryList = new ArrayList<>(); //TODO reset when method is called
 		
 		instance.dbHandler = dbHandler;
 		instance.activeUser = instance.importUser("max32");  //TODO remove hard coded name when login is implemented
@@ -324,7 +338,17 @@ public class Controller {
 		//sort by id
 		subC = sortCategoryByID(subC);		
 		for (Category c : subC) {
-			positionTreeList.add(c.toSubTreeItem(findTreeItemWithID(c.getParentCategory())));
+			TreeItem tItem = c.toSubTreeItem(findTreeItemWithID(c.getParentCategory()));
+			//TODO test!
+			if (c.getSubCategories().length < 1) {
+				for ( Position p : positions) {
+					if (p.getCategory_ID().equals(c.getCategoryID())) {
+						String [] vals = {c.getTitle(), p.getAmount(),p.getDescription()};
+						tItem.setText(vals);
+					}
+				}
+			}
+			positionTreeList.add(tItem);
 		}
 		
 	}
@@ -386,7 +410,7 @@ public class Controller {
 				buf[i] = x;	
 				i++;
 			}
-			result[j] = new Position(buf[0], buf[1], buf[2], buf[3], buf[4]); 
+			result[j] = new Position(buf[1], buf[2], buf[3], buf[4]); 
 		}
 		return result;
 }
@@ -413,10 +437,11 @@ public class Controller {
 				i++;
 			}
 			Position [] temp = importPositionsForAssignment(buf[0]);
-			result[j] = new Assignment(buf[0], temp, buf[1], buf[2], buf[3], buf[4], buf[5]); 
+			result[j] = new Assignment(buf[0], temp, buf[1], buf[2], buf[3], buf[4], buf[5], buf[6]); 
 		}
 		this.assignmentHandler = new AssignmentHandler(result);
 		}
+	
 
 	
 
@@ -451,6 +476,33 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Generates Offer Array for a specific assignment
+	 * TODO TES!!
+	 * @param  assignment_ID	id to filter specific offers from database
+	 * 
+	 * @throws SQLException 	Exception is thrown when a data base connection error occurs.
+	 * @throws IOException 		Exception is thrown when corrupt data is imported from the data base
+	 */
+	private Offer [] generateOfferlistforAssignment(String assignment_ID) throws SQLException, IOException {
+		HashMap<String,String[]> offerDataFromDB = dbHandler.getOffer(assignment_ID);
+		
+		Offer [] result = new Offer[offerDataFromDB.size()];
+		String [] buf = new String[offerDataFromDB.get(String.valueOf(0)).length];
+		
+		for (int j = 0; j < offerDataFromDB.size(); j++) {
+			
+			int i = 0;
+			for (String x : offerDataFromDB.get(String.valueOf(j))) {
+				buf[i] = x;	
+				i++;
+			}
+
+			result[j] = new Offer(buf[0], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
+		}
+		return result;
+		}
+	
 	
 
 // GUI triggered Methods TODO's!!!
@@ -464,11 +516,10 @@ public class Controller {
 	 * @throws SQLException Exception is thrown when a data base connection error occurs.
 	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	public void editUser(User updatedUser) throws SQLException, IOException {
-		this.activeUser = updatedUser;
-		//TODO 
-//		dbHandler.updateUser(Username, Password, Vorname, Nachname, Strasse, Hausnummer, Postleitzahl, Stadt, Email, Telefonnummer, Firma, Geschlecht)
-		
+	public void updateUser(String Username, String Password, String Vorname, String Nachname, String Strasse,
+						 String Hausnummer, String Postleitzahl, String Stadt, String Email, String Telefonnummer,
+						 String Firma, String Geschlecht) throws SQLException, IOException { 
+		dbHandler.updateUser(Username, Password, Vorname, Nachname, Strasse, Hausnummer, Postleitzahl, Stadt, Email, Telefonnummer, Firma, Geschlecht);
 	}
 
 	/**
@@ -479,22 +530,14 @@ public class Controller {
 	 */
 	public void deleteUser() throws SQLException, IOException {
 		dbHandler.deleteUser(activeUser.getUserID());
-		logOff();
-	}
-	
-	/**
-	 * Logs the user off and returns to the login screen
-	 */
-	public void logOff() {
-		// TODO GUI schliessen
-		//
-		LoginController l = new LoginController();
-		l.showLoginScreen();
+		//logOff(); //TODO
 	}
 
 	/**
 	 * This method creates a new Assignment from data entered into the GUI and appends it to the assignmentHandler's list.
-	 * TODO Tobi - implement the assignment creation in GUI (also with positionList)
+	 * 
+	 * TODO TEST! 
+	 * 
 	 * @param assignmentID All parameters according to the attributes of the assignment object.
 	 * @param positionList
 	 * @param offerHandler
@@ -503,29 +546,139 @@ public class Controller {
 	 * @param deadline
 	 * @param status
 	 * @param title
+	 * 
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public void createAssignment(String assignmentID, TreeItem[] positionList,
-			OfferHandler offerHandler, String description, DatumFull dateOfCreation,
-			DatumFull deadline, String status, String title) {
-
-//		// Creation of the new assignment initialized from the GUI
-//		Assignment newAssignment = new Assignment(assignmentID, positionList,
-//				offerHandler, description, dateOfCreation, deadline, status,
-//				title);
+	public void createAssignment(String assignmentID, Position[] positionList, String description, String dateOfCreation,
+								String deadline, String status, String title, String dueDate) throws SQLException, IOException {
+		//add object to handler
+		// Creation of the new assignment initialized from the GUI
+		Assignment newAssignment = new Assignment(assignmentID, positionList, description, dateOfCreation, deadline, status, title, dueDate);
 
 		// Add the new assignment to the Controller's AssignmentList
 		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler.getAssignmentList().length + 1];
 		for (int j = 0; j < this.assignmentHandler.getAssignmentList().length; j++) {
 			newAssignmentList[j] = this.assignmentHandler.getAssignmentList()[j];
 		}
-//		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
+		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
 		this.assignmentHandler.setAssignmentList(newAssignmentList);
+		
+		//add entry in database
+		dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, deadline, status, title, dueDate);
 	}
 	
 	/**
-	 * TODO Finish this method with exception, if it is needed for searching a Company - Felix: which exception??
+	 * Updates a specific Assignment within the database
+	 * 
+	 * TODO TEST! 
+	 * 
+	 * @param assignmentID
+	 * @param status
+	 * 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	public void updateAssignment(String assignment_ID, String status) throws SQLException, IOException {
+		//update object in handler
+		for (Assignment a : assignmentHandler.getAssignmentList()) {
+			if (a.getAssignmentID().equals(assignment_ID)) {
+				a.setStatus(status);
+			}
+		}
+		//update entry in database
+		dbHandler.updateAssignmentStatus(assignment_ID, status);
+	}
+	
+	/**
+	 * Deletes a specific Assignment within the database (updates the status in database! no real deletion)
+	 * 
+	 * TODO TEST! 
+	 * 
+	 * @param assignmentID
+	 * @param status
+	 * 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	public void deleteAssignment(String assignment_ID) throws SQLException, IOException {
+		ArrayList<Assignment> list = new ArrayList<>();
+		//update object in handler
+		for (Assignment a : assignmentHandler.getAssignmentList()) {
+			if (!(a.getAssignmentID().equals(assignment_ID))) {
+				list.add(a);
+			}
+		}
+		int i = 0;
+		Assignment [] assigns = new Assignment[list.size()];
+		for (Assignment x : list) {
+			assigns[i] = x;
+			i++;
+		}
+		this.assignmentHandler.setAssignmentList(assigns);
+		//update entry in database
+		dbHandler.deleteAssignment(assignment_ID);
+	}
+	
+	/**
+	 * Updates a specific Assignment within the database
+	 * 
+	 * TODO TEST! 
+	 * 
+	 * @param offer id 
+	 * @param status
+	 * 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	public void updateOffer(String offer_ID, String status) throws SQLException, IOException {
+		//no local update needed just generate new offer list
+		//update entry in database
+		dbHandler.updateOfferStatus(offer_ID, status);
+	}
+	
+	/**
+	 * This method creates a new Position from data entered into the GUI and appends it to the assignment within assignmentHandler's list.
+	 * 
+	 * TODO TEST! 
+	 * 
+	 * @param position_ID
+	 * @param category_ID
+	 * @param assignment_ID
+	 * @param description
+	 * @param amount
+	 * 
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	public void createPosition(String category_ID, String assignment_ID, String description, String amount) throws SQLException, IOException {
+		//add object to handler
+		// Creation of the new Position initialized from the GUI
+		Position newPosition = new Position(category_ID, assignment_ID, description, amount);
+
+		// Add the new Position to the assignment
+		for (Assignment a : assignmentHandler.getAssignmentList()) {
+			if (a.getAssignmentID().equals(assignment_ID)) {
+				Position [] old = a.getPositionList();
+				Position [] buf  = new Position[a.getPositionList().length+1];
+				int i = 0;
+				for (Position p : old) {
+					buf[i] = old[i];
+					i++;
+				}
+				buf[i] = newPosition;
+			}
+		}
+		
+		//add entry in database
+		dbHandler.createPosition(category_ID, assignment_ID, description, amount);
+	}
+	
+	
+	/**
+	 * Gets specific category with given ID
 	 * @param ID
-	 * @return
+	 * @return Category 
 	 */
 	public Category searchForCategory(String Cat_ID){
 		for (Category a : instance.categoryList) {
@@ -565,46 +718,59 @@ public class Controller {
 		return cats;	
 		
 	}
+	
+//	o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
+//	 * 			o next Dates											-> 
+//	 * 			o companies												
+//	 * 			o my Assignments (detailed list)
+//	 * 			o generate offer list (database action)
 
+	//TODO'S
+	
+	public TableItem [] generateMyAssignmentTableItemsDashboard() {
+		return null;
+	}
+	
+	public TableItem [] generateCompanyTableItems() {
+		return null;
+	}
+	
+	public TableItem [] generateMyAssignmentTableItems() {
+		return null;
+	}
+	
+	public TableItem [] generateOfferTableItems() {
+		return null;
+	}
 	
 // Getters
 // No setters needed. Only setting possibility is through the init method
 	
-	public User getUser() {
-		return activeUser;
-	}
-	
-	public Company[] getCompanyList() {
-		return this.companyList;
-	}
-	
-	public AssignmentHandler getAssignmentHandler() {
-		return assignmentHandler;
-	}
-
-	public dbHandler getDbHandler() {
-		return dbHandler;
-	}
-
-
-	public ArrayList<TreeItem> getPositionTreeList() {
-		return positionTreeList;
-	}
-
-
-	public void setPositionTreeList(ArrayList<TreeItem> positionTreeList) {
-		this.positionTreeList = positionTreeList;
-	}
-
-
-	public ArrayList<Category> getNeededCategoryList() {
-		return neededCategoryList;
-	}
-
-
-	public void setNeededCategoryList(ArrayList<Category> neededCategoryList) {
-		this.neededCategoryList = neededCategoryList;
-	}
+//	public User getUser() {
+//		return activeUser;
+//	}
+//	
+//	public Company[] getCompanyList() {
+//		return this.companyList;
+//	}
+//	
+//	public AssignmentHandler getAssignmentHandler() {
+//		return assignmentHandler;
+//	}
+//
+//	public dbHandler getDbHandler() {
+//		return dbHandler;
+//	}
+//
+//
+//	public ArrayList<TreeItem> getPositionTreeList() {
+//		return positionTreeList;
+//	}
+//
+//
+//	public void setPositionTreeList(ArrayList<TreeItem> positionTreeList) {
+//		this.positionTreeList = positionTreeList;
+//	}
 
 
 }

@@ -421,21 +421,21 @@ public class dbHandler {
 	
 	/**
 	 * Creates assignment in database table	
-	 * TODO params
+	 * TODO params 
 	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
 	 *  
 	 * @throws IOException		if output statement is corrupt 
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */ 
-	public boolean createAssignment( String owner, Position[] positionList, OfferHandler  oHandler, String description, DatumFull dateOfCreation, DatumFull deadline , String status, String title, DatumFull dueDate) throws SQLException, IOException {
+	//	TODO TEST!
+	public boolean createAssignment( String owner, String description, String dateOfCreation, String deadline , String status, String title, String dueDate) throws SQLException, IOException {
 	Connection con = setUpConnection();
 	try {	//TODO fix statement to create database structure
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + assingmentTable + " " +
-														"( Assignment_ID, Owner, PositionList , OfferHandler , Description , DateOfCreation , Deadline , Status , Title , DueDate )" +
+														"( Assignment_ID, Owner, Description , DateOfCreation , Deadline , Status , Title , DueDate )" +
 														//set NULL for ID for auto_increment and automatically generated id
-														" VALUES ( NULL, \"" + owner + "\" , \"" + positionList + "\" , \"" + oHandler + "\" , \"" +
-																	description + "\" , \"" + dateOfCreation + "\" , \"" + deadline + "\" , \"" + status + "\" , \"" + 
-																	title + "\" , \"" + dueDate + "\" );");
+														" VALUES ( NULL, \"" + owner + "\" , \"" + description + "\" , \"" + dateOfCreation + "\" , \"" +
+														deadline + "\" , \"" + status + "\" , \"" + title + "\" , \"" + dueDate + "\" );");
 			pst.execute();
 	}
 	catch (SQLException ex) {
@@ -582,15 +582,15 @@ public class dbHandler {
 				//( Assignment_ID, Owner, PositionList , OfferHandler , Description , DateOfCreation , Deadline , Status , Title , DueDate )
 				String [] rowStr = new String[8];
 				rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
-				rowStr[1] = neu.getNString("Owner");
+//				rowStr[1] = neu.getNString("Owner");
 //				rowStr[2] = neu.getNString("PositionList");
 //				rowStr[3] = neu.getNString("OfferHandler");
-				rowStr[2] = neu.getNString("Description");
-				rowStr[3] = neu.getNString("DateOfCreation");
-				rowStr[4] = neu.getNString("Deadline");
-				rowStr[5] = neu.getNString("Status");
-				rowStr[6] = neu.getNString("Title");
-				rowStr[7] = neu.getNString("DueDate");
+				rowStr[1] = neu.getNString("Description");
+				rowStr[2] = neu.getNString("DateOfCreation");
+				rowStr[3] = neu.getNString("Deadline");
+				rowStr[4] = neu.getNString("Status");
+				rowStr[5] = neu.getNString("Title");
+				rowStr[6] = neu.getNString("DueDate");
 				
 				hAssignmentMap.put(String.valueOf(i), rowStr);
 				i++;
@@ -749,13 +749,14 @@ public class dbHandler {
 	 * @throws IOException		input or output statement is corrupt 
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */  
-	public boolean createPosition( String category, String description, String  amount) throws SQLException, IOException {
+	public boolean createPosition(String category_ID, String assignment_ID, String description, String amount) throws SQLException, IOException {
 	Connection con = setUpConnection();
 	try {	//TODO fix statement to create database structure
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + positionTable + " " +
-														"( Position_ID, Category, Description , Amount )" +
+														"( Position_ID, Category_ID, Assignment_ID, Description , Amount )" +
 														//set NULL for ID for auto_increment and automatically generated id
-														" VALUES ( NULL, \"" + category + "\" , \"" + description + "\" , \"" + amount + "\" );");
+														" VALUES ( NULL, \"" + category_ID + "\" , \"" + assignment_ID + "\" , \"" + description +
+														"\" , \"" + amount + "\" );");
 			pst.execute();
 	}
 	catch (SQLException ex) {

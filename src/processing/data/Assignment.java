@@ -13,6 +13,7 @@ public class Assignment {
 	private String deadline;
 	private String status;
 	private String title;
+	private String dueDate;
 
 /**
  * Constructor for an Assignment from the DB
@@ -84,7 +85,7 @@ public class Assignment {
  * @param title
  */
 	public Assignment(String assignmentID, Position[] positionList, String description, String dateOfCreation,
-			String deadline, String status, String title) {
+			String deadline, String status, String title, String dueDate) {
 
 		this.assignmentID = assignmentID;
 		this.setPositionList(positionList);
@@ -93,6 +94,7 @@ public class Assignment {
 		this.deadline = deadline;
 		this.status = status;
 		this.title = title;
+		this.dueDate = dueDate;
 	}
 
 // Getters and Setters
