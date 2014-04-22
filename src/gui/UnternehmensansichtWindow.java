@@ -39,100 +39,100 @@ public class UnternehmensansichtWindow extends Shell {
 		super(display, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
-		Composite UpperContainer = new Composite(this, SWT.NONE);
-		UpperContainer.setLayoutData(BorderLayout.NORTH);
-		UpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer.setLayoutData(BorderLayout.NORTH);
+		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftUpperContainer = new Composite(UpperContainer, SWT.NONE);
-		LeftUpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
+		leftUpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label UnternehmensnameLabel = new Label(LeftUpperContainer, SWT.NONE);
-		UnternehmensnameLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.BOLD));
-		UnternehmensnameLabel.setText("Unternehmensname");
+		Label unternehmensnameLabel = new Label(leftUpperContainer, SWT.NONE);
+		unternehmensnameLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.BOLD));
+		unternehmensnameLabel.setText("Unternehmensname");
 		
-		Composite RightUpperContainer = new Composite(UpperContainer, SWT.NONE);
-		RightUpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
+		rightUpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftRightUpperContainer = new Composite(RightUpperContainer, SWT.NONE);
+		Composite leftRightUpperContainer = new Composite(rightUpperContainer, SWT.NONE);
 		
-		Composite RightRightUpperContainer = new Composite(RightUpperContainer, SWT.NONE);
-		RightRightUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite rightRightUpperContainer = new Composite(rightUpperContainer, SWT.NONE);
+		rightRightUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label UnternehmensIDTextLabel = new Label(RightRightUpperContainer, SWT.NONE);
-		UnternehmensIDTextLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensIDTextLabel.setText("Unternehmens ID:");
+		Label unternehmensIDTextLabel = new Label(rightRightUpperContainer, SWT.NONE);
+		unternehmensIDTextLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensIDTextLabel.setText("Unternehmens ID:");
 		
-		Label UnternehmensIDLabel = new Label(RightRightUpperContainer, SWT.NONE);
-		UnternehmensIDLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensIDLabel.setText("Hier ID");
+		Label unternehmensIDLabel = new Label(rightRightUpperContainer, SWT.NONE);
+		unternehmensIDLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensIDLabel.setText("Hier ID");
 		
-		Composite MiddleContainer = new Composite(this, SWT.NONE);
-		MiddleContainer.setLayoutData(BorderLayout.CENTER);
-		MiddleContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite middleContainer = new Composite(this, SWT.NONE);
+		middleContainer.setLayoutData(BorderLayout.CENTER);
+		middleContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Composite composite_1 = new Composite(MiddleContainer, SWT.NONE);
+		Composite composite_1 = new Composite(middleContainer, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Composite composite = new Composite(composite_1, SWT.NONE);
 		composite.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label BesitzerNameLabel = new Label(composite, SWT.NONE);
-		BesitzerNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		BesitzerNameLabel.setText("Besitzer:");
+		Label besitzerNameLabel = new Label(composite, SWT.NONE);
+		besitzerNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		besitzerNameLabel.setText("Besitzer:");
 		
-		Label BesitzerLabel = new Label(composite, SWT.NONE);
-		BesitzerLabel.setText("Hier Besitzer");
+		Label besitzerLabel = new Label(composite, SWT.NONE);
+		besitzerLabel.setText("Hier Besitzer");
 		
-		Label TelefonNameLabel = new Label(composite, SWT.NONE);
-		TelefonNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		TelefonNameLabel.setText("Telefon:");
+		Label telefonNameLabel = new Label(composite, SWT.NONE);
+		telefonNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		telefonNameLabel.setText("Telefon:");
 		
-		Label TelefonLabel = new Label(composite, SWT.NONE);
-		TelefonLabel.setText("Hier Telefon");
+		Label telefonLabel = new Label(composite, SWT.NONE);
+		telefonLabel.setText("Hier Telefon");
 		
-		Label EmailNameLabel = new Label(composite, SWT.NONE);
-		EmailNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		EmailNameLabel.setText("E-Mail:");
+		Label emailNameLabel = new Label(composite, SWT.NONE);
+		emailNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		emailNameLabel.setText("E-Mail:");
 		
-		Label EmailLabel = new Label(composite, SWT.NONE);
-		EmailLabel.setText("Hier E-Mail");
+		Label emailLabel = new Label(composite, SWT.NONE);
+		emailLabel.setText("Hier E-Mail");
 		
 		Composite composite_2 = new Composite(composite_1, SWT.NONE);
 		composite_2.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Composite AddresseNameContainer = new Composite(composite_2, SWT.NONE);
-		AddresseNameContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite addresseNameContainer = new Composite(composite_2, SWT.NONE);
+		addresseNameContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label StraﬂeNameLabel = new Label(AddresseNameContainer, SWT.NONE);
-		StraﬂeNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		StraﬂeNameLabel.setText("Stra\u00DFe:");
+		Label straﬂeNameLabel = new Label(addresseNameContainer, SWT.NONE);
+		straﬂeNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		straﬂeNameLabel.setText("Straﬂe:");
 		
-		Label NummerNameLabel = new Label(AddresseNameContainer, SWT.NONE);
-		NummerNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		NummerNameLabel.setText("Nr.:");
+		Label nummerNameLabel = new Label(addresseNameContainer, SWT.NONE);
+		nummerNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		nummerNameLabel.setText("Nr.:");
 		
-		Composite AddresseContainer = new Composite(composite_2, SWT.NONE);
-		AddresseContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite addresseContainer = new Composite(composite_2, SWT.NONE);
+		addresseContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label StraﬂeLabel = new Label(AddresseContainer, SWT.NONE);
-		StraﬂeLabel.setText("Hier Stra\u00DFe");
+		Label straﬂeLabel = new Label(addresseContainer, SWT.NONE);
+		straﬂeLabel.setText("Hier Straﬂe");
 		
-		Label NummerLabel = new Label(AddresseContainer, SWT.NONE);
-		NummerLabel.setText("Hier Nummer");
+		Label nummerLabel = new Label(addresseContainer, SWT.NONE);
+		nummerLabel.setText("Hier Nummer");
 		
-		Label PostleitzahlNameLabel = new Label(composite_2, SWT.NONE);
-		PostleitzahlNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		PostleitzahlNameLabel.setText("Postleitzahl:");
+		Label postleitzahlNameLabel = new Label(composite_2, SWT.NONE);
+		postleitzahlNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		postleitzahlNameLabel.setText("Postleitzahl:");
 		
-		Label PostleitzahlLabel = new Label(composite_2, SWT.NONE);
-		PostleitzahlLabel.setText("Hier Postleitzahl");
+		Label postleitzahlLabel = new Label(composite_2, SWT.NONE);
+		postleitzahlLabel.setText("Hier Postleitzahl");
 		
-		Label BeschreibungNameLabel = new Label(composite_2, SWT.NONE);
-		BeschreibungNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
-		BeschreibungNameLabel.setText("Beschreibung:");
+		Label beschreibungNameLabel = new Label(composite_2, SWT.NONE);
+		beschreibungNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		beschreibungNameLabel.setText("Beschreibung:");
 		
-		Label BeschreibungLabel = new Label(composite_2, SWT.NONE);
-		BeschreibungLabel.setText("Hier Beschreibung");
+		Label beschreibungLabel = new Label(composite_2, SWT.NONE);
+		beschreibungLabel.setText("Hier Beschreibung");
 		createContents();
 	}
 

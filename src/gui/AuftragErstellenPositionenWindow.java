@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 
 import swing2swt.layout.BorderLayout;
+
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Tree;
@@ -18,12 +19,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Slider;
+
 import swing2swt.layout.FlowLayout;
 import swing2swt.layout.BoxLayout;
+
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -46,122 +51,122 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Controller controller = Controller.getInstance();
 		
-		Composite LowContainer = new Composite(this, SWT.NONE);
-		LowContainer.setLayoutData(BorderLayout.SOUTH);
-		LowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite lowContainer = new Composite(this, SWT.NONE);
+		lowContainer.setLayoutData(BorderLayout.SOUTH);
+		lowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftLowContainer = new Composite(LowContainer, SWT.NONE);
-		LeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite leftLowContainer = new Composite(lowContainer, SWT.NONE);
+		leftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite RightLowContainer = new Composite(LowContainer, SWT.NONE);
-		RightLowContainer.setLayout(new BorderLayout(0, 0));
+		Composite rightLowContainer = new Composite(lowContainer, SWT.NONE);
+		rightLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label UpperRightLowLabel = new Label(RightLowContainer, SWT.NONE);
-		UpperRightLowLabel.setLayoutData(BorderLayout.NORTH);
+		Label upperRightLowLabel = new Label(rightLowContainer, SWT.NONE);
+		upperRightLowLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Label LowerRightLowLabel = new Label(RightLowContainer, SWT.NONE);
-		LowerRightLowLabel.setLayoutData(BorderLayout.SOUTH);
+		Label lowerRightLowLabel = new Label(rightLowContainer, SWT.NONE);
+		lowerRightLowLabel.setLayoutData(BorderLayout.SOUTH);
 		
-		Composite MiddleRightLowContainer = new Composite(RightLowContainer, SWT.NONE);
-		MiddleRightLowContainer.setLayoutData(BorderLayout.CENTER);
-		MiddleRightLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite middleRightLowContainer = new Composite(rightLowContainer, SWT.NONE);
+		middleRightLowContainer.setLayoutData(BorderLayout.CENTER);
+		middleRightLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button WeiterButton = new Button(MiddleRightLowContainer, SWT.NONE);
-		WeiterButton.addSelectionListener(new SelectionAdapter() {
+		Button weiterButton = new Button(middleRightLowContainer, SWT.NONE);
+		weiterButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((Button)e.getSource()).getShell().setVisible(false);
 				AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(((Button)e.getSource()).getShell());
 			}
 		});
-		WeiterButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		WeiterButton.setText("Weiter");
+		weiterButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		weiterButton.setText("Weiter");
 		
-		Button AbbrechenButton = new Button(MiddleRightLowContainer, SWT.NONE);
-		AbbrechenButton.addSelectionListener(new SelectionAdapter() {
+		Button abbrechenButton = new Button(middleRightLowContainer, SWT.NONE);
+		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((Button)e.getSource()).getShell().dispose();
 			}
 		});
-		AbbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AbbrechenButton.setText("Abbrechen");
+		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		abbrechenButton.setText("Abbrechen");
 		
-		Composite UpperContainer = new Composite(this, SWT.NONE);
-		UpperContainer.setLayoutData(BorderLayout.NORTH);
-		UpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer.setLayoutData(BorderLayout.NORTH);
+		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label UpperLabel = new Label(UpperContainer, SWT.NONE);
+		Label upperLabel = new Label(upperContainer, SWT.NONE);
 		
-		Composite MainContainer = new Composite(this, SWT.NONE);
-		MainContainer.setLayoutData(BorderLayout.CENTER);
-		MainContainer.setLayout(new BorderLayout(0, 0));
+		Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer.setLayoutData(BorderLayout.CENTER);
+		mainContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite UpperMainContainer = new Composite(MainContainer, SWT.NONE);
-		UpperMainContainer.setLayoutData(BorderLayout.NORTH);
-		UpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite upperMainContainer = new Composite(mainContainer, SWT.NONE);
+		upperMainContainer.setLayoutData(BorderLayout.NORTH);
+		upperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftUpperMainContainer = new Composite(UpperMainContainer, SWT.NONE);
-		LeftUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite leftUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
+		leftUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label InputTreeLabel = new Label(LeftUpperMainContainer, SWT.NONE);
-		InputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		InputTreeLabel.setText("Mögliche \nAuftragselemente");
+		Label inputTreeLabel = new Label(leftUpperMainContainer, SWT.NONE);
+		inputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		inputTreeLabel.setText("Mögliche \nAuftragselemente");
 		
-		Composite RightLeftUpperMainContainer = new Composite(LeftUpperMainContainer, SWT.NONE);
-		RightLeftUpperMainContainer.setLayout(new BorderLayout());
+		Composite rightLeftUpperMainContainer = new Composite(leftUpperMainContainer, SWT.NONE);
+		rightLeftUpperMainContainer.setLayout(new BorderLayout());
 				
-		Label LeftMenuLabel = new Label(RightLeftUpperMainContainer, SWT.NONE);
-		LeftMenuLabel.setLayoutData(BorderLayout.NORTH);
+		Label leftMenuLabel = new Label(rightLeftUpperMainContainer, SWT.NONE);
+		leftMenuLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Composite LowerRightLeftUpperMainContainer = new Composite(RightLeftUpperMainContainer, SWT.NONE);
-		LowerRightLeftUpperMainContainer.setLayoutData(BorderLayout.SOUTH);
-		LowerRightLeftUpperMainContainer.setLayout(new FillLayout());
+		Composite lowerRightLeftUpperMainContainer = new Composite(rightLeftUpperMainContainer, SWT.NONE);
+		lowerRightLeftUpperMainContainer.setLayoutData(BorderLayout.SOUTH);
+		lowerRightLeftUpperMainContainer.setLayout(new FillLayout());
 				
-		Button LeftKlappenButton = new Button(LowerRightLeftUpperMainContainer, SWT.NONE);
-		LeftKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		LeftKlappenButton.setText("Klappen");
+		Button leftKlappenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		leftKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		leftKlappenButton.setText("Klappen");
 		
-		Button EinfügenButton = new Button(LowerRightLeftUpperMainContainer, SWT.NONE);
-		EinfügenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		EinfügenButton.setText("Einfügen");
+		Button einfügenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		einfügenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		einfügenButton.setText("Einfügen");
 		
-		Composite RightUpperMainContainer = new Composite(UpperMainContainer, SWT.NONE);
-		RightUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite rightUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
+		rightUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label OutputTreeLabel = new Label(RightUpperMainContainer, SWT.NONE);
-		OutputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		OutputTreeLabel.setText("Ausgewählte \nAuftragselemente");
+		Label outputTreeLabel = new Label(rightUpperMainContainer, SWT.NONE);
+		outputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		outputTreeLabel.setText("Ausgewählte \nAuftragselemente");
 		
-		Composite RightRightUpperMainContainer = new Composite(RightUpperMainContainer, SWT.NONE);
-		RightRightUpperMainContainer.setLayout(new BorderLayout());
+		Composite rightRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
+		rightRightUpperMainContainer.setLayout(new BorderLayout());
 		
-		Label RightMenuLabel = new Label(RightRightUpperMainContainer, SWT.NONE);
-		RightMenuLabel.setLayoutData(BorderLayout.NORTH);
+		Label rightMenuLabel = new Label(rightRightUpperMainContainer, SWT.NONE);
+		rightMenuLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Composite LowerRightRightUpperMainContainer = new Composite(RightRightUpperMainContainer, SWT.NONE);
-		LowerRightRightUpperMainContainer.setLayoutData(BorderLayout.SOUTH);
-		LowerRightRightUpperMainContainer.setLayout(new FillLayout());
+		Composite lowerRightRightUpperMainContainer = new Composite(rightRightUpperMainContainer, SWT.NONE);
+		lowerRightRightUpperMainContainer.setLayoutData(BorderLayout.SOUTH);
+		lowerRightRightUpperMainContainer.setLayout(new FillLayout());
 		
-		Button RightKlappenButton = new Button(LowerRightRightUpperMainContainer, SWT.NONE);
-		RightKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		RightKlappenButton.setText("Klappen");
+		Button rightKlappenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		rightKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		rightKlappenButton.setText("Klappen");
 		
-		Button LöschenButton = new Button(LowerRightRightUpperMainContainer, SWT.NONE);
-		LöschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		LöschenButton.setText("Löschen");
+		Button löschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		löschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		löschenButton.setText("Löschen");
 		
-		Composite MiddleMainContainer = new Composite(MainContainer, SWT.NONE);
-		MiddleMainContainer.setLayoutData(BorderLayout.CENTER);
-		MiddleMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite middleMainContainer = new Composite(mainContainer, SWT.NONE);
+		middleMainContainer.setLayoutData(BorderLayout.CENTER);
+		middleMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Tree InputTree = new Tree(MiddleMainContainer, SWT.BORDER);
-		InputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		final Tree inputTree = new Tree(middleMainContainer, SWT.BORDER);
+		inputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 //		TreeColumn tc = new TreeColumn(InputTree, SWT.NORMAL);
 		
 		//TODO userdata
 		controller = controller.init(null, new dbHandler());
-		controller.buildTreeFromMajorCategories(InputTree);
+		controller.buildTreeFromMajorCategories(inputTree);
 //		test.builTreeWithPositons("12345", InputTree);
 //		for (TreeItem t : test.getPositionTreeList()) {
 //			System.out.println(t.getText());
@@ -171,8 +176,17 @@ public class AuftragErstellenPositionenWindow extends Shell {
 //			System.out.println(t.getTitle());
 //		}
 		
-		Tree OutputTree = new Tree(MiddleMainContainer, SWT.BORDER);
-		OutputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		final Tree outputTree = new Tree(middleMainContainer, SWT.BORDER);
+		outputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		
+		einfügenButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] selectedItems = inputTree.getSelection();
+				for(TreeItem item : selectedItems){
+					System.out.println(item.getText());
+				}
+			}
+		});
 		
 		createContents();
 		

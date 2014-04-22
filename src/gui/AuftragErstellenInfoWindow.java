@@ -17,8 +17,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import processing.Controller;
 
 public class AuftragErstellenInfoWindow extends Shell {
-	private Text TitelText;
-	private Text BeschreibungText;
+	private Text titelText;
+	private Text beschreibungText;
 	private Shell previousWindow;
 
 	/**
@@ -32,71 +32,71 @@ public class AuftragErstellenInfoWindow extends Shell {
 		
 		this.setLocation(previousWindow.getLocation());
 		
-		Composite UpperContainer = new Composite(this, SWT.NONE);
-		UpperContainer.setLayoutData(BorderLayout.NORTH);
-		UpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer.setLayoutData(BorderLayout.NORTH);
+		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftUpperContainer = new Composite(UpperContainer, SWT.NONE);
-		LeftUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
+		leftUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label UpperLeftUpperLabel = new Label(LeftUpperContainer, SWT.NONE);
+		Label upperLeftUpperLabel = new Label(leftUpperContainer, SWT.NONE);
 		
-		Label IhreAuswahlLabel = new Label(LeftUpperContainer, SWT.NONE);
-		IhreAuswahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		IhreAuswahlLabel.setText("\tIhre ausgewählten Leistungen");
+		Label ihreAuswahlLabel = new Label(leftUpperContainer, SWT.NONE);
+		ihreAuswahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		ihreAuswahlLabel.setText("\tIhre ausgewählten Leistungen");
 		
-		Composite RightUpperContainer = new Composite(UpperContainer, SWT.NONE);
+		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		
-		Composite MainContainer = new Composite(this, SWT.NONE);
-		MainContainer.setLayoutData(BorderLayout.CENTER);
-		MainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer.setLayoutData(BorderLayout.CENTER);
+		mainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Tree AuftragsTree = new Tree(MainContainer, SWT.BORDER);
+		Tree auftragsTree = new Tree(mainContainer, SWT.BORDER);
 		
-		Composite RightMainContainer = new Composite(MainContainer, SWT.NONE);
-		RightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite rightMainContainer = new Composite(mainContainer, SWT.NONE);
+		rightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Composite UpperRightMainContainer = new Composite(RightMainContainer, SWT.NONE);
-		UpperRightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite upperRightMainContainer = new Composite(rightMainContainer, SWT.NONE);
+		upperRightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label TitelLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		TitelLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		TitelLabel.setText("Titel des Auftrags");
+		Label titelLabel = new Label(upperRightMainContainer, SWT.NONE);
+		titelLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		titelLabel.setText("Titel des Auftrags");
 		
-		TitelText = new Text(UpperRightMainContainer, SWT.BORDER);
-		TitelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		titelText = new Text(upperRightMainContainer, SWT.BORDER);
+		titelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Label DatumLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		DatumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DatumLabel.setText("Datum der Ausführung");
+		Label datumLabel = new Label(upperRightMainContainer, SWT.NONE);
+		datumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		datumLabel.setText("Datum der Ausführung");
 		
-		DateTime DateField = new DateTime(UpperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
-		DateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		DateTime dateField = new DateTime(upperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
+		dateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Label BeschreibungLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		BeschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		BeschreibungLabel.setText("Zusätzliche Beschreibungen");
+		Label beschreibungLabel = new Label(upperRightMainContainer, SWT.NONE);
+		beschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		beschreibungLabel.setText("Zusätzliche Beschreibungen");
 		
-		BeschreibungText = new Text(RightMainContainer, SWT.BORDER);
-		BeschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		beschreibungText = new Text(rightMainContainer, SWT.BORDER);
+		beschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Composite LowContainer = new Composite(this, SWT.NONE);
-		LowContainer.setLayoutData(BorderLayout.SOUTH);
-		LowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite lowContainer = new Composite(this, SWT.NONE);
+		lowContainer.setLayoutData(BorderLayout.SOUTH);
+		lowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite RightLowContainer = new Composite(LowContainer, SWT.NONE);
+		Composite rightLowContainer = new Composite(lowContainer, SWT.NONE);
 		
-		Composite LeftLowContainer = new Composite(LowContainer, SWT.NONE);
-		LeftLowContainer.setLayout(new BorderLayout(0, 0));
+		Composite leftLowContainer = new Composite(lowContainer, SWT.NONE);
+		leftLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label UpperLeftLowLabel = new Label(LeftLowContainer, SWT.NONE);
-		UpperLeftLowLabel.setLayoutData(BorderLayout.NORTH);
+		Label upperLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		upperLeftLowLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Composite MiddleLeftLowContainer = new Composite(LeftLowContainer, SWT.NONE);
-		MiddleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite middleLeftLowContainer = new Composite(leftLowContainer, SWT.NONE);
+		middleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button ZurückButton = new Button(MiddleLeftLowContainer, SWT.NONE);
-		ZurückButton.addSelectionListener(new SelectionAdapter() {
+		Button zurückButton = new Button(middleLeftLowContainer, SWT.NONE);
+		zurückButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
@@ -104,21 +104,21 @@ public class AuftragErstellenInfoWindow extends Shell {
 				window.getPreviousWindow().open();
 			}
 		});
-		ZurückButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		ZurückButton.setText("Zurück");
+		zurückButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		zurückButton.setText("Zurück");
 		
-		Button ErstellenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
-		ErstellenButton.addSelectionListener(new SelectionAdapter() {
+		Button erstellenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		erstellenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				
 			}
 		});
-		ErstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		ErstellenButton.setText("Erstellen");
+		erstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		erstellenButton.setText("Erstellen");
 		
-		Button AbbrechenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
-		AbbrechenButton.addSelectionListener(new SelectionAdapter() {
+		Button abbrechenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
@@ -126,11 +126,11 @@ public class AuftragErstellenInfoWindow extends Shell {
 				window.getPreviousWindow().dispose();
 			}
 		});
-		AbbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AbbrechenButton.setText("Abbrechen");
+		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		abbrechenButton.setText("Abbrechen");
 		
-		Label LowerLeftLowLabel = new Label(LeftLowContainer, SWT.NONE);
-		LowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
+		Label lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
 		createContents();
 		try {
 			this.open();

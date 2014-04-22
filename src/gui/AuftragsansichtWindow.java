@@ -14,148 +14,154 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
 import swing2swt.layout.BorderLayout;
+
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Table;
 
+import processing.Controller;
+
 public class AuftragsansichtWindow extends Shell {
-	private Text StatusText;
-	private Table AngeboteTable;
-	private DateTime ErstelldatumField;
+	private Text statusText;
+	private Table angeboteTable;
+	private DateTime erstelldatumField;
 
 	/**
 	 * Create the shell.
 	 */
-	public AuftragsansichtWindow() {
+	public AuftragsansichtWindow(String assignmentID) {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
-		Composite UpperContainer = new Composite(this, SWT.NONE);
-		UpperContainer.setLayoutData(BorderLayout.NORTH);
-		UpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Controller controller = Controller.getInstance();
+		controller.searchForID(assignmentID);//TODO sollte nicht Assignment kennen
 		
-		Composite LeftUpperContainer = new Composite(UpperContainer, SWT.NONE);
-		LeftUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer.setLayoutData(BorderLayout.NORTH);
+		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label UpperLeftUpperLabel = new Label(LeftUpperContainer, SWT.NONE);
+		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
+		leftUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label LeistungenLabel = new Label(LeftUpperContainer, SWT.NONE);
-		LeistungenLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		LeistungenLabel.setText("\tEnthaltene Leistungen");
+		Label upperLeftUpperLabel = new Label(leftUpperContainer, SWT.NONE);
 		
-		Composite RightUpperContainer = new Composite(UpperContainer, SWT.NONE);
+		Label leistungenLabel = new Label(leftUpperContainer, SWT.NONE);
+		leistungenLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		leistungenLabel.setText("\tEnthaltene Leistungen");
 		
-		Composite MainContainer = new Composite(this, SWT.NONE);
-		MainContainer.setLayoutData(BorderLayout.CENTER);
-		MainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		
-		Composite UpperMainContainer = new Composite(MainContainer, SWT.NONE);
-		UpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer.setLayoutData(BorderLayout.CENTER);
+		mainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Tree AuftragsTree = new Tree(UpperMainContainer, SWT.BORDER);
+		Composite upperMainContainer = new Composite(mainContainer, SWT.NONE);
+		upperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite MiddleUpperMainContainer = new Composite(UpperMainContainer, SWT.NONE);
-		MiddleUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Tree auftragsTree = new Tree(upperMainContainer, SWT.BORDER);
 		
-		Composite UpperRightMainContainer = new Composite(MiddleUpperMainContainer, SWT.NONE);
-		UpperRightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite middleUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
+		middleUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label TitelLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		TitelLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		TitelLabel.setText("Titel des Auftrags");
+		Composite upperRightMainContainer = new Composite(middleUpperMainContainer, SWT.NONE);
+		upperRightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Text TitelText = new Text(UpperRightMainContainer, SWT.BORDER);
-		TitelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		Label titelLabel = new Label(upperRightMainContainer, SWT.NONE);
+		titelLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		titelLabel.setText("Titel des Auftrags");
 		
-		Label DatumLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		DatumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DatumLabel.setText("Datum der Ausf¸hrung");
+		Text titelText = new Text(upperRightMainContainer, SWT.BORDER);
+		titelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		DateTime DateField = new DateTime(UpperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
-		DateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		Label datumLabel = new Label(upperRightMainContainer, SWT.NONE);
+		datumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		datumLabel.setText("Datum der Ausf¸hrung");
 		
-		Label BeschreibungLabel = new Label(UpperRightMainContainer, SWT.NONE);
-		BeschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		BeschreibungLabel.setText("Zus‰tzliche Beschreibungen");
+		DateTime dateField = new DateTime(upperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
+		dateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Text BeschreibungText = new Text(MiddleUpperMainContainer, SWT.BORDER);
-		BeschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		Label beschreibungLabel = new Label(upperRightMainContainer, SWT.NONE);
+		beschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		beschreibungLabel.setText("Zus‰tzliche Beschreibungen");
 		
-		Composite RightUpperMainContainer = new Composite(UpperMainContainer, SWT.NONE);
-		RightUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Text beschreibungText = new Text(middleUpperMainContainer, SWT.BORDER);
+		beschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Composite UpperRightUpperMainContainer = new Composite(RightUpperMainContainer, SWT.NONE);
-		UpperRightUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
+		Composite rightUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
+		rightUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label ErstelldatumLabel = new Label(UpperRightUpperMainContainer, SWT.NONE);
-		ErstelldatumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		ErstelldatumLabel.setText("Erstelldatum");
+		Composite upperRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
+		upperRightUpperMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		ErstelldatumField = new DateTime(UpperRightUpperMainContainer, SWT.BORDER | SWT.LONG);
-		ErstelldatumField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		Label erstelldatumLabel = new Label(upperRightUpperMainContainer, SWT.NONE);
+		erstelldatumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		erstelldatumLabel.setText("Erstelldatum");
 		
-		Label AusschreibungsendeLabel = new Label(UpperRightUpperMainContainer, SWT.NONE);
-		AusschreibungsendeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AusschreibungsendeLabel.setText("Ausschreibungsende");
+		erstelldatumField = new DateTime(upperRightUpperMainContainer, SWT.BORDER | SWT.LONG);
+		erstelldatumField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		DateTime AusschreibungsendeField = new DateTime(UpperRightUpperMainContainer, SWT.BORDER | SWT.LONG);
-		AusschreibungsendeField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		Label ausschreibungsendeLabel = new Label(upperRightUpperMainContainer, SWT.NONE);
+		ausschreibungsendeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		ausschreibungsendeLabel.setText("Ausschreibungsende");
 		
-		Label StatusLabel = new Label(UpperRightUpperMainContainer, SWT.NONE);
-		StatusLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StatusLabel.setText("Status");
+		DateTime ausschreibungsendeField = new DateTime(upperRightUpperMainContainer, SWT.BORDER | SWT.LONG);
+		ausschreibungsendeField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Composite LowerRightUpperMainContainer = new Composite(RightUpperMainContainer, SWT.NONE);
-		LowerRightUpperMainContainer.setLayout(new BorderLayout(0, 0));
+		Label statusLabel = new Label(upperRightUpperMainContainer, SWT.NONE);
+		statusLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		statusLabel.setText("Status");
 		
-		StatusText = new Text(LowerRightUpperMainContainer, SWT.BORDER);
-		StatusText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StatusText.setLayoutData(BorderLayout.NORTH);
+		Composite lowerRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
+		lowerRightUpperMainContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite LowerMainContainer = new Composite(MainContainer, SWT.NONE);
-		LowerMainContainer.setLayout(new BorderLayout(0, 0));
+		statusText = new Text(lowerRightUpperMainContainer, SWT.BORDER);
+		statusText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		statusText.setLayoutData(BorderLayout.NORTH);
 		
-		Label AngeboteLabel = new Label(LowerMainContainer, SWT.NONE);
-		AngeboteLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AngeboteLabel.setLayoutData(BorderLayout.NORTH);
-		AngeboteLabel.setText("\tErhaltene Angebote");
+		Composite lowerMainContainer = new Composite(mainContainer, SWT.NONE);
+		lowerMainContainer.setLayout(new BorderLayout(0, 0));
 		
-		AngeboteTable = new Table(LowerMainContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		AngeboteTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AngeboteTable.setLayoutData(BorderLayout.CENTER);
-		AngeboteTable.setHeaderVisible(true);
-		AngeboteTable.setLinesVisible(true);
+		Label angeboteLabel = new Label(lowerMainContainer, SWT.NONE);
+		angeboteLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		angeboteLabel.setLayoutData(BorderLayout.NORTH);
+		angeboteLabel.setText("\tErhaltene Angebote");
 		
-		Composite LowContainer = new Composite(this, SWT.NONE);
-		LowContainer.setLayoutData(BorderLayout.SOUTH);
-		LowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		angeboteTable = new Table(lowerMainContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		angeboteTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		angeboteTable.setLayoutData(BorderLayout.CENTER);
+		angeboteTable.setHeaderVisible(true);
+		angeboteTable.setLinesVisible(true);
 		
-		Composite RightLowContainer = new Composite(LowContainer, SWT.NONE);
+		Composite lowContainer = new Composite(this, SWT.NONE);
+		lowContainer.setLayoutData(BorderLayout.SOUTH);
+		lowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite LeftLowContainer = new Composite(LowContainer, SWT.NONE);
-		LeftLowContainer.setLayout(new BorderLayout(0, 0));
+		Composite rightLowContainer = new Composite(lowContainer, SWT.NONE);
 		
-		Label UpperLeftLowLabel = new Label(LeftLowContainer, SWT.NONE);
-		UpperLeftLowLabel.setLayoutData(BorderLayout.NORTH);
+		Composite leftLowContainer = new Composite(lowContainer, SWT.NONE);
+		leftLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite MiddleLeftLowContainer = new Composite(LeftLowContainer, SWT.NONE);
-		MiddleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Label upperLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		upperLeftLowLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Button BearbeitenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
-		BearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		BearbeitenButton.setText("Bearbeiten");
+		Composite middleLeftLowContainer = new Composite(leftLowContainer, SWT.NONE);
+		middleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button SchlieﬂenButton = new Button(MiddleLeftLowContainer, SWT.NONE);
-		SchlieﬂenButton.addSelectionListener(new SelectionAdapter() {
+		Button bearbeitenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		bearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		bearbeitenButton.setText("Bearbeiten");
+		
+		Button schlieﬂenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		schlieﬂenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((Button)e.getSource()).getShell().dispose();
 			}
 		});
-		SchlieﬂenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		SchlieﬂenButton.setText("Schlie\u00DFen");
+		schlieﬂenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		schlieﬂenButton.setText("Schlie\u00DFen");
 		
-		Label LowerLeftLowLabel = new Label(LeftLowContainer, SWT.NONE);
-		LowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
+		Label lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
 		createContents();
 		try {
 			this.open();

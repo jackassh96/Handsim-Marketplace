@@ -1,12 +1,20 @@
 package gui;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.TableItem;
+
 import swing2swt.layout.BorderLayout;
+
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.RowLayout;
@@ -25,21 +33,22 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 
 public class CSPmainWindows extends Shell {
-	private Text Suchfeld;
-	private Text BenutzernameTextField;
-	private Text VornameTextField;
-	private Text NachnameTextField;
-	private Text StraßeTextField;
-	private Text PostleitzahlTextField;
-	private Text StadtTextField;
-	private Text HausnummerTextField;
-	private Text UnternehmensTextField;
-	private Text EmailTextField;
-	private Text TelefonTextField;
-	private Table DashboardAufträgeTable;
-	private Table DashboardTermineTable;
-	private Table UnternehmensTable;
-	private Table MeineAufträgeTable;
+	private Text suchfeld;
+	private Text benutzernameTextField;
+	private Text vornameTextField;
+	private Text nachnameTextField;
+	private Text straßeTextField;
+	private Text postleitzahlTextField;
+	private Text stadtTextField;
+	private Text hausnummerTextField;
+	private Text unternehmensTextField;
+	private Text emailTextField;
+	private Text telefonTextField;
+	private Table dashboardAufträgeTable;
+	private Table dashboardTermineTable;
+	private Table unternehmensTable;
+	private Table meineAufträgeTable;
+	private Label unternehmensLabel;
 
 	/**
 	 * Launch the application.
@@ -71,268 +80,279 @@ public class CSPmainWindows extends Shell {
 		
 		
 		//Upper static navigationbar
-		Composite HeaderContainer = new Composite(this, SWT.NONE);
-		HeaderContainer.setLayoutData(BorderLayout.NORTH);
-		HeaderContainer.setLayout(new BorderLayout(0, 0));
+		Composite headerContainer = new Composite(this, SWT.NONE);
+		headerContainer.setLayoutData(BorderLayout.NORTH);
+		headerContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite RightHeader = new Composite(HeaderContainer, SWT.NONE);
-		RightHeader.setLayoutData(BorderLayout.EAST);
-		RightHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite rightHeader = new Composite(headerContainer, SWT.NONE);
+		rightHeader.setLayoutData(BorderLayout.EAST);
+		rightHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button DashboardButton = new Button(RightHeader, SWT.NONE);
-		DashboardButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardButton.setText("Dashboard");
+		Button dashboardButton = new Button(rightHeader, SWT.NONE);
+		dashboardButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardButton.setText("Dashboard");
 		
-		Button ProfilButton = new Button(RightHeader, SWT.NONE);
-		ProfilButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		ProfilButton.setText("Profil");
+		Button profilButton = new Button(rightHeader, SWT.NONE);
+		profilButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		profilButton.setText("Profil");
 		
-		Button UnternehmensButton = new Button(RightHeader, SWT.NONE);
-		UnternehmensButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensButton.setText("Unternehmen");
+		Button unternehmensButton = new Button(rightHeader, SWT.NONE);
+		unternehmensButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensButton.setText("Unternehmen");
 		
-		Button AuftragsButton = new Button(RightHeader, SWT.NONE);
-		AuftragsButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AuftragsButton.setText("Aufträge");
+		Button auftragsButton = new Button(rightHeader, SWT.NONE);
+		auftragsButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		auftragsButton.setText("Aufträge");
 		
-		Composite LeftHeader = new Composite(HeaderContainer, SWT.NONE);
-		LeftHeader.setLayoutData(BorderLayout.WEST);
+		Composite leftHeader = new Composite(headerContainer, SWT.NONE);
+		leftHeader.setLayoutData(BorderLayout.WEST);
 		
-		Label UnternehmensLogo = new Label(LeftHeader, SWT.NONE);
-		UnternehmensLogo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensLogo.setBounds(0, 0, 81, 25);
-		UnternehmensLogo.setText("LOGO");
+		Label unternehmensLogo = new Label(leftHeader, SWT.NONE);
+		unternehmensLogo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensLogo.setBounds(0, 0, 81, 25);
+		unternehmensLogo.setText("LOGO");
 		
-		Composite MiddleHeader = new Composite(HeaderContainer, SWT.NONE);
-		MiddleHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite middleHeader = new Composite(headerContainer, SWT.NONE);
+		middleHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Suchfeld = new Text(MiddleHeader, SWT.BORDER);
-		Suchfeld.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		Suchfeld.setText("Suche");
+		suchfeld = new Text(middleHeader, SWT.BORDER);
+		suchfeld.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		suchfeld.setText("Suche");
 		
 		//Composite for distance controll in every direction
-		Composite LowContainer = new Composite(this, SWT.NONE);
-		LowContainer.setLayoutData(BorderLayout.SOUTH);
+		Composite lowContainer = new Composite(this, SWT.NONE);
+		lowContainer.setLayoutData(BorderLayout.SOUTH);
 		
-		Composite LeftContainer = new Composite(this, SWT.NONE);
-		LeftContainer.setLayoutData(BorderLayout.WEST);
+		Composite leftContainer = new Composite(this, SWT.NONE);
+		leftContainer.setLayoutData(BorderLayout.WEST);
 		
-		Composite RightContainer = new Composite(this, SWT.NONE);
-		RightContainer.setLayoutData(BorderLayout.EAST);
+		Composite rightContainer = new Composite(this, SWT.NONE);
+		rightContainer.setLayoutData(BorderLayout.EAST);
 		
 		//MainContainer containing the 4 Views of the Mainwindow (all final to access them from ActionHandlers)
-		final Composite MainContainer = new Composite(this, SWT.NONE);
-		MainContainer.setLayoutData(BorderLayout.CENTER);
-		final StackLayout MainStack = new StackLayout();
-		MainContainer.setLayout(MainStack);
+		final Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer.setLayoutData(BorderLayout.CENTER);
+		final StackLayout mainStack = new StackLayout();
+		mainContainer.setLayout(mainStack);
 		
 		//DashboardContainer with the tables for quick access - first selected
-		final Composite DashboardContainer = new Composite(MainContainer, SWT.NONE);
-		MainStack.topControl = DashboardContainer;
-		DashboardContainer.setLayout(new BorderLayout(0, 0));
+		final Composite dashboardContainer = new Composite(mainContainer, SWT.NONE);
+		mainStack.topControl = dashboardContainer;
+		dashboardContainer.setLayout(new BorderLayout(0, 0));
 		
 		//MiddleContainer containing the two tables of the Dashboard
-		Composite DashboardMiddleContainer = new Composite(DashboardContainer, SWT.NONE);
-		DashboardMiddleContainer.setLayoutData(BorderLayout.CENTER);
-		DashboardMiddleContainer.setLayout(new GridLayout(2, false));
+		Composite dashboardMiddleContainer = new Composite(dashboardContainer, SWT.NONE);
+		dashboardMiddleContainer.setLayoutData(BorderLayout.CENTER);
+		dashboardMiddleContainer.setLayout(new GridLayout(2, false));
 		
-		Label DashboardAufträgeLabel = new Label(DashboardMiddleContainer, SWT.NONE);
-		DashboardAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardAufträgeLabel.setText("Meine Aufträge");
+		Label dashboardAufträgeLabel = new Label(dashboardMiddleContainer, SWT.NONE);
+		dashboardAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardAufträgeLabel.setText("Meine Aufträge");
 		
-		Label DashboardTermineLabel = new Label(DashboardMiddleContainer, SWT.NONE);
-		DashboardTermineLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardTermineLabel.setText("Nächste Termine");
+		Label dashboardTermineLabel = new Label(dashboardMiddleContainer, SWT.NONE);
+		dashboardTermineLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardTermineLabel.setText("Nächste Termine");
 		
-		DashboardAufträgeTable = new Table(DashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		DashboardAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardAufträgeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		DashboardAufträgeTable.setHeaderVisible(true);
-		DashboardAufträgeTable.setLinesVisible(true);
+		dashboardAufträgeTable = new Table(dashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		dashboardAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardAufträgeTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		dashboardAufträgeTable.setHeaderVisible(true);
+		dashboardAufträgeTable.setLinesVisible(true);
 		
-		DashboardTermineTable = new Table(DashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		DashboardTermineTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		DashboardTermineTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		DashboardTermineTable.setHeaderVisible(true);
-		DashboardTermineTable.setLinesVisible(true);
+		dashboardTermineTable = new Table(dashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		dashboardTermineTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardTermineTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		dashboardTermineTable.setHeaderVisible(true);
+		dashboardTermineTable.setLinesVisible(true);
 		
 		//Composite for upper distance control
-		Composite DashboardTopContainer = new Composite(DashboardContainer, SWT.NONE);
-		DashboardTopContainer.setLayoutData(BorderLayout.NORTH);
+		Composite dashboardTopContainer = new Composite(dashboardContainer, SWT.NONE);
+		dashboardTopContainer.setLayoutData(BorderLayout.NORTH);
 		
 		//Container with the companyview
-		final Composite UnternehmenContainer = new Composite(MainContainer, SWT.NONE);
-		UnternehmenContainer.setLayout(new BorderLayout(0, 0));
+		final Composite unternehmenContainer = new Composite(mainContainer, SWT.NONE);
+		unternehmenContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite UnternehmenTopContainer = new Composite(UnternehmenContainer, SWT.NONE);
-		UnternehmenTopContainer.setLayoutData(BorderLayout.NORTH);
+		Composite unternehmenTopContainer = new Composite(unternehmenContainer, SWT.NONE);
+		unternehmenTopContainer.setLayoutData(BorderLayout.NORTH);
 		
-		Composite UnternehmenMiddleContainer = new Composite(UnternehmenContainer, SWT.NONE);
-		UnternehmenMiddleContainer.setLayoutData(BorderLayout.CENTER);
-		UnternehmenMiddleContainer.setLayout(new BorderLayout(0, 0));
+		Composite unternehmenMiddleContainer = new Composite(unternehmenContainer, SWT.NONE);
+		unternehmenMiddleContainer.setLayoutData(BorderLayout.CENTER);
+		unternehmenMiddleContainer.setLayout(new BorderLayout(0, 0));
 		
-		UnternehmensTable = new Table(UnternehmenMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		UnternehmensTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensTable.setLayoutData(BorderLayout.CENTER);
-		UnternehmensTable.setHeaderVisible(true);
-		UnternehmensTable.setLinesVisible(true);
+		unternehmensTable = new Table(unternehmenMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		unternehmensTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensTable.setLayoutData(BorderLayout.CENTER);
+		unternehmensTable.setHeaderVisible(true);
+		unternehmensTable.setLinesVisible(true);
 		
-		Composite UnternehmenMidleHeaderContainer = new Composite(UnternehmenMiddleContainer, SWT.NONE);
-		UnternehmenMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
-		UnternehmenMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite unternehmenMidleHeaderContainer = new Composite(unternehmenMiddleContainer, SWT.NONE);
+		unternehmenMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
+		unternehmenMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label RegistrierteUnternehmenLabel = new Label(UnternehmenMidleHeaderContainer, SWT.NONE);
-		RegistrierteUnternehmenLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
-		RegistrierteUnternehmenLabel.setText("Registrierte Unternehmen");
+		Label registrierteUnternehmenLabel = new Label(unternehmenMidleHeaderContainer, SWT.NONE);
+		registrierteUnternehmenLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
+		registrierteUnternehmenLabel.setText("Registrierte Unternehmen");
 		
-		Composite UnternehmenTableButtonContainer = new Composite(UnternehmenMidleHeaderContainer, SWT.NONE);
+		Composite unternehmenTableButtonContainer = new Composite(unternehmenMidleHeaderContainer, SWT.NONE);
 		
 		//Container with the Assignmentview
-		final Composite AufträgeContainer = new Composite(MainContainer, SWT.NONE);
-		AufträgeContainer.setLayout(new BorderLayout(0, 0));
+		final Composite aufträgeContainer = new Composite(mainContainer, SWT.NONE);
+		aufträgeContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite AufträgeMiddleContainer = new Composite(AufträgeContainer, SWT.NONE);
-		AufträgeMiddleContainer.setLayoutData(BorderLayout.CENTER);
-		AufträgeMiddleContainer.setLayout(new BorderLayout(0, 0));
+		Composite aufträgeMiddleContainer = new Composite(aufträgeContainer, SWT.NONE);
+		aufträgeMiddleContainer.setLayoutData(BorderLayout.CENTER);
+		aufträgeMiddleContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite AufträgeMidleHeaderContainer = new Composite(AufträgeMiddleContainer, SWT.NONE);
-		AufträgeMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
-		AufträgeMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite aufträgeMidleHeaderContainer = new Composite(aufträgeMiddleContainer, SWT.NONE);
+		aufträgeMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
+		aufträgeMidleHeaderContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label MeineAufträgeLabel = new Label(AufträgeMidleHeaderContainer, SWT.NONE);
-		MeineAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
-		MeineAufträgeLabel.setText("Meine Aufträge");
+		Label meineAufträgeLabel = new Label(aufträgeMidleHeaderContainer, SWT.NONE);
+		meineAufträgeLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.NORMAL));
+		meineAufträgeLabel.setText("Meine Aufträge");
 		
-		Composite AufträgeTableButtonContainer = new Composite(AufträgeMidleHeaderContainer, SWT.NONE);
-		AufträgeTableButtonContainer.setLayout(new BorderLayout(0, 0));
+		Composite aufträgeTableButtonContainer = new Composite(aufträgeMidleHeaderContainer, SWT.NONE);
+		aufträgeTableButtonContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite AufträgeUpperTableButtonContainer = new Composite(AufträgeTableButtonContainer, SWT.NONE);
-		AufträgeUpperTableButtonContainer.setLayoutData(BorderLayout.NORTH);
-		AufträgeUpperTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite aufträgeUpperTableButtonContainer = new Composite(aufträgeTableButtonContainer, SWT.NONE);
+		aufträgeUpperTableButtonContainer.setLayoutData(BorderLayout.NORTH);
+		aufträgeUpperTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Label AufträgeUpperTableButtonLabel = new Label(AufträgeUpperTableButtonContainer, SWT.NONE);
+		Label aufträgeUpperTableButtonLabel = new Label(aufträgeUpperTableButtonContainer, SWT.NONE);
 		
-		Composite AufträgeLowerTableButtonContainer = new Composite(AufträgeTableButtonContainer, SWT.NONE);
-		AufträgeLowerTableButtonContainer.setLayoutData(BorderLayout.SOUTH);
-		AufträgeLowerTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite aufträgeLowerTableButtonContainer = new Composite(aufträgeTableButtonContainer, SWT.NONE);
+		aufträgeLowerTableButtonContainer.setLayoutData(BorderLayout.SOUTH);
+		aufträgeLowerTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button AufträgeNeuButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
-		AufträgeNeuButton.addSelectionListener(new SelectionAdapter() {
+		Button aufträgeNeuButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeNeuButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				new AuftragErstellenPositionenWindow();
+				try {
+					new AuftragErstellenPositionenWindow();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
-		AufträgeNeuButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AufträgeNeuButton.setText("Neu");
+		aufträgeNeuButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		aufträgeNeuButton.setText("Neu");
 		
-		Button AufträgeBearbeitenButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
-		AufträgeBearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AufträgeBearbeitenButton.setText("Bearbeiten");
+		Button aufträgeBearbeitenButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeBearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		aufträgeBearbeitenButton.setText("Bearbeiten");
 		
-		Button AufträgeLöschenButton = new Button(AufträgeLowerTableButtonContainer, SWT.NONE);
-		AufträgeLöschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		AufträgeLöschenButton.setText("Löschen");
+		Button aufträgeLöschenButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeLöschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		aufträgeLöschenButton.setText("Löschen");
 		
-		MeineAufträgeTable = new Table(AufträgeMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
-		MeineAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		MeineAufträgeTable.setLayoutData(BorderLayout.CENTER);
-		MeineAufträgeTable.setHeaderVisible(true);
-		MeineAufträgeTable.setLinesVisible(true);
+		meineAufträgeTable = new Table(aufträgeMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
+		meineAufträgeTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		meineAufträgeTable.setLayoutData(BorderLayout.CENTER);
+		meineAufträgeTable.setHeaderVisible(true);
+		meineAufträgeTable.setLinesVisible(true);
 		
-		Composite AufträgeTopContainer = new Composite(AufträgeContainer, SWT.NONE);
-		AufträgeTopContainer.setLayoutData(BorderLayout.NORTH);
+		Composite aufträgeTopContainer = new Composite(aufträgeContainer, SWT.NONE);
+		aufträgeTopContainer.setLayoutData(BorderLayout.NORTH);
 		
 		//Container with Profilview
-		final Composite ProfilContainer = new Composite(MainContainer, SWT.NONE);
-		ProfilContainer.setLayout(new BorderLayout(0, 0));
+		final Composite profilContainer = new Composite(mainContainer, SWT.NONE);
+		profilContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite ProfilLowContainer = new Composite(ProfilContainer, SWT.NONE);
-		ProfilLowContainer.setLayoutData(BorderLayout.SOUTH);
-		ProfilLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Composite profilLowContainer = new Composite(profilContainer, SWT.NONE);
+		profilLowContainer.setLayoutData(BorderLayout.SOUTH);
+		profilLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite ProfilLeftLowContainer = new Composite(ProfilLowContainer, SWT.NONE);
+		Composite profilLeftLowContainer = new Composite(profilLowContainer, SWT.NONE);
 		
-		Composite ProfilRightLowContainer = new Composite(ProfilLowContainer, SWT.NONE);
-		ProfilRightLowContainer.setLayout(new BorderLayout(0, 0));
+		Composite profilRightLowContainer = new Composite(profilLowContainer, SWT.NONE);
+		profilRightLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite ProfilRightRightLowContainer = new Composite(ProfilRightLowContainer, SWT.NONE);
-		ProfilRightRightLowContainer.setLayoutData(BorderLayout.EAST);
+		Composite profilRightRightLowContainer = new Composite(profilRightLowContainer, SWT.NONE);
+		profilRightRightLowContainer.setLayoutData(BorderLayout.EAST);
 		
-		Button ProfilSpeichernButton = new Button(ProfilRightRightLowContainer, SWT.NONE);
-		ProfilSpeichernButton.setBounds(0, 0, 105, 35);
-		ProfilSpeichernButton.setText("Speichern");
+		Button profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
+		profilSpeichernButton.setBounds(0, 0, 105, 35);
+		profilSpeichernButton.setText("Speichern");
 		
-		Composite ProfilMiddleContainer = new Composite(ProfilContainer, SWT.NONE);
-		ProfilMiddleContainer.setLayoutData(BorderLayout.CENTER);
-		ProfilMiddleContainer.setLayout(new GridLayout(2, false));
+		Composite profilMiddleContainer = new Composite(profilContainer, SWT.NONE);
+		profilMiddleContainer.setLayoutData(BorderLayout.CENTER);
+		profilMiddleContainer.setLayout(new GridLayout(2, false));
 		
-		Label BenutzernameLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		BenutzernameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		BenutzernameLabel.setText("Benutzername");
+		Label benutzernameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		benutzernameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		benutzernameLabel.setText("Benutzername");
 		
-		Label StadtLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		StadtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StadtLabel.setText("Stadt");
+		Label stadtLabel = new Label(profilMiddleContainer, SWT.NONE);
+		stadtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		stadtLabel.setText("Stadt");
 		
-		BenutzernameTextField = new Text(ProfilMiddleContainer, SWT.READ_ONLY);
-		BenutzernameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		BenutzernameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		benutzernameTextField = new Text(profilMiddleContainer, SWT.READ_ONLY);
+		benutzernameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		benutzernameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		StadtTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		StadtTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StadtTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		stadtTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		stadtTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		stadtTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label VornameLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		VornameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		VornameLabel.setText("Vorname");
+		Label vornameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		vornameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		vornameLabel.setText("Vorname");
 		
-		Label UnternehmensLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		UnternehmensLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensLabel.setText("Unternehmen");
+		unternehmensLabel = new Label(profilMiddleContainer, SWT.NONE);
+		unternehmensLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensLabel.setText("Unternehmen");
 		
-		VornameTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		VornameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		VornameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		vornameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		vornameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		vornameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		UnternehmensTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		UnternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		UnternehmensTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		unternehmensTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		unternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label NachnameLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		NachnameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		NachnameLabel.
+		Label nachnameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		nachnameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		nachnameLabel.
 		setText("Nachname");
 		
-		Label EmailLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		EmailLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		EmailLabel.setText("E-Mail");
+		Label emailLabel = new Label(profilMiddleContainer, SWT.NONE);
+		emailLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		emailLabel.setText("E-Mail");
 		
-		NachnameTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		NachnameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		NachnameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		nachnameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		nachnameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		nachnameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		EmailTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		EmailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		EmailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		emailTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		emailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		emailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label StraßeLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		StraßeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StraßeLabel.setText("Stra\u00DFe");
+		Label straßeLabel = new Label(profilMiddleContainer, SWT.NONE);
+		straßeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		straßeLabel.setText("Straße");
 		
-		Label TelefonLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		TelefonLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		TelefonLabel.setText("Telefon");
+		Label telefonLabel = new Label(profilMiddleContainer, SWT.NONE);
+		telefonLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		telefonLabel.setText("Telefon");
 		
-		StraßeTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		StraßeTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		StraßeTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		straßeTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		straßeTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		straßeTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		TelefonTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		TelefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		TelefonTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		telefonTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		telefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		telefonTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering letters out
-		TelefonTextField.addVerifyListener(new VerifyListener() {
+		telefonTextField.addVerifyListener(new VerifyListener() {
 	        public void verifyText(VerifyEvent e) {
 	            	if(Character.isAlphabetic(e.character)){
 	            		e.doit = false;
@@ -342,68 +362,86 @@ public class CSPmainWindows extends Shell {
 	        	}
 	        });
 		
-		Label HausnummerLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		HausnummerLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		HausnummerLabel.setText("Hausnummer");
+		Label hausnummerLabel = new Label(profilMiddleContainer, SWT.NONE);
+		hausnummerLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		hausnummerLabel.setText("Hausnummer");
 		
-		Label GeschlechtLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		GeschlechtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		GeschlechtLabel.setText("Geschlecht");
+		Label geschlechtLabel = new Label(profilMiddleContainer, SWT.NONE);
+		geschlechtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		geschlechtLabel.setText("Geschlecht");
 		
-		HausnummerTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		HausnummerTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		HausnummerTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		hausnummerTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		hausnummerTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		hausnummerTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Combo GeschlechtCombo = new Combo(ProfilMiddleContainer, SWT.NONE);
-		GeschlechtCombo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		GeschlechtCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		GeschlechtCombo.add("Männlich");
-		GeschlechtCombo.add("Weiblich");
+		Combo geschlechtCombo = new Combo(profilMiddleContainer, SWT.NONE);
+		geschlechtCombo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		geschlechtCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		geschlechtCombo.add("Männlich");
+		geschlechtCombo.add("Weiblich");
 		
-		Label PostleitzahlLabel = new Label(ProfilMiddleContainer, SWT.NONE);
-		PostleitzahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		PostleitzahlLabel.setText("Postleitzahl");
+		Label postleitzahlLabel = new Label(profilMiddleContainer, SWT.NONE);
+		postleitzahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		postleitzahlLabel.setText("Postleitzahl");
 		//Empty label to fill the GridLayout
-		new Label(ProfilMiddleContainer, SWT.NONE);
+		new Label(profilMiddleContainer, SWT.NONE);
 		
-		PostleitzahlTextField = new Text(ProfilMiddleContainer, SWT.BORDER);
-		PostleitzahlTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		PostleitzahlTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		PostleitzahlTextField.setTextLimit(5);
+		postleitzahlTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		postleitzahlTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		postleitzahlTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		postleitzahlTextField.setTextLimit(5);
 		//Empty label to fill GridLayout
-		new Label(ProfilMiddleContainer, SWT.NONE);
+		new Label(profilMiddleContainer, SWT.NONE);
 		
-		Composite ProfilTopContainer = new Composite(ProfilContainer, SWT.NONE);
-		ProfilTopContainer.setLayoutData(BorderLayout.NORTH);
+		Composite profilTopContainer = new Composite(profilContainer, SWT.NONE);
+		profilTopContainer.setLayoutData(BorderLayout.NORTH);
 		createContents();
 		
 		//SelectionListener of the Button of the Header to switch between views
-		DashboardButton.addSelectionListener(new SelectionAdapter() {
+		dashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				MainStack.topControl = DashboardContainer;
-				MainContainer.layout();
+				mainStack.topControl = dashboardContainer;
+				mainContainer.layout();
 			}
 		});
 		
-		ProfilButton.addSelectionListener(new SelectionAdapter() {
+		profilButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				MainStack.topControl = ProfilContainer;
-				MainContainer.layout();
+				mainStack.topControl = profilContainer;
+				mainContainer.layout();
 			}
 		});
 		
-		UnternehmensButton.addSelectionListener(new SelectionAdapter() {
+		unternehmensButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				MainStack.topControl = UnternehmenContainer;
-				MainContainer.layout();
+				mainStack.topControl = unternehmenContainer;
+				mainContainer.layout();
 			}
 		});
 		
-		AuftragsButton.addSelectionListener(new SelectionAdapter() {
+		auftragsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				MainStack.topControl = AufträgeContainer;
-				MainContainer.layout();
+				mainStack.topControl = aufträgeContainer;
+				mainContainer.layout();
 			}
+		});
+		
+		meineAufträgeTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				TableItem item = (TableItem) e.getSource();
+				new AuftragsansichtWindow(item.getText(1));
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
 		});
 		
 	}
