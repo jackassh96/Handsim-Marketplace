@@ -20,7 +20,7 @@ public class OfferHandler {
 	 * @param ID
 	 * @return 
 	 * @throws 
-	 * TODO Implement the Exception for the SearchForID-Method correctly
+	 * TODO Implement the Exception for the SearchForID-Method correctly --> Felix: welche exception soll da kommen? Die OfferList wird doch mit dem OfferHandler zusammen erstellt, da ist eigentlich kein Spielraum fuer Exceptions meine ich...
 	 */
 	public Offer SearchForID(String ID) {
 

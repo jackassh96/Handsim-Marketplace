@@ -2,13 +2,16 @@ package processing.data;
 
 public class Position {
 	
-	//Attributes
+//Attributes
+	
 	private String positionID;
 	private String category_ID;
 	private String assignment_ID;
 	private String description;
 	private String amount;
 	
+
+//Constructor	
 	
 	public Position(String positionID, String category_ID,
 			String assignment_ID, String description, String amount) {
@@ -19,6 +22,8 @@ public class Position {
 		this.amount = amount;
 	}
 
+	
+//Getters and Setters	
 
 	public String getPositionID() {
 		return positionID;
