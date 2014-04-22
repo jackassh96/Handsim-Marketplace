@@ -31,9 +31,9 @@ public class Controller {
 	 ********** GUI
 	 * 
 	 * -> triggering gui:
-	 * 			o start man window
-	 * 			o close main window
-	 * 			o close main window and start login again
+	 * 		Tobi	o start main window
+	 * 		Tobi	o close main window
+	 * 		Tobi	o close main window and start login again
 	 * 
 	 * -> generate TableItems:
 	 * 			o my Assignments (short version for dashboard)
@@ -111,7 +111,7 @@ public class Controller {
 	 * @throws SQLException
 	 * @throws Exception  
 	 */
-	//TODO dbHandler übergeben?
+	//TODO dbHandler ï¿½bergeben?
 	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
 		instance = Controller.getInstance();
 		//initialize helper lists
@@ -192,7 +192,7 @@ public class Controller {
 				}
 			}
 			Category [] subCats = new Category[buf.size()];
-			//gemerkte Arraylist in array überführen
+			//gemerkte Arraylist in array ï¿½berfï¿½hren
 			for (int i = 0; i < buf.size(); i++) {
 				subCats[i] = buf.get(i);
 			}
@@ -220,7 +220,7 @@ public class Controller {
 			}
 		}
 		Category [] majorCats = new Category[buf.size()];
-		//gemerkte Arraylist in array überführen
+		//gemerkte Arraylist in array ï¿½berfï¿½hren
 		for (int i = 0; i < buf.size(); i++) {
 			majorCats[i] = buf.get(i);
 		}
@@ -246,7 +246,7 @@ public class Controller {
 			}
 		}
 		Category [] majorCats = new Category[buf.size()];
-		//gemerkte Arraylist in array überführen
+		//gemerkte Arraylist in array ï¿½berfï¿½hren
 		for (int i = 0; i < buf.size(); i++) {
 			majorCats[i] = buf.get(i);
 		}
@@ -265,7 +265,7 @@ public class Controller {
 		Category [] majCats = instance.majorCategoryList;
 		//durch major categories laufen um subkategorien zu erhalten
 		for (Category c : majCats) {
-			//Treeitem erzeugen für major categories
+			//Treeitem erzeugen fï¿½r major categories
 			TreeItem x = c.toMajorTreeItem(tree);
 			serviceTreeList.add(x);
 			for (Category ca : c.getSubCategories()) {
@@ -308,7 +308,7 @@ public class Controller {
 				catpuffer.add(c);
 				findParentCategory(c.getParentCategory());
 		}
-		//arrayList in Array überführen
+		//arrayList in Array ï¿½berfï¿½hren
 		Category [] buffer = new Category[catpuffer.size()];
 		int i = 0;
 		for (Category c : catpuffer) {
