@@ -2,6 +2,14 @@ package gui;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.NumberFormat;
+
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -27,6 +35,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -178,13 +187,29 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		final Tree outputTree = new Tree(middleMainContainer, SWT.BORDER);
 		outputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		outputTree.setHeaderVisible(true);
+		TreeColumn dienstleistungColumn = new TreeColumn(outputTree, SWT.NONE);
+		dienstleistungColumn.setText("Dienstleistung");
+		dienstleistungColumn.setWidth(300);
+		TreeColumn anzahlColumn = new TreeColumn(outputTree, SWT.NONE);
+		anzahlColumn.setText("Anzahl");
+		anzahlColumn.setWidth(300);
 		
 		einfügenButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] selectedItems = inputTree.getSelection();
-				for(TreeItem item : selectedItems){
-					
+				if(inputTree.getSelection().length > 0){
+					TreeItem[] selectedItems = inputTree.getSelection();
+					for(TreeItem item : selectedItems){
+						if(item.getItems().length < 1){
+							String menge = JOptionPane.showInputDialog("Bitte gewünschte Anzahl eintragen: ");
+							String tempText = item.getText();
+							TreeItem outputItem = new TreeItem(getSameTreeItem(item.getParentItem(), outputTree), SWT.NONE);
+							outputItem.setText(new String[]{item.getText(), ""+menge});
+							outputItem.setData(item.getData());
+						}
+					}
 				}
+				
 			}
 		});
 		
@@ -215,5 +240,18 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+	
+	private static TreeItem getSameTreeItem(TreeItem item, Tree tree){
+		TreeItem returnTree = null;
+		if(((String[])item.getData())[2].equals("-1")){
+			returnTree = new TreeItem(tree, SWT.NONE);
+
+		}else{
+			returnTree = new TreeItem(getSameTreeItem(item.getParentItem(), tree), SWT.NONE);
+		}
+		returnTree.setText(new String[]{item.getText()});
+		returnTree.setData(item.getData());
+		return returnTree;
 	}
 }
