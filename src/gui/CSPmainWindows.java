@@ -2,6 +2,8 @@ package gui;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -31,6 +33,8 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import processing.Controller;
+
 
 public class CSPmainWindows extends Shell {
 	private Text suchfeld;
@@ -49,6 +53,7 @@ public class CSPmainWindows extends Shell {
 	private Table unternehmensTable;
 	private Table meineAuftr‰geTable;
 	private Label unternehmensLabel;
+	private Combo geschlechtCombo;
 
 	/**
 	 * Launch the application.
@@ -282,6 +287,51 @@ public class CSPmainWindows extends Shell {
 		Button profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
 		profilSpeichernButton.setBounds(0, 0, 105, 35);
 		profilSpeichernButton.setText("Speichern");
+		profilSpeichernButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				if(stadtTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde keine Stadt eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(vornameTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde kein Vorname eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(nachnameTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde kein Nachname eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(telefonTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde keine Telefonnummer eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(straﬂeTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde keine Straﬂe eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(hausnummerTextField.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Es wurde keine Hausnummer eingetragen!", "Fehler!", 2);
+					return;
+				}
+				if(!(emailTextField.getText().contains("@") && emailTextField.getText().contains("."))){
+					JOptionPane.showMessageDialog(null, "Keine g¸ltige E-Mail-Addresse eingetragen!", "Fehler!", 2);
+					return;
+				}
+				Controller controller = Controller.getInstance();
+				/*
+				try {
+					//TODO password?
+					controller.updateUser(benutzernameTextField.getText(), null, vornameTextField.getText(), nachnameTextField.getText(), straﬂeTextField.getText(), hausnummerTextField.getText(), postleitzahlTextField.getText(), stadtTextField.getText(), emailTextField.getText(), telefonTextField.getText(), unternehmensTextField.getText(), geschlechtCombo.getText());
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				*/
+			}
+		});
 		
 		Composite profilMiddleContainer = new Composite(profilContainer, SWT.NONE);
 		profilMiddleContainer.setLayoutData(BorderLayout.CENTER);
@@ -298,10 +348,20 @@ public class CSPmainWindows extends Shell {
 		benutzernameTextField = new Text(profilMiddleContainer, SWT.READ_ONLY);
 		benutzernameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		benutzernameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		benutzernameTextField.setEditable(false);
 		
 		stadtTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		stadtTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		stadtTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		stadtTextField.addVerifyListener(new VerifyListener() {
+	        public void verifyText(VerifyEvent e) {
+            	if(Character.isDigit(e.character)){
+            		e.doit = false;
+            	}else{
+            		e.doit = true;
+            	}
+        	}
+        });
 		
 		Label vornameLabel = new Label(profilMiddleContainer, SWT.NONE);
 		vornameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -314,6 +374,16 @@ public class CSPmainWindows extends Shell {
 		vornameTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		vornameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		vornameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//VerifyListener filtering digits out
+		vornameTextField.addVerifyListener(new VerifyListener() {
+	        public void verifyText(VerifyEvent e) {
+            	if(Character.isDigit(e.character)){
+            		e.doit = false;
+            	}else{
+            		e.doit = true;
+            	}
+        	}
+        });
 		
 		unternehmensTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		unternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -331,6 +401,16 @@ public class CSPmainWindows extends Shell {
 		nachnameTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		nachnameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		nachnameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//VerifyListener filtering digits out
+		nachnameTextField.addVerifyListener(new VerifyListener() {
+	        public void verifyText(VerifyEvent e) {
+            	if(Character.isDigit(e.character)){
+            		e.doit = false;
+            	}else{
+            		e.doit = true;
+            	}
+        	}
+        });
 		
 		emailTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		emailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -347,6 +427,16 @@ public class CSPmainWindows extends Shell {
 		straﬂeTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		straﬂeTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		straﬂeTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		//VerifyListener filtering digits out
+		straﬂeTextField.addVerifyListener(new VerifyListener() {
+			public void verifyText(VerifyEvent e) {
+				if(Character.isDigit(e.character)){
+					e.doit = false;
+		        }else{
+		            e.doit = true;
+		        }
+		    }
+		});
 		
 		telefonTextField = new Text(profilMiddleContainer, SWT.BORDER);
 		telefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -374,7 +464,7 @@ public class CSPmainWindows extends Shell {
 		hausnummerTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		hausnummerTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Combo geschlechtCombo = new Combo(profilMiddleContainer, SWT.NONE);
+		geschlechtCombo = new Combo(profilMiddleContainer, SWT.NONE);
 		geschlechtCombo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		geschlechtCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		geschlechtCombo.add("M‰nnlich");
