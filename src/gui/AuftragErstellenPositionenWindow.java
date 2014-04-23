@@ -202,14 +202,54 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					for(TreeItem item : selectedItems){
 						if(item.getItems().length < 1){
 							String menge = JOptionPane.showInputDialog("Bitte gewünschte Anzahl eintragen: ");
-							String tempText = item.getText();
-							TreeItem outputItem = new TreeItem(getSameTreeItem(item.getParentItem(), outputTree), SWT.NONE);
-							outputItem.setText(new String[]{item.getText(), ""+menge});
-							outputItem.setData(item.getData());
+							int zusätzlicheMenge;
+							try{
+								zusätzlicheMenge = Integer.parseInt(menge);
+							}catch(NumberFormatException notInt){
+								JOptionPane.showMessageDialog(null, "Bitte eine Zahl eingeben", "Fehler!", 2);
+								return;
+							}
+							TreeItem outputItem = getSameTreeItem(item, outputTree);
+							if(outputItem.getText(1).equals("")){
+								outputItem.setText(new String[]{item.getText(), ""+menge});
+							}else{
+								int alteMenge = Integer.parseInt(outputItem.getText(1));
+								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusätzlicheMenge)});
+							}
 						}
 					}
 				}
 				
+			}
+		});
+		
+		leftKlappenButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				for(TreeItem item : inputTree.getItems()){
+					expandAll(item);
+				}
+			}
+		});
+		
+		löschenButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				if(outputTree.getSelection().length > 0){
+					TreeItem[] selectedItems = outputTree.getSelection();
+					for(TreeItem item : selectedItems){
+						if(item.getItems().length < 1){
+							deleteAllUnneededItems(item);
+						}
+					}
+				}
+				
+			}
+		});
+		
+		rightKlappenButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				for(TreeItem item : outputTree.getItems()){
+					expandAll(item);
+				}
 			}
 		});
 		
@@ -242,16 +282,71 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
+	/**
+	 * Copys all the contant of an item and its parents into new items that will be attached to the given tree
+	 * @param item that should be copyed
+	 * @param tree the new Items should be attached to
+	 * @return the copy of the item
+	 */
 	private static TreeItem getSameTreeItem(TreeItem item, Tree tree){
-		TreeItem returnTree = null;
-		if(((String[])item.getData())[2].equals("-1")){
-			returnTree = new TreeItem(tree, SWT.NONE);
-
-		}else{
-			returnTree = new TreeItem(getSameTreeItem(item.getParentItem(), tree), SWT.NONE);
+		TreeItem returnItem = null;
+		for(TreeItem searchItem : tree.getItems()){
+			if(returnItem == null){
+				returnItem = idTaken(searchItem, item);
+			}
 		}
-		returnTree.setText(new String[]{item.getText()});
-		returnTree.setData(item.getData());
-		return returnTree;
+		if(returnItem == null){
+			if(((String[])item.getData())[2].equals("-1")){
+				returnItem = new TreeItem(tree, SWT.NONE);
+
+			}else{
+				returnItem = new TreeItem(getSameTreeItem(item.getParentItem(), tree), SWT.NONE);
+			}
+			returnItem.setText(new String[]{item.getText()});
+			returnItem.setData(item.getData());
+		}
+		return returnItem;
+	}
+
+	/**
+	 * Searches for a specified Item by comparing its data with a given Item and its childs
+	 * @param searchItem is the item and the parent of the items that will be compared to the one that is to find
+	 * @param toFindItem is the one that is searched for
+	 * @return null if no one is found or the found item
+	 */
+	private static TreeItem idTaken(TreeItem searchItem, TreeItem toFindItem) {
+		if(searchItem.getData().equals(toFindItem.getData())){
+			return searchItem;
+		}else{
+			for(TreeItem child : searchItem.getItems()){
+				return idTaken(child, toFindItem);
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * Sets the item an all of its child expanded
+	 * @param item to expand
+	 */
+	private static void expandAll(TreeItem item){
+		item.setExpanded(true);
+		for(TreeItem child : item.getItems()){
+			expandAll(child);
+		}
+	}
+	
+	/**
+	 * deletes the item from the tree and all its parents that dont have more childs
+	 * @param deleteItem is the one to delete
+	 */
+	private static void deleteAllUnneededItems(TreeItem deleteItem){
+		if(deleteItem.getItems().length == 0){
+			TreeItem parent = deleteItem.getParentItem();
+			deleteItem.dispose();
+			if(parent != null){
+				deleteAllUnneededItems(parent);
+			}
+		}
 	}
 }
