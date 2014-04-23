@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DatumFull implements Serializable {
+public class DatumFull implements Serializable, Comparable<DatumFull> {
 
 	
 	private String day; // --> dd (Bsp. 07)
@@ -225,5 +225,28 @@ public class DatumFull implements Serializable {
 
 	public String getSeconds() {
 		return seconds;
+	}
+
+	@Override
+	public int compareTo(DatumFull date) {
+		if(Integer.parseInt(date.getYear()) == Integer.parseInt(getYear())){
+			if(Integer.parseInt(date.getMonth()) == Integer.parseInt(getMonth())){
+				if(Integer.parseInt(date.getDay()) == Integer.parseInt(getDay())){
+					return 0;
+				}else if(Integer.parseInt(date.getDay()) < Integer.parseInt(getDay())){
+					return 1;
+				}else{
+					return -1;
+				}
+			}else if(Integer.parseInt(date.getMonth()) < Integer.parseInt(getMonth())){
+				return 1;
+			}else{
+				return -1;
+			}
+		}else if(Integer.parseInt(date.getYear()) < Integer.parseInt(getYear())){
+			return 1;
+		}else{
+			return -1;
+		}
 	}
 }

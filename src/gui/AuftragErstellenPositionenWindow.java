@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -43,6 +44,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import processing.Controller;
 import processing.data.Category;
+import processing.data.Position;
 import processing.dataBase.dbHandler;
 
 public class AuftragErstellenPositionenWindow extends Shell {
@@ -81,23 +83,10 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		middleRightLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Button weiterButton = new Button(middleRightLowContainer, SWT.NONE);
-		weiterButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				((Button)e.getSource()).getShell().setVisible(false);
-				AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(((Button)e.getSource()).getShell());
-			}
-		});
 		weiterButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		weiterButton.setText("Weiter");
 		
 		Button abbrechenButton = new Button(middleRightLowContainer, SWT.NONE);
-		abbrechenButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				((Button)e.getSource()).getShell().dispose();
-			}
-		});
 		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		abbrechenButton.setText("Abbrechen");
 		
@@ -171,19 +160,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		final Tree inputTree = new Tree(middleMainContainer, SWT.BORDER);
 		inputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-//		TreeColumn tc = new TreeColumn(InputTree, SWT.NORMAL);
-		
 		//TODO userdata
 		controller = controller.init(null, new dbHandler());
 		controller.buildTreeFromMajorCategories(inputTree);
-//		test.builTreeWithPositons("12345", InputTree);
-//		for (TreeItem t : test.getPositionTreeList()) {
-//			System.out.println(t.getText());
-//		}
-//		
-//		for (Category t : test.getNeededCategoryList()) {
-//			System.out.println(t.getTitle());
-//		}
 		
 		final Tree outputTree = new Tree(middleMainContainer, SWT.BORDER);
 		outputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -193,7 +172,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		dienstleistungColumn.setWidth(300);
 		TreeColumn anzahlColumn = new TreeColumn(outputTree, SWT.NONE);
 		anzahlColumn.setText("Anzahl");
-		anzahlColumn.setWidth(300);
+		anzahlColumn.setWidth(100);
 		
 		einfügenButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -253,6 +232,29 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			}
 		});
 		
+		weiterButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(outputTree.getItems().length > 0){
+					((Button)e.getSource()).getShell().setVisible(false);
+					ArrayList<TreeItem> items = new ArrayList<TreeItem>();
+					for(TreeItem item : outputTree.getItems()){
+						getPositionItems(items, item);
+					}
+					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(((Button)e.getSource()).getShell(),outputTree);
+				}else{
+					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
+				}
+			}
+		});
+		
+		abbrechenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				((Button)e.getSource()).getShell().dispose();
+			}
+		});
+		
 		createContents();
 		
 		try {
@@ -266,7 +268,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 
 	/**
 	 * Create contents of the shell.
@@ -348,5 +350,19 @@ public class AuftragErstellenPositionenWindow extends Shell {
 				deleteAllUnneededItems(parent);
 			}
 		}
+	}
+
+	/**
+	 * Adds all the child items that have no more childs to a given ArrayList of TreeItem
+	 * @param items ArrayList to add all found childs with no more childs to
+	 * @param item to check
+	 */
+	private static void getPositionItems(ArrayList<TreeItem> items, TreeItem item) {
+		if(item.getItems().length > 1){
+			getPositionItems(items, item);
+		}else{
+			items.add(item);
+		}
+		
 	}
 }
