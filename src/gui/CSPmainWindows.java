@@ -235,7 +235,7 @@ public class CSPmainWindows extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					new AuftragErstellenPositionenWindow();
+					new AuftragErstellenPositionenWindow(null);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

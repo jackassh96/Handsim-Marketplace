@@ -1,5 +1,7 @@
 package gui;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -32,20 +35,17 @@ import processing.helper.DatumFull;
 public class AuftragErstellenInfoWindow extends Shell {
 	private Text titelText;
 	private Text beschreibungText;
-	private Shell previousWindow;
 
 	/**
 	 * Create the shell.
 	 * @param treeItems 
 	 * @param display
 	 */
-	public AuftragErstellenInfoWindow(Shell previousPage, final Tree outputTree) {
+	public AuftragErstellenInfoWindow(ArrayList<TreeItem> outputItems) {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		
 		setLayout(new BorderLayout(0, 0));
-		previousWindow = previousPage;
 		
-		this.setLocation(previousWindow.getLocation());
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
@@ -66,10 +66,18 @@ public class AuftragErstellenInfoWindow extends Shell {
 		mainContainer.setLayoutData(BorderLayout.CENTER);
 		mainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		//Tree auftragsTree = new Tree(mainContainer, SWT.BORDER);
-		final Composite oldParent = outputTree.getParent();
-		outputTree.setParent(mainContainer);
-
+		final Tree auftragsTree = new Tree(mainContainer, SWT.BORDER);
+		auftragsTree.setHeaderVisible(true);
+		TreeColumn dienstleistungColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		dienstleistungColumn.setText("Dienstleistung");
+		dienstleistungColumn.setWidth(300);
+		TreeColumn anzahlColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		anzahlColumn.setText("Anzahl");
+		anzahlColumn.setWidth(100);
+		for(TreeItem outputItem : outputItems){
+			System.out.println(outputItem.getText());
+			AuftragErstellenPositionenWindow.getSameTreeItem(outputItem, auftragsTree);
+		}
 		
 		Composite rightMainContainer = new Composite(mainContainer, SWT.NONE);
 		rightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
@@ -132,11 +140,28 @@ public class AuftragErstellenInfoWindow extends Shell {
 		zurückButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
-				outputTree.setParent(oldParent);
-				window.dispose();
-				window.getPreviousWindow().open();
-				oldParent.layout();
+				try {
+					ArrayList<TreeItem> returnItems = new ArrayList<TreeItem>();
+					for(TreeItem returnItem : auftragsTree.getItems()){
+						AuftragErstellenPositionenWindow.getPositionItems(returnItems, returnItem);
+					}
+					String[][] dataArray = new String[returnItems.size()][];
+					for(int i = 0; i < returnItems.size(); i++){
+						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1)};
+					}
+					((Button)e.getSource()).getShell().dispose();
+					new AuftragErstellenPositionenWindow(dataArray);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 			}				
 		});
 		
@@ -145,13 +170,17 @@ public class AuftragErstellenInfoWindow extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				DatumFull date = new DatumFull();
 				try {
-					int result = date.compareTo(new DatumFull(""+dateField.getDay(), ""+dateField.getMonth(), ""+dateField.getYear()));
-					if(result > 0){
+					//Somehow the DateField returns the Month -1
+					int result = date.compareTo(new DatumFull(""+dateField.getDay(), ""+(dateField.getMonth()+1), ""+dateField.getYear()));
+					if(result >= 0){
 						JOptionPane.showMessageDialog(null, "Das Erfüllungsdatum muss in der Zukunft liegen!", "Fehler!", 2);
 						return;
 					}
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+				if(titelText.getText().isEmpty()){
+					JOptionPane.showMessageDialog(null, "Bitte tragen Sie einen Titel für den Auftrag hinzu!", "Fehler!", 2);
 				}
 			}
 		});
@@ -159,20 +188,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AuftragErstellenInfoWindow window =(AuftragErstellenInfoWindow) ((Button)e.getSource()).getShell();
-				window.dispose();
-				window.getPreviousWindow().dispose();
+				((Button)e.getSource()).getShell().dispose();
 			}
 		});
-		
-		addListener(SWT.Close, new Listener()
-	    {
-	        public void handleEvent(Event event)
-	        {
-	        	oldParent.getShell().dispose();
-	            event.doit = true;
-	        }
-	    });
 		
 		createContents();
 		try {
@@ -186,10 +204,6 @@ public class AuftragErstellenInfoWindow extends Shell {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public Shell getPreviousWindow(){
-		return previousWindow;
 	}
 
 	/**
