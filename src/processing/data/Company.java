@@ -9,7 +9,6 @@ public class Company {
 	private String street;
 	private String number;
 	private int postCode;
-	private String city;
 	private String owner;
 	private String phone;
 	private String eMail;
@@ -113,13 +112,4 @@ public class Company {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
 }

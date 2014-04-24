@@ -94,7 +94,7 @@ public class Assignment {
 		this.deadline = deadline;
 		this.status = status;
 		this.title = title;
-		this.dueDate = dueDate;
+		this.setDueDate(dueDate);
 	}
 
 // Getters and Setters
@@ -152,6 +152,14 @@ public class Assignment {
 
 	public void setPositionList(Position[] positionList) {
 		this.positionList = positionList;
+	}
+
+	public String getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(String dueDate) {
+		this.dueDate = dueDate;
 	}
 
 }

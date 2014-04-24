@@ -1,6 +1,7 @@
 package testing;
 
 import gui.AuftragErstellenPositionenWindow;
+import gui.CSPmainWindows;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -48,7 +49,11 @@ public class ControllerTest {
 //		neu.init(x, new dbHandler());
 		
 		
-		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
+//		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
+		
+		CSPmainWindows window = new CSPmainWindows(null);
+		window.main(null);
+		
 		
 			}
 

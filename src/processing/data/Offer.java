@@ -95,4 +95,20 @@ public class Offer {
 		this.description = description;
 	}
 
+	public String getAssignmentID() {
+		return assignmentID;
+	}
+
+	public void setAssignmentID(String assignmentID) {
+		this.assignmentID = assignmentID;
+	}
+
+	public String getCompanyID() {
+		return companyID;
+	}
+
+	public void setCompanyID(String companyID) {
+		this.companyID = companyID;
+	}
+
 }

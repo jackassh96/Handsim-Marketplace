@@ -38,7 +38,6 @@ public class Category {
 	}
 	
 	public TreeItem toSubTreeItem(TreeItem treeitem) {
-		System.out.println("treeitem: " +treeitem);
 		TreeItem trItem = new TreeItem(treeitem, SWT.NONE);
 		//TODO set correct data depending on columns
 		String [] tem = new String [3];

@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -40,10 +44,13 @@ public class Controller {
 	 * ----------------------
 	 * 
 	 * -> generate TableItems:
-	 * 			o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
+	 * 		x	o my Assignments Header
+	 * 		x	o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
 	 * 			o next Dates											-> 
-	 * 			o companies												
-	 * 			o my Assignments (detailed list)
+	 * 		x	o companies header				
+	 * 		x	o companies								
+	 * 		x	o my Assignments (detailed list) header
+	 * 		x	o my Assignments (detailed list)
 	 * 			o generate offer list (database action)
 	 * 
 	 * 			
@@ -726,21 +733,169 @@ public class Controller {
 //	 * 			o generate offer list (database action)
 
 	//TODO'S
-	
-	public TableItem [] generateMyAssignmentTableItemsDashboard() {
-		return null;
+	// could be global parameters at beginning of class definition! TODO 
+	// + documentation
+	public void generateTableHeaderMyAssignments(Table table) {
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
+		tblClmnTitle.setWidth(200);
+		tblClmnTitle.setText("Bezeichnung");
+		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
+		tblClmnState.setWidth(100);
+		tblClmnState.setText("Status");
+		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
+		tblClmnDeadline.setWidth(100);
+		tblClmnDeadline.setText("Deadline");
+		TableColumn tblClmnIcon = new TableColumn(table, SWT.CENTER);
+		tblClmnIcon.setWidth(25);
+		tblClmnIcon.setText("");
 	}
 	
-	public TableItem [] generateCompanyTableItems() {
-		return null;
+	public void generateMyAssignmentTableItemsDashboard(Table table) {
+		for (Assignment a : assignmentHandler.getAssignmentList()) {
+			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			tableItem.setText(new String[] {a.getTitle(), a.getStatus(), a.getDeadline()});
+			tableItem.setData("id", a.getAssignmentID());
+			
+			switch (a.getStatus()) {
+			//TODO add different states
+			case "new": 		tableItem.setImage(3, new Image(null, "X:\\icon.png"));
+								break;
+			
+			default :			tableItem.setImage(3, new Image(null, "X:\\icon2.png"));
+								break;
+			}
+			
+		}
 	}
 	
-	public TableItem [] generateMyAssignmentTableItems() {
-		return null;
+	public void generateTableHeaderCompanyTable(Table table) {
+		TableColumn tblClmnName = new TableColumn(table, SWT.LEFT);
+		tblClmnName.setWidth(150);
+		tblClmnName.setText("Name");
+		
+		TableColumn tblClmnStreet = new TableColumn(table, SWT.LEFT);
+		tblClmnStreet.setWidth(150);
+		tblClmnStreet.setText("Straße");
+		
+		TableColumn tblClmnNumber = new TableColumn(table, SWT.LEFT);
+		tblClmnNumber.setWidth(80);
+		tblClmnNumber.setText("Nummer");
+		
+		TableColumn tblClmnPostcode = new TableColumn(table, SWT.LEFT);
+		tblClmnPostcode.setWidth(80);
+		tblClmnPostcode.setText("Postleitzahl");
+		
+		TableColumn tblClmnOwner = new TableColumn(table, SWT.LEFT);
+		tblClmnOwner.setWidth(100);
+		tblClmnOwner.setText("Eigentümer");
+		
+		TableColumn tblClmnPhone = new TableColumn(table, SWT.LEFT);
+		tblClmnPhone.setWidth(100);
+		tblClmnPhone.setText("Telefonnummer");
+		
+		TableColumn tblClmnEmail = new TableColumn(table, SWT.LEFT);
+		tblClmnEmail.setWidth(100);
+		tblClmnEmail.setText("Email");
+		
+		TableColumn tblClmnDescription = new TableColumn(table, SWT.LEFT);
+		tblClmnDescription.setWidth(300);
+		tblClmnDescription.setText("Beschreibung");
 	}
 	
-	public TableItem [] generateOfferTableItems() {
-		return null;
+	public void generateCompanyTableItems(Table table) {
+		for (Company c : companyList) {
+			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			tableItem.setText(new String[] {c.getName(),c.getStreet(),c.getNumber(),String.valueOf(c.getPostCode()),
+											c.getOwner(), c.getPhone(), c.getEMail(),c.getDescription()});
+			tableItem.setData("id", c.getCompanyID());
+		}
+	}
+	
+	public void generateTableHeaderAssignmentTable(Table table) {
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
+		tblClmnTitle.setWidth(200);
+		tblClmnTitle.setText("Bezeichnung");
+		
+		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
+		tblClmnCreation.setWidth(100);
+		tblClmnCreation.setText("Erstellungsdatum");
+		
+		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
+		tblClmnDeadline.setWidth(100);
+		tblClmnDeadline.setText("Ausschreibungsende");
+		
+		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
+		tblClmnDuedate.setWidth(100);
+		tblClmnDuedate.setText("Fälligkeitsdatum");
+		
+		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
+		tblClmnState.setWidth(100);
+		tblClmnState.setText("Status");
+		
+		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
+		tblClmnDescritpion.setWidth(250);
+		tblClmnDescritpion.setText("Beschreibung");
+	}
+	
+	
+	
+	public void generateMyAssignmentTableItems(Table table) {
+		for (Assignment a : assignmentHandler.getAssignmentList()) {
+			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			tableItem.setText(new String[] {a.getTitle(), a.getDateOfCreation(), a.getDeadline(),
+											a.getDueDate(), a.getStatus(), a.getDescription()});
+			tableItem.setData("id", a.getAssignmentID());
+		}
+	}
+	
+//	private String companyID;
+//	private double price;
+//	private String amountOfTimeNeeded;
+//	private String description;
+//	private String date;
+//	private String status;
+	
+	public void generateTableHeaderOfferTable(Table table) {
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
+		tblClmnTitle.setWidth(200);
+		tblClmnTitle.setText("Firma");
+		
+		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
+		tblClmnCreation.setWidth(100);
+		tblClmnCreation.setText("Erstellungsdatum");
+		
+		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
+		tblClmnDeadline.setWidth(80);
+		tblClmnDeadline.setText("Preis");
+		
+		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
+		tblClmnDuedate.setWidth(100);
+		tblClmnDuedate.setText("Benötigter Zeitraum");
+		
+		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
+		tblClmnState.setWidth(100);
+		tblClmnState.setText("Status");
+		
+		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
+		tblClmnDescritpion.setWidth(100);
+		tblClmnDescritpion.setText("Erstellt am");
+	}
+	
+	public void generateOfferTableItems(Table table, String assignment_ID) throws SQLException, IOException {
+		Offer [] offerList = generateOfferlistforAssignment(assignment_ID);
+		for (Offer o : offerList) {
+			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			String companyName = "";
+			
+			for (Company c : companyList) {
+				if (o.getCompanyID().equals(c.getCompanyID())) {
+					companyName = c.getName();
+				}
+			}
+			tableItem.setText(new String[] {companyName, String.valueOf(o.getPrice()), o.getAmountOfTimeNeeded(), 
+											o.getDescription(),	o.getStatus(), o.getDate()});
+			tableItem.setData("id", o.getOfferID());
+		}
 	}
 	
 // Getters
