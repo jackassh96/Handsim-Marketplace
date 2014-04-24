@@ -22,7 +22,7 @@ public class DbTest {
 		try {
 			
 			dbhandler.createPosition("99", "12949847", "ganz schön viel ...", "12 Stück");
-			
+			dbhandler.createPosition("88", "12949847", "ganz schön viel ...", "12 Stück");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
