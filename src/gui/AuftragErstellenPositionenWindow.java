@@ -51,12 +51,13 @@ public class AuftragErstellenPositionenWindow extends Shell {
 
 	/**
 	 * Create the shell.
+	 * @param dataArray 
 	 * @param display
 	 * @throws Exception 
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AuftragErstellenPositionenWindow() throws SQLException, IOException, Exception {
+	public AuftragErstellenPositionenWindow(String[][] dataArray) throws SQLException, IOException, Exception {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -174,6 +175,19 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		anzahlColumn.setText("Anzahl");
 		anzahlColumn.setWidth(100);
 		
+		if(dataArray != null){
+			for(String[] singleData : dataArray){
+				for(TreeItem item : inputTree.getItems()){
+					TreeItem tempItem = idTaken(item, singleData[0]);
+					if(tempItem != null){
+						TreeItem foundItem = getSameTreeItem(tempItem, outputTree);
+						foundItem.setText(new String[]{item.getText(), singleData[1]});
+					}
+				}
+			}
+			
+		}
+		
 		einfügenButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if(inputTree.getSelection().length > 0){
@@ -241,7 +255,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					for(TreeItem item : outputTree.getItems()){
 						getPositionItems(items, item);
 					}
-					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(((Button)e.getSource()).getShell(),outputTree);
+					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items);
 				}else{
 					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
@@ -290,11 +304,11 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * @param tree the new Items should be attached to
 	 * @return the copy of the item
 	 */
-	private static TreeItem getSameTreeItem(TreeItem item, Tree tree){
+	protected static TreeItem getSameTreeItem(TreeItem item, Tree tree){
 		TreeItem returnItem = null;
 		for(TreeItem searchItem : tree.getItems()){
 			if(returnItem == null){
-				returnItem = idTaken(searchItem, item);
+				returnItem = idTaken(searchItem, ((String[])searchItem.getData())[0]);
 			}
 		}
 		if(returnItem == null){
@@ -304,7 +318,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			}else{
 				returnItem = new TreeItem(getSameTreeItem(item.getParentItem(), tree), SWT.NONE);
 			}
-			returnItem.setText(new String[]{item.getText()});
+			returnItem.setText(new String[]{item.getText(), item.getText(1)});
 			returnItem.setData(item.getData());
 		}
 		return returnItem;
@@ -316,12 +330,15 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * @param toFindItem is the one that is searched for
 	 * @return null if no one is found or the found item
 	 */
-	private static TreeItem idTaken(TreeItem searchItem, TreeItem toFindItem) {
-		if(searchItem.getData().equals(toFindItem.getData())){
+	protected static TreeItem idTaken(TreeItem searchItem, String toFindID) {
+		if(((String[])searchItem.getData())[0].equals(toFindID)){
 			return searchItem;
 		}else{
 			for(TreeItem child : searchItem.getItems()){
-				return idTaken(child, toFindItem);
+				TreeItem tempItem = idTaken(child, toFindID);
+				if(tempItem != null){
+					return tempItem;
+				}
 			}
 			return null;
 		}
@@ -331,7 +348,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * Sets the item an all of its child expanded
 	 * @param item to expand
 	 */
-	private static void expandAll(TreeItem item){
+	protected static void expandAll(TreeItem item){
 		item.setExpanded(true);
 		for(TreeItem child : item.getItems()){
 			expandAll(child);
@@ -342,7 +359,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * deletes the item from the tree and all its parents that dont have more childs
 	 * @param deleteItem is the one to delete
 	 */
-	private static void deleteAllUnneededItems(TreeItem deleteItem){
+	protected static void deleteAllUnneededItems(TreeItem deleteItem){
 		if(deleteItem.getItems().length == 0){
 			TreeItem parent = deleteItem.getParentItem();
 			deleteItem.dispose();
@@ -357,12 +374,14 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * @param items ArrayList to add all found childs with no more childs to
 	 * @param item to check
 	 */
-	private static void getPositionItems(ArrayList<TreeItem> items, TreeItem item) {
-		if(item.getItems().length > 1){
-			getPositionItems(items, item);
+	protected static void getPositionItems(ArrayList<TreeItem> items, TreeItem item) {
+		if(item.getItems().length > 0){
+			for(TreeItem child : item.getItems())
+			getPositionItems(items, child);
 		}else{
 			items.add(item);
 		}
 		
 	}
+
 }
