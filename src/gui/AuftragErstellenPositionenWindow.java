@@ -110,7 +110,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Label inputTreeLabel = new Label(leftUpperMainContainer, SWT.NONE);
 		inputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		inputTreeLabel.setText("Mögliche \nAuftragselemente");
+		inputTreeLabel.setText("MÃ¶gliche \nAuftragselemente");
 		
 		Composite rightLeftUpperMainContainer = new Composite(leftUpperMainContainer, SWT.NONE);
 		rightLeftUpperMainContainer.setLayout(new BorderLayout());
@@ -126,16 +126,16 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		leftKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		leftKlappenButton.setText("Klappen");
 		
-		Button einfügenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
-		einfügenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		einfügenButton.setText("Einfügen");
+		Button einfugenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		einfugenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		einfugenButton.setText("EinfÃ¼gen");
 		
 		Composite rightUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
 		rightUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Label outputTreeLabel = new Label(rightUpperMainContainer, SWT.NONE);
 		outputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		outputTreeLabel.setText("Ausgewählte \nAuftragselemente");
+		outputTreeLabel.setText("AusgewÃ¤hlte \nAuftragselemente");
 		
 		Composite rightRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
 		rightRightUpperMainContainer.setLayout(new BorderLayout());
@@ -151,9 +151,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		rightKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		rightKlappenButton.setText("Klappen");
 		
-		Button löschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
-		löschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		löschenButton.setText("Löschen");
+		Button loschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		loschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		loschenButton.setText("LÃ¶schen");
 		
 		Composite middleMainContainer = new Composite(mainContainer, SWT.NONE);
 		middleMainContainer.setLayoutData(BorderLayout.CENTER);
@@ -188,16 +188,16 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			
 		}
 		
-		einfügenButton.addSelectionListener(new SelectionAdapter() {
+		einfugenButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if(inputTree.getSelection().length > 0){
 					TreeItem[] selectedItems = inputTree.getSelection();
 					for(TreeItem item : selectedItems){
 						if(item.getItems().length < 1){
-							String menge = JOptionPane.showInputDialog("Bitte gewünschte Anzahl eintragen: ");
-							int zusätzlicheMenge;
+							String menge = JOptionPane.showInputDialog("Bitte gewÃ¼nschte Anzahl eintragen: ");
+							int zusatzlicheMenge;
 							try{
-								zusätzlicheMenge = Integer.parseInt(menge);
+								zusatzlicheMenge = Integer.parseInt(menge);
 							}catch(NumberFormatException notInt){
 								JOptionPane.showMessageDialog(null, "Bitte eine Zahl eingeben", "Fehler!", 2);
 								return;
@@ -207,7 +207,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 								outputItem.setText(new String[]{item.getText(), ""+menge});
 							}else{
 								int alteMenge = Integer.parseInt(outputItem.getText(1));
-								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusätzlicheMenge)});
+								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusatzlicheMenge)});
 							}
 						}
 					}
@@ -224,7 +224,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			}
 		});
 		
-		löschenButton.addSelectionListener(new SelectionAdapter(){
+		loschenButton.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
 				if(outputTree.getSelection().length > 0){
 					TreeItem[] selectedItems = outputTree.getSelection();
@@ -257,7 +257,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					}
 					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items);
 				}else{
-					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
+					JOptionPane.showMessageDialog(null, "Bitte fÃ¼gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
 			}
 		});
