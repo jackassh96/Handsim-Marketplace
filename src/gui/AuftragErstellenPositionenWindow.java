@@ -9,8 +9,12 @@ import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -110,7 +114,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Label inputTreeLabel = new Label(leftUpperMainContainer, SWT.NONE);
 		inputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		inputTreeLabel.setText("MÃ¶gliche \nAuftragselemente");
+		inputTreeLabel.setText("Mögliche \nAuftragselemente");
 		
 		Composite rightLeftUpperMainContainer = new Composite(leftUpperMainContainer, SWT.NONE);
 		rightLeftUpperMainContainer.setLayout(new BorderLayout());
@@ -124,18 +128,22 @@ public class AuftragErstellenPositionenWindow extends Shell {
 				
 		Button leftKlappenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
 		leftKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		leftKlappenButton.setText("Klappen");
+		leftKlappenButton.setText("Auflappen");
+		
+		Button leftZuklappenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		leftZuklappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		leftZuklappenButton.setText("Zuklappen");
 		
 		Button einfugenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
 		einfugenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		einfugenButton.setText("EinfÃ¼gen");
+		einfugenButton.setText("Einfügen");
 		
 		Composite rightUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
 		rightUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Label outputTreeLabel = new Label(rightUpperMainContainer, SWT.NONE);
 		outputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		outputTreeLabel.setText("AusgewÃ¤hlte \nAuftragselemente");
+		outputTreeLabel.setText("Ausgewählte \nAuftragselemente");
 		
 		Composite rightRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
 		rightRightUpperMainContainer.setLayout(new BorderLayout());
@@ -149,11 +157,15 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Button rightKlappenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
 		rightKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		rightKlappenButton.setText("Klappen");
+		rightKlappenButton.setText("Aufklappen");
+		
+		Button rightZuklappenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		rightZuklappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		rightZuklappenButton.setText("Zuklappen");
 		
 		Button loschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
 		loschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		loschenButton.setText("LÃ¶schen");
+		loschenButton.setText("Löschen");
 		
 		Composite middleMainContainer = new Composite(mainContainer, SWT.NONE);
 		middleMainContainer.setLayoutData(BorderLayout.CENTER);
@@ -174,6 +186,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		TreeColumn anzahlColumn = new TreeColumn(outputTree, SWT.NONE);
 		anzahlColumn.setText("Anzahl");
 		anzahlColumn.setWidth(100);
+		TreeColumn beschreibungColumn = new TreeColumn(outputTree, SWT.NONE);
+		beschreibungColumn.setText("Beschreibung");
+		beschreibungColumn.setWidth(200);
 		
 		if(dataArray != null){
 			for(String[] singleData : dataArray){
@@ -181,7 +196,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					TreeItem tempItem = idTaken(item, singleData[0]);
 					if(tempItem != null){
 						TreeItem foundItem = getSameTreeItem(tempItem, outputTree);
-						foundItem.setText(new String[]{item.getText(), singleData[1]});
+						foundItem.setText(new String[]{item.getText(), singleData[1], singleData[2]});
 					}
 				}
 			}
@@ -194,7 +209,25 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					TreeItem[] selectedItems = inputTree.getSelection();
 					for(TreeItem item : selectedItems){
 						if(item.getItems().length < 1){
-							String menge = JOptionPane.showInputDialog("Bitte gewÃ¼nschte Anzahl eintragen: ");
+							//Create a Window to ask for the amount and further informations
+							String menge = "not set";
+							String beschreibung = "";
+							JTextField mengeField =  new JTextField();
+							JTextArea beschreibungArea = new JTextArea("",20,10);
+							JPanel pnl = new JPanel(new java.awt.BorderLayout());
+							JPanel pnl2 = new JPanel(new java.awt.BorderLayout());
+							JPanel pnl3 = new JPanel(new java.awt.BorderLayout());
+							pnl3.add(pnl, java.awt.BorderLayout.NORTH);
+							pnl3.add(pnl2, java.awt.BorderLayout.SOUTH);
+							pnl.add(new JLabel("Bitte geben Sie die gewünschte Anzahl an:"), java.awt.BorderLayout.NORTH);
+							pnl.add(mengeField, java.awt.BorderLayout.SOUTH);
+							pnl2.add(new JLabel("Hier, falls nötig, weitere Beschreibung einfügen:"), java.awt.BorderLayout.NORTH);
+							pnl2.add(beschreibungArea, java.awt.BorderLayout.SOUTH);
+							int okCxl = JOptionPane.showConfirmDialog(null,pnl3,"Enter Data",JOptionPane.OK_CANCEL_OPTION);
+                            if (okCxl == JOptionPane.OK_OPTION) {
+                            	menge = mengeField.getText();
+                            	beschreibung = beschreibungArea.getText();
+                            }
 							int zusatzlicheMenge;
 							try{
 								zusatzlicheMenge = Integer.parseInt(menge);
@@ -204,10 +237,10 @@ public class AuftragErstellenPositionenWindow extends Shell {
 							}
 							TreeItem outputItem = getSameTreeItem(item, outputTree);
 							if(outputItem.getText(1).equals("")){
-								outputItem.setText(new String[]{item.getText(), ""+menge});
+								outputItem.setText(new String[]{item.getText(), ""+menge, beschreibung});
 							}else{
 								int alteMenge = Integer.parseInt(outputItem.getText(1));
-								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusatzlicheMenge)});
+								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusatzlicheMenge), beschreibung});
 							}
 						}
 					}
@@ -220,6 +253,14 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				for(TreeItem item : inputTree.getItems()){
 					expandAll(item);
+				}
+			}
+		});
+		
+		leftZuklappenButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				for(TreeItem item : inputTree.getItems()){
+					collapseAll(item);
 				}
 			}
 		});
@@ -246,6 +287,14 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			}
 		});
 		
+		rightZuklappenButton.addSelectionListener(new SelectionAdapter(){
+			public void widgetSelected(SelectionEvent e) {
+				for(TreeItem item : outputTree.getItems()){
+					collapseAll(item);
+				}
+			}
+		});
+		
 		weiterButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -257,7 +306,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					}
 					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items);
 				}else{
-					JOptionPane.showMessageDialog(null, "Bitte fÃ¼gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
+					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
 			}
 		});
@@ -289,7 +338,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 */
 	protected void createContents() {
 		setText("Auftrag Erstellen");
-		setSize(900, 700);
+		setSize(1280, 720);
 
 	}
 
@@ -318,7 +367,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			}else{
 				returnItem = new TreeItem(getSameTreeItem(item.getParentItem(), tree), SWT.NONE);
 			}
-			returnItem.setText(new String[]{item.getText(), item.getText(1)});
+			returnItem.setText(new String[]{item.getText(), item.getText(1), item.getText(2)});
 			returnItem.setData(item.getData());
 		}
 		return returnItem;
@@ -352,6 +401,13 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		item.setExpanded(true);
 		for(TreeItem child : item.getItems()){
 			expandAll(child);
+		}
+	}
+	
+	protected static void collapseAll(TreeItem item){
+		item.setExpanded(false);
+		for(TreeItem child : item.getItems()){
+			collapseAll(child);
 		}
 	}
 	

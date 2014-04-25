@@ -74,8 +74,10 @@ public class AuftragErstellenInfoWindow extends Shell {
 		TreeColumn anzahlColumn = new TreeColumn(auftragsTree, SWT.NONE);
 		anzahlColumn.setText("Anzahl");
 		anzahlColumn.setWidth(100);
+		TreeColumn beschreibungColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		beschreibungColumn.setText("Beschreibung");
+		beschreibungColumn.setWidth(200);
 		for(TreeItem outputItem : outputItems){
-			System.out.println(outputItem.getText());
 			AuftragErstellenPositionenWindow.getSameTreeItem(outputItem, auftragsTree);
 		}
 		
@@ -147,7 +149,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 					}
 					String[][] dataArray = new String[returnItems.size()][];
 					for(int i = 0; i < returnItems.size(); i++){
-						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1)};
+						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
 					}
 					((Button)e.getSource()).getShell().dispose();
 					new AuftragErstellenPositionenWindow(dataArray);
@@ -181,7 +183,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 				}
 				if(titelText.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Bitte tragen Sie einen Titel für den Auftrag hinzu!", "Fehler!", 2);
+					return;
 				}
+				
 			}
 		});
 		
