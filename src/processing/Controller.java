@@ -37,7 +37,7 @@ public class Controller {
 	 ********** GUI
 	 * 
 	 * -> triggering gui:
-	 * 	Tobi	o start main window
+	 * 	TOBI	o start main window
 	 * 	TOBI	o close main window
 	 * 	TOBI	o close main window and start login again
 	 * 
@@ -51,14 +51,15 @@ public class Controller {
 	 * 		x	o companies								
 	 * 		x	o my Assignments (detailed list) header
 	 * 		x	o my Assignments (detailed list)
-	 * 			o generate offer list (database action)
+	 * 		x	o generate offer list header
+	 * 		x	o generate offer list (database action)
 	 * 
 	 * 			
 	 * -> generate Strings:
-	 * 			o my Profile
-	 * 			o specific Assignment
-	 * 			o specific Offer
-	 * 			o specific Company
+	 * 	nT	x	o my Profile
+	 * 	nT	x	o specific Assignment
+	 * 	nT	x	o specific Offer
+	 * 	nT	x	o specific Company
 	 * 
 	 * 
 	 *************** DB 
@@ -329,7 +330,7 @@ public class Controller {
 				catpuffer.add(c);
 				findParentCategory(c.getParentCategory());
 		}
-		//arrayList in Array �berf�hren
+		//arrayList in Array überführen
 		Category [] buffer = new Category[catpuffer.size()];
 		int i = 0;
 		for (Category c : catpuffer) {
@@ -725,12 +726,6 @@ public class Controller {
 		return cats;	
 		
 	}
-	
-//	o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
-//	 * 			o next Dates											-> 
-//	 * 			o companies												
-//	 * 			o my Assignments (detailed list)
-//	 * 			o generate offer list (database action)
 
 	//TODO'S
 	// could be global parameters at beginning of class definition! TODO 
@@ -848,13 +843,6 @@ public class Controller {
 		}
 	}
 	
-//	private String companyID;
-//	private double price;
-//	private String amountOfTimeNeeded;
-//	private String description;
-//	private String date;
-//	private String status;
-	
 	public void generateTableHeaderOfferTable(Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
 		tblClmnTitle.setWidth(200);
@@ -897,35 +885,91 @@ public class Controller {
 			tableItem.setData("id", o.getOfferID());
 		}
 	}
-	
-// Getters
-// No setters needed. Only setting possibility is through the init method
-	
-//	public User getUser() {
-//		return activeUser;
-//	}
-//	
-//	public Company[] getCompanyList() {
-//		return this.companyList;
-//	}
-//	
-//	public AssignmentHandler getAssignmentHandler() {
-//		return assignmentHandler;
-//	}
-//
-//	public dbHandler getDbHandler() {
-//		return dbHandler;
-//	}
-//
-//
-//	public ArrayList<TreeItem> getPositionTreeList() {
-//		return positionTreeList;
-//	}
-//
-//
-//	public void setPositionTreeList(ArrayList<TreeItem> positionTreeList) {
-//		this.positionTreeList = positionTreeList;
-//	}
 
+	//TODO DOCU
+	public HashMap<String,String> genereateMyProfileHashMap() {
+		HashMap<String,String> result = new HashMap<>();
+		result.put("firstname", activeUser.getFirstName());
+		result.put("lastname", activeUser.getLastName());
+		result.put("street", activeUser.getStreet());
+		result.put("number", activeUser.getNumber());
+		result.put("postcode", String.valueOf(activeUser.getPostCode()));
+		result.put("city", activeUser.getCity());
+		result.put("company", activeUser.getCompany());
+		result.put("phone", activeUser.getPhone());
+		result.put("email", activeUser.geteMail());
+		result.put("gender", activeUser.getGender());		
+		return result;
+	}
+
+	//TODO DOCU
+	public HashMap<String,String> genereateAssignmentHashMap(String assignment_ID) {
+		Assignment assign = null;
+		for ( Assignment a : assignmentHandler.getAssignmentList()) {
+			if (a.getAssignmentID().equals(assignment_ID)) {
+				assign = a;
+			}
+		}
+		HashMap<String,String> result = new HashMap<>();
+		if (assign != null) {
+			result.put("title", assign.getTitle());
+			result.put("duedate", assign.getDueDate());
+			result.put("deadline", assign.getDeadline());
+			result.put("dateofcration", assign.getDateOfCreation());
+			result.put("status", assign.getStatus());
+			result.put("description", assign.getDescription());	
+		}
+		return result;
+	}
+	
+	//TODO DOCU
+	public HashMap<String,String> genereateOfferHashMap(String assignment_ID, String offer_ID) throws SQLException, IOException {
+		Offer offer = null;
+		String compID = "";
+		Company comp = null;
+		for ( Offer o : generateOfferlistforAssignment(assignment_ID)) {
+			if (o.getOfferID().equals(offer_ID)) {
+				offer = o;
+				compID = o.getCompanyID();
+			}
+		}
+		for (Company c : companyList) {
+			if (c.getCompanyID().equals(compID)) {
+				comp = c;
+			}
+		}
+		HashMap<String,String> result = new HashMap<>();
+		if (offer != null && comp != null) {
+			result.put("company", comp.getName());
+			result.put("price", String.valueOf(offer.getPrice()));
+			result.put("amountofttimeneeded", offer.getAmountOfTimeNeeded());
+			result.put("description", offer.getDescription());
+			result.put("date", offer.getDate());
+			result.put("status", offer.getStatus());	
+		}
+		return result;
+	}
+	
+	//TODO DOCU
+	public HashMap<String,String> genereatCompanyHashMap(String company_ID) {
+		Company comp = null;
+		for ( Company c : companyList) {
+			if (c.getCompanyID().equals(company_ID)) {
+				comp = c;
+			}
+		}
+		HashMap<String,String> result = new HashMap<>();
+		if (comp != null) {
+			result.put("name", comp.getName());
+			result.put("street", comp.getStreet());
+			result.put("number", comp.getNumber());
+			result.put("postcode", String.valueOf(comp.getPostCode()));
+			result.put("owner", comp.getOwner());
+			result.put("phone", comp.getPhone());
+			result.put("email", comp.getEMail());
+			result.put("description", comp.getDescription());
+		}
+		return result;
+	}
 
 }
