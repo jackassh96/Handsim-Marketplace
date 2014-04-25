@@ -189,6 +189,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		TreeColumn beschreibungColumn = new TreeColumn(outputTree, SWT.NONE);
 		beschreibungColumn.setText("Beschreibung");
 		beschreibungColumn.setWidth(200);
+		outputTree.setLinesVisible(true);
 		
 		if(dataArray != null){
 			for(String[] singleData : dataArray){

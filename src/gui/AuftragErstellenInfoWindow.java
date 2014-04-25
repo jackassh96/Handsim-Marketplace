@@ -41,7 +41,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 	 * @param treeItems 
 	 * @param display
 	 */
-	public AuftragErstellenInfoWindow(ArrayList<TreeItem> outputItems) {
+	public AuftragErstellenInfoWindow(final ArrayList<TreeItem> outputItems) {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		
 		setLayout(new BorderLayout(0, 0));
@@ -77,6 +77,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		TreeColumn beschreibungColumn = new TreeColumn(auftragsTree, SWT.NONE);
 		beschreibungColumn.setText("Beschreibung");
 		beschreibungColumn.setWidth(200);
+		auftragsTree.setLinesVisible(true);
 		for(TreeItem outputItem : outputItems){
 			AuftragErstellenPositionenWindow.getSameTreeItem(outputItem, auftragsTree);
 		}
@@ -171,9 +172,11 @@ public class AuftragErstellenInfoWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				DatumFull date = new DatumFull();
+				DatumFull chosenDate = null;
 				try {
 					//Somehow the DateField returns the Month -1
-					int result = date.compareTo(new DatumFull(""+dateField.getDay(), ""+(dateField.getMonth()+1), ""+dateField.getYear()));
+					chosenDate = new DatumFull(""+dateField.getDay(), ""+(dateField.getMonth()+1), ""+dateField.getYear());
+					int result = date.compareTo(chosenDate);
 					if(result >= 0){
 						JOptionPane.showMessageDialog(null, "Das Erfüllungsdatum muss in der Zukunft liegen!", "Fehler!", 2);
 						return;
@@ -185,7 +188,17 @@ public class AuftragErstellenInfoWindow extends Shell {
 					JOptionPane.showMessageDialog(null, "Bitte tragen Sie einen Titel für den Auftrag hinzu!", "Fehler!", 2);
 					return;
 				}
-				
+				try {
+					Controller controller = Controller.getInstance();
+					controller.createAssignment(null, null, beschreibungText.getText(), null , null, null, titelText.getText(), chosenDate.toString());
+					for(TreeItem position : outputItems){
+						controller.createPosition(((String[])position.getData())[0], null, position.getText(2), position.getText(1));
+					}
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
 			}
 		});
 		

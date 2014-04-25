@@ -1,43 +1,32 @@
 package gui;
 
+import java.util.HashMap;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
 import swing2swt.layout.BorderLayout;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class UnternehmensansichtWindow extends Shell {
+import processing.Controller;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			UnternehmensansichtWindow shell = new UnternehmensansichtWindow(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+public class UnternehmensansichtWindow extends Shell {
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public UnternehmensansichtWindow(Display display) {
-		super(display, SWT.SHELL_TRIM);
+	public UnternehmensansichtWindow(String unternehmensID) {
+		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
+		
+		Controller controller = Controller.getInstance();
+		HashMap<String, String> unternehmensInfo = controller.genereatCompanyHashMap(unternehmensID);
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
@@ -48,7 +37,7 @@ public class UnternehmensansichtWindow extends Shell {
 		
 		Label unternehmensnameLabel = new Label(leftUpperContainer, SWT.NONE);
 		unternehmensnameLabel.setFont(SWTResourceManager.getFont("Calibri", 16, SWT.BOLD));
-		unternehmensnameLabel.setText("Unternehmensname");
+		unternehmensnameLabel.setText(unternehmensInfo.get("name"));
 		
 		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		rightUpperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -64,7 +53,7 @@ public class UnternehmensansichtWindow extends Shell {
 		
 		Label unternehmensIDLabel = new Label(rightRightUpperContainer, SWT.NONE);
 		unternehmensIDLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		unternehmensIDLabel.setText("Hier ID");
+		unternehmensIDLabel.setText(unternehmensID);
 		
 		Composite middleContainer = new Composite(this, SWT.NONE);
 		middleContainer.setLayoutData(BorderLayout.CENTER);
@@ -81,21 +70,21 @@ public class UnternehmensansichtWindow extends Shell {
 		besitzerNameLabel.setText("Besitzer:");
 		
 		Label besitzerLabel = new Label(composite, SWT.NONE);
-		besitzerLabel.setText("Hier Besitzer");
+		besitzerLabel.setText(unternehmensInfo.get("owner"));
 		
 		Label telefonNameLabel = new Label(composite, SWT.NONE);
 		telefonNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
 		telefonNameLabel.setText("Telefon:");
 		
 		Label telefonLabel = new Label(composite, SWT.NONE);
-		telefonLabel.setText("Hier Telefon");
+		telefonLabel.setText(unternehmensInfo.get("phone"));
 		
 		Label emailNameLabel = new Label(composite, SWT.NONE);
 		emailNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
 		emailNameLabel.setText("E-Mail:");
 		
 		Label emailLabel = new Label(composite, SWT.NONE);
-		emailLabel.setText("Hier E-Mail");
+		emailLabel.setText(unternehmensInfo.get("email"));
 		
 		Composite composite_2 = new Composite(composite_1, SWT.NONE);
 		composite_2.setLayout(new FillLayout(SWT.VERTICAL));
@@ -115,32 +104,46 @@ public class UnternehmensansichtWindow extends Shell {
 		addresseContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Label straﬂeLabel = new Label(addresseContainer, SWT.NONE);
-		straﬂeLabel.setText("Hier Straﬂe");
+		straﬂeLabel.setText(unternehmensInfo.get("street"));
 		
 		Label nummerLabel = new Label(addresseContainer, SWT.NONE);
-		nummerLabel.setText("Hier Nummer");
+		nummerLabel.setText(unternehmensInfo.get("number"));
 		
 		Label postleitzahlNameLabel = new Label(composite_2, SWT.NONE);
 		postleitzahlNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
 		postleitzahlNameLabel.setText("Postleitzahl:");
 		
 		Label postleitzahlLabel = new Label(composite_2, SWT.NONE);
-		postleitzahlLabel.setText("Hier Postleitzahl");
+		postleitzahlLabel.setText(unternehmensInfo.get("postcode"));
 		
 		Label beschreibungNameLabel = new Label(composite_2, SWT.NONE);
 		beschreibungNameLabel.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
 		beschreibungNameLabel.setText("Beschreibung:");
 		
 		Label beschreibungLabel = new Label(composite_2, SWT.NONE);
-		beschreibungLabel.setText("Hier Beschreibung");
+		beschreibungLabel.setText(unternehmensInfo.get("description"));
+		
 		createContents();
+		
+		try {
+			Display display = Display.getDefault();
+			this.open();
+			this.layout();
+			while (!this.isDisposed()) {
+				if (!Display.getDefault().readAndDispatch()) {
+					Display.getDefault().sleep();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("SWT Application");
+		setText("Unternehmensansicht");
 		setSize(753, 427);
 
 	}

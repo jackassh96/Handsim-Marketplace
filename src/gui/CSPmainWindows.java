@@ -1,6 +1,8 @@
 package gui;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -10,6 +12,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
 import swing2swt.layout.BorderLayout;
 
@@ -54,35 +58,16 @@ public class CSPmainWindows extends Shell {
 	private Table meineAuftr‰geTable;
 	private Label unternehmensLabel;
 	private Combo geschlechtCombo;
-
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		try {
-			Display display = Display.getDefault();
-			CSPmainWindows shell = new CSPmainWindows(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private Controller controller;
 
 	/**
 	 * Create the shell.
 	 * @param display
 	 */
-	public CSPmainWindows(Display display) {
-		super(display, SWT.SHELL_TRIM);
+	public CSPmainWindows() {
+		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
-		
+		controller = Controller.getInstance();
 		
 		//Upper static navigationbar
 		Composite headerContainer = new Composite(this, SWT.NONE);
@@ -170,6 +155,11 @@ public class CSPmainWindows extends Shell {
 		dashboardTermineTable.setHeaderVisible(true);
 		dashboardTermineTable.setLinesVisible(true);
 		
+		//TODO uncoment if working
+		//controller.generateTableHeaderMyAssignments(dashboardAuftr‰geTable);
+		//controller.generateMyAssignmentTableItemsDashboard(dashboardAuftr‰geTable);
+		
+		
 		//Composite for upper distance control
 		Composite dashboardTopContainer = new Composite(dashboardContainer, SWT.NONE);
 		dashboardTopContainer.setLayoutData(BorderLayout.NORTH);
@@ -190,6 +180,8 @@ public class CSPmainWindows extends Shell {
 		unternehmensTable.setLayoutData(BorderLayout.CENTER);
 		unternehmensTable.setHeaderVisible(true);
 		unternehmensTable.setLinesVisible(true);
+		
+		controller.generateTableHeaderCompanyTable(unternehmensTable);
 		
 		Composite unternehmenMidleHeaderContainer = new Composite(unternehmenMiddleContainer, SWT.NONE);
 		unternehmenMidleHeaderContainer.setLayoutData(BorderLayout.NORTH);
@@ -237,14 +229,11 @@ public class CSPmainWindows extends Shell {
 				try {
 					new AuftragErstellenPositionenWindow(null);
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				}
 			}
 		});
@@ -254,6 +243,36 @@ public class CSPmainWindows extends Shell {
 		Button auftr‰geBearbeitenButton = new Button(auftr‰geLowerTableButtonContainer, SWT.NONE);
 		auftr‰geBearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		auftr‰geBearbeitenButton.setText("Bearbeiten");
+		auftr‰geBearbeitenButton.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				for(TableItem item : meineAuftr‰geTable.getSelection()){
+					/* Not working this way because you can not create a dummy tree
+					Tree tempTree = new Tree(null, SWT.NONE);
+					try {
+						controller.builTreeWithPositons((String) item.getData("id"), tempTree);
+						ArrayList<TreeItem> items = new ArrayList<TreeItem>();
+						for(TreeItem treeItem : tempTree.getItems()){
+							AuftragErstellenPositionenWindow.getPositionItems(items, treeItem);
+						}
+						String[][] dataArray = new String[items.size()][];
+						for(int i = 0; i < items.size(); i++){
+							dataArray[i] = new String[]{((String[]) items.get(i).getData())[0], items.get(i).getText(1), items.get(i).getText(2)};
+						}
+						try {
+							new AuftragErstellenPositionenWindow(dataArray);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						}
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+					*/
+				}
+			}
+		});
 		
 		Button auftr‰geLˆschenButton = new Button(auftr‰geLowerTableButtonContainer, SWT.NONE);
 		auftr‰geLˆschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
@@ -264,6 +283,8 @@ public class CSPmainWindows extends Shell {
 		meineAuftr‰geTable.setLayoutData(BorderLayout.CENTER);
 		meineAuftr‰geTable.setHeaderVisible(true);
 		meineAuftr‰geTable.setLinesVisible(true);
+		
+		controller.generateTableHeaderAssignmentTable(meineAuftr‰geTable);
 		
 		Composite auftr‰geTopContainer = new Composite(auftr‰geContainer, SWT.NONE);
 		auftr‰geTopContainer.setLayoutData(BorderLayout.NORTH);
@@ -491,6 +512,9 @@ public class CSPmainWindows extends Shell {
 		dashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = dashboardContainer;
+				//TODO uncoment if working
+				//controller.generateTableHeaderMyAssignments(dashboardAuftr‰geTable);
+				//controller.generateMyAssignmentTableItemsDashboard(dashboardAuftr‰geTable);
 				mainContainer.layout();
 			}
 		});
@@ -498,6 +522,17 @@ public class CSPmainWindows extends Shell {
 		profilButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = profilContainer;
+				HashMap<String, String> profilInfo = controller.genereateMyProfileHashMap();
+				vornameTextField.setText(profilInfo.get("firstname"));
+				nachnameTextField.setText(profilInfo.get("lastname"));
+				straﬂeTextField.setText(profilInfo.get("street"));
+				hausnummerTextField.setText(profilInfo.get("number"));
+				postleitzahlTextField.setText(profilInfo.get("postcode"));
+				stadtTextField.setText(profilInfo.get("city"));
+				unternehmensTextField.setText(profilInfo.get("company"));
+				telefonTextField.setText(profilInfo.get("phone"));
+				emailTextField.setText(profilInfo.get("email"));
+				geschlechtCombo.setText(profilInfo.get("gender"));
 				mainContainer.layout();
 			}
 		});
@@ -505,6 +540,8 @@ public class CSPmainWindows extends Shell {
 		unternehmensButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = unternehmenContainer;
+				unternehmensTable.removeAll();
+				controller.generateCompanyTableItems(unternehmensTable);
 				mainContainer.layout();
 			}
 		});
@@ -512,6 +549,8 @@ public class CSPmainWindows extends Shell {
 		auftragsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = auftr‰geContainer;
+				meineAuftr‰geTable.removeAll();
+				controller.generateMyAssignmentTableItems(meineAuftr‰geTable);
 				mainContainer.layout();
 			}
 		});
@@ -520,8 +559,17 @@ public class CSPmainWindows extends Shell {
 
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				TableItem item = (TableItem) e.getSource();
-				new AuftragsansichtWindow(item.getText(1));
+				Table table = (Table) e.getSource();
+				for(TableItem item : table.getSelection()){
+					try {
+						String auftragsID = (String) item.getData("id");
+						new AuftragsansichtWindow(auftragsID);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+				}
 			}
 
 			@Override
@@ -533,6 +581,39 @@ public class CSPmainWindows extends Shell {
 			}
 			
 		});
+		
+		unternehmensTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				Table table = (Table) e.getSource();
+				for(TableItem item :table.getSelection()){
+					String unternehmensID = (String) item.getData("id");
+					new UnternehmensansichtWindow(unternehmensID);
+				}
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
+		});
+		
+		try {
+			this.open();
+			this.layout();
+			while (!this.isDisposed()) {
+				if (!Display.getDefault().readAndDispatch()) {
+					Display.getDefault().sleep();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
