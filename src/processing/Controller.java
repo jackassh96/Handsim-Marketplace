@@ -914,7 +914,7 @@ public class Controller {
 		}
 
 		for (Company c : companyList) {
-			if (c.getCompanyID().equals(compID)) {
+			if (c.getCompanyID().equals(offer.getCompanyID())) {
 				comp = c;
 			}
 		}
@@ -922,7 +922,7 @@ public class Controller {
 		if (offer != null && comp != null) {
 			result.put("company", comp.getName());
 			result.put("price", String.valueOf(offer.getPrice()));
-			result.put("amountofttimeneeded", offer.getAmountOfTimeNeeded());
+			result.put("amountoftimeneeded", offer.getAmountOfTimeNeeded());
 			result.put("description", offer.getDescription());
 			result.put("date", offer.getDate());
 			result.put("status", offer.getStatus());	
