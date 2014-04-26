@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -14,6 +18,7 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -165,6 +170,33 @@ public class AuftragsansichtWindow extends Shell {
 		controller.generateOfferTableItems(angeboteTable, assignmentID);
 		controller.generateTableHeaderOfferTable(angeboteTable);
 		
+		angeboteTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				Table table = (Table) e.getSource();
+				for(TableItem item : table.getSelection()){
+					try {
+						String angebotsID = (String) item.getData("id");
+						new AngeboteansichtWindow(angebotsID);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+				}
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
+		});
+		
 		Composite lowContainer = new Composite(this, SWT.NONE);
 		lowContainer.setLayoutData(BorderLayout.SOUTH);
 		lowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -196,7 +228,9 @@ public class AuftragsansichtWindow extends Shell {
 		
 		Label lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
 		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
+		
 		createContents();
+		
 		try {
 			this.open();
 			this.layout();

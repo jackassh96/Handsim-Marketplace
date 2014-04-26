@@ -62,7 +62,6 @@ public class CSPmainWindows extends Shell {
 
 	/**
 	 * Create the shell.
-	 * @param display
 	 */
 	public CSPmainWindows() {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
