@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -17,6 +19,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Text;
 
 import processing.Controller;
+
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,12 +32,12 @@ public class AngeboteansichtWindow extends Shell {
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AngeboteansichtWindow(String angebotsID) throws SQLException, IOException {
+	public AngeboteansichtWindow(final String angebotsID) throws SQLException, IOException {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
-		Controller controller = Controller.getInstance();
-		HashMap<String, String> angebotsInfo = controller.genereateOfferHashMap(null, angebotsID);
+		final Controller controller = Controller.getInstance();
+		HashMap<String, String> angebotsInfo = controller.genereateOfferHashMap(angebotsID);
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
@@ -43,10 +46,10 @@ public class AngeboteansichtWindow extends Shell {
 		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
 		leftUpperContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label unternehmensnamTextLabel = new Label(leftUpperContainer, SWT.NONE);
-		unternehmensnamTextLabel.setFont(SWTResourceManager.getFont("Calibri", 20, SWT.NORMAL));
-		unternehmensnamTextLabel.setLayoutData(BorderLayout.CENTER);
-		unternehmensnamTextLabel.setText(angebotsInfo.get("company"));
+		Label unternehmensnameTextLabel = new Label(leftUpperContainer, SWT.NONE);
+		unternehmensnameTextLabel.setFont(SWTResourceManager.getFont("Calibri", 20, SWT.NORMAL));
+		unternehmensnameTextLabel.setLayoutData(BorderLayout.CENTER);
+		unternehmensnameTextLabel.setText(angebotsInfo.get("company"));
 		
 		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		rightUpperContainer.setLayout(new BorderLayout(0, 0));
@@ -131,14 +134,26 @@ public class AngeboteansichtWindow extends Shell {
 		annehmenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				try {
+					controller.acceptOffer(angebotsID);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
 			}
 		});
 		
 		ablehnenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				try {
+					controller.declineOffer(angebotsID);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
 			}
 		});
 		

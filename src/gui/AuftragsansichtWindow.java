@@ -167,8 +167,8 @@ public class AuftragsansichtWindow extends Shell {
 		angeboteTable.setHeaderVisible(true);
 		angeboteTable.setLinesVisible(true);
 		
-		controller.generateOfferTableItems(angeboteTable, assignmentID);
 		controller.generateTableHeaderOfferTable(angeboteTable);
+		controller.generateOfferTableItems(angeboteTable, assignmentID);
 		
 		angeboteTable.addMouseListener(new MouseListener(){
 

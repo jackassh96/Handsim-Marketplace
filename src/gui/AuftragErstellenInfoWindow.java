@@ -190,9 +190,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 				}
 				try {
 					Controller controller = Controller.getInstance();
-					controller.createAssignment(null, null, beschreibungText.getText(), null , null, null, titelText.getText(), chosenDate.toString());
+					String auftragsID = controller.createAssignment(beschreibungText.getText(), date.toString(), null, titelText.getText(), chosenDate.toString());
 					for(TreeItem position : outputItems){
-						controller.createPosition(((String[])position.getData())[0], null, position.getText(2), position.getText(1));
+						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));
 					}
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);

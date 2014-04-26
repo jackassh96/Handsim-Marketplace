@@ -274,6 +274,23 @@ public class CSPmainWindows extends Shell {
 		});
 		
 		Button aufträgeLöschenButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeLöschenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int antwort = JOptionPane.showOptionDialog(null, "Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+				if(antwort == 0){
+					for(TableItem item : meineAufträgeTable.getSelection()){
+						try {
+							controller.deleteAssignment((String) item.getData("id"));
+						} catch (SQLException e1) {
+							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						}
+					}
+				}
+			}
+		});
 		aufträgeLöschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		aufträgeLöschenButton.setText("Löschen");
 		
