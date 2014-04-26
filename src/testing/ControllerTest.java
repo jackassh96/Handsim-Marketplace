@@ -51,8 +51,9 @@ public class ControllerTest {
 		
 //		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
 		
-		CSPmainWindows window = new CSPmainWindows(null);
-		window.main(null);
+		CSPmainWindows window = new CSPmainWindows();
+		
+	
 		
 		
 			}

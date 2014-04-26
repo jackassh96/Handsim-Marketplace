@@ -79,6 +79,9 @@ public class Controller {
 	 * 	x = implemented
 	 * nT = not tested yet
 	 *  
+	 *  /// String [][] = gneriere pposituino 8assignnmentid<9
+	 *  
+	 *  
 	 * 
 	 */
 	
@@ -320,6 +323,7 @@ public class Controller {
 	 * 
 	 */
 	public void builTreeWithPositons(String Assignment_ID, Tree tree) throws SQLException, IOException { 
+		positionTreeList = new ArrayList<>();
 		Assignment assign = instance.searchForID(Assignment_ID);
 		Position [] positions = assign.getPositionList();
 		
@@ -506,7 +510,7 @@ public class Controller {
 				i++;
 			}
 
-			result[j] = new Offer(buf[0], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
+			result[j] = new Offer(buf[0], assignment_ID, buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 		}
 		return result;
 		}
@@ -546,57 +550,25 @@ public class Controller {
 	 * 
 	 * TODO TEST! 
 	 * 
-	 * @param assignmentID All parameters according to the attributes of the assignment object.
-	 * @param positionList
-	 * @param offerHandler
+	 *  All parameters according to the attributes of the assignment object.
 	 * @param description
 	 * @param dateOfCreation
 	 * @param deadline
-	 * @param status
 	 * @param title
 	 * 
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public void createAssignment(String assignmentID, Position[] positionList, String description, String dateOfCreation,
-								String deadline, String status, String title, String dueDate) throws SQLException, IOException {
-		//add object to handler
-		// Creation of the new assignment initialized from the GUI
-		Assignment newAssignment = new Assignment(assignmentID, positionList, description, dateOfCreation, deadline, status, title, dueDate);
-
-		// Add the new assignment to the Controller's AssignmentList
-		Assignment[] newAssignmentList = new Assignment[this.assignmentHandler.getAssignmentList().length + 1];
-		for (int j = 0; j < this.assignmentHandler.getAssignmentList().length; j++) {
-			newAssignmentList[j] = this.assignmentHandler.getAssignmentList()[j];
-		}
-		newAssignmentList[this.assignmentHandler.getAssignmentList().length] = newAssignment;
-		this.assignmentHandler.setAssignmentList(newAssignmentList);
-		
+	// assignmentID raus, positionlist raus 
+	public String createAssignment(String description, String dateOfCreation, String deadline,
+								   String title, String dueDate) throws SQLException, IOException {
 		//add entry in database
-		dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, deadline, status, title, dueDate);
+		dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, deadline, title, dueDate);
+		
+		//string mit id zurückgeben
+		return null;
 	}
 	
-	/**
-	 * Updates a specific Assignment within the database
-	 * 
-	 * TODO TEST! 
-	 * 
-	 * @param assignmentID
-	 * @param status
-	 * 
-	 * @throws IOException 
-	 * @throws SQLException 
-	 */
-	public void updateAssignment(String assignment_ID, String status) throws SQLException, IOException {
-		//update object in handler
-		for (Assignment a : assignmentHandler.getAssignmentList()) {
-			if (a.getAssignmentID().equals(assignment_ID)) {
-				a.setStatus(status);
-			}
-		}
-		//update entry in database
-		dbHandler.updateAssignmentStatus(assignment_ID, status);
-	}
 	
 	/**
 	 * Deletes a specific Assignment within the database (updates the status in database! no real deletion)
@@ -610,22 +582,13 @@ public class Controller {
 	 * @throws SQLException 
 	 */
 	public void deleteAssignment(String assignment_ID) throws SQLException, IOException {
-		ArrayList<Assignment> list = new ArrayList<>();
-		//update object in handler
-		for (Assignment a : assignmentHandler.getAssignmentList()) {
-			if (!(a.getAssignmentID().equals(assignment_ID))) {
-				list.add(a);
-			}
-		}
-		int i = 0;
-		Assignment [] assigns = new Assignment[list.size()];
-		for (Assignment x : list) {
-			assigns[i] = x;
-			i++;
-		}
-		this.assignmentHandler.setAssignmentList(assigns);
 		//update entry in database
 		dbHandler.deleteAssignment(assignment_ID);
+
+		//TODO fill new database table with description
+		dbHandler.cancelAllOffer(assignment_ID);
+
+		
 	}
 	
 	/**
@@ -639,10 +602,30 @@ public class Controller {
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public void updateOffer(String offer_ID, String status) throws SQLException, IOException {
-		//no local update needed just generate new offer list
-		//update entry in database
-		dbHandler.updateOfferStatus(offer_ID, status);
+	public void acceptOffer(String offer_ID) throws SQLException, IOException {
+		HashMap<String,String[]> hM = dbHandler.getSpecificOffer(offer_ID);
+		String [] buf = new String[hM.get(String.valueOf(0)).length];
+		Offer offer = null;
+		for (int j = 0; j < hM.size(); j++) {
+			
+			int i = 0;
+			for (String x : hM.get(String.valueOf(j))) {
+				buf[i] = x;	
+				i++;
+			}
+			offer = new Offer(buf[0], buf[1], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
+		}
+		
+		//set state assigned for assignment in database
+		dbHandler.acceptAssignmentStatus(offer.getAssignmentID());
+		//set state accepted for offer in database
+		dbHandler.acceptOffer(offer_ID);
+		//set state reject state for all other offers
+		dbHandler.cancelAllOtherOffer(offer.getAssignmentID(), offer_ID);
+	}
+	//TODO + beschreibung
+	public void declineOffer(String offer_ID) throws SQLException, IOException {
+		dbHandler.rejectOffer(offer_ID);
 	}
 	
 	/**
@@ -660,24 +643,6 @@ public class Controller {
 	 * @throws SQLException 
 	 */
 	public void createPosition(String category_ID, String assignment_ID, String description, String amount) throws SQLException, IOException {
-		//add object to handler
-		// Creation of the new Position initialized from the GUI
-		Position newPosition = new Position(category_ID, assignment_ID, description, amount);
-
-		// Add the new Position to the assignment
-		for (Assignment a : assignmentHandler.getAssignmentList()) {
-			if (a.getAssignmentID().equals(assignment_ID)) {
-				Position [] old = a.getPositionList();
-				Position [] buf  = new Position[a.getPositionList().length+1];
-				int i = 0;
-				for (Position p : old) {
-					buf[i] = old[i];
-					i++;
-				}
-				buf[i] = newPosition;
-			}
-		}
-		
 		//add entry in database
 		dbHandler.createPosition(category_ID, assignment_ID, description, amount);
 	}
@@ -752,11 +717,18 @@ public class Controller {
 			tableItem.setData("id", a.getAssignmentID());
 			
 			switch (a.getStatus()) {
+			
 			//TODO add different states
-			case "new": 		tableItem.setImage(3, new Image(null, "X:\\icon.png"));
+			case "open": 		tableItem.setImage(3, new Image(null, ".\\images\\openState.png"));
 								break;
 			
-			default :			tableItem.setImage(3, new Image(null, "X:\\icon2.png"));
+			case "canceled": 	tableItem.setImage(3, new Image(null, ".\\images\\declinedState.png"));
+								break;
+								
+			case "assigned": 	tableItem.setImage(3, new Image(null, ".\\images\\assignedState.png"));
+								break;
+								
+			default :			tableItem.setImage(3, new Image(null, ".\\images\\doneState.png"));
 								break;
 			}
 			
@@ -889,6 +861,7 @@ public class Controller {
 	//TODO DOCU
 	public HashMap<String,String> genereateMyProfileHashMap() {
 		HashMap<String,String> result = new HashMap<>();
+		result.put("id", activeUser.getUserID());
 		result.put("firstname", activeUser.getFirstName());
 		result.put("lastname", activeUser.getLastName());
 		result.put("street", activeUser.getStreet());
@@ -923,16 +896,23 @@ public class Controller {
 	}
 	
 	//TODO DOCU
-	public HashMap<String,String> genereateOfferHashMap(String assignment_ID, String offer_ID) throws SQLException, IOException {
+	public HashMap<String,String> genereateOfferHashMap(String offer_ID) throws SQLException, IOException {
 		Offer offer = null;
 		String compID = "";
 		Company comp = null;
-		for ( Offer o : generateOfferlistforAssignment(assignment_ID)) {
-			if (o.getOfferID().equals(offer_ID)) {
-				offer = o;
-				compID = o.getCompanyID();
+		//aus db! TOD
+		HashMap<String,String[]> hM = dbHandler.getSpecificOffer(offer_ID);
+		String [] buf = new String[hM.get(String.valueOf(0)).length];
+		for (int j = 0; j < hM.size(); j++) {
+			
+			int i = 0;
+			for (String x : hM.get(String.valueOf(j))) {
+				buf[i] = x;	
+				i++;
 			}
+			offer = new Offer(buf[0], buf[1], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 		}
+
 		for (Company c : companyList) {
 			if (c.getCompanyID().equals(compID)) {
 				comp = c;
