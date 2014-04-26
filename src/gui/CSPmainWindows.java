@@ -522,6 +522,7 @@ public class CSPmainWindows extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = profilContainer;
 				HashMap<String, String> profilInfo = controller.genereateMyProfileHashMap();
+				benutzernameTextField.setText(profilInfo.get("id"));
 				vornameTextField.setText(profilInfo.get("firstname"));
 				nachnameTextField.setText(profilInfo.get("lastname"));
 				straﬂeTextField.setText(profilInfo.get("street"));

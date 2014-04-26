@@ -56,7 +56,6 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	/**
 	 * Create the shell.
 	 * @param dataArray 
-	 * @param display
 	 * @throws Exception 
 	 * @throws IOException 
 	 * @throws SQLException 
@@ -358,7 +357,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		TreeItem returnItem = null;
 		for(TreeItem searchItem : tree.getItems()){
 			if(returnItem == null){
-				returnItem = idTaken(searchItem, ((String[])searchItem.getData())[0]);
+				returnItem = idTaken(searchItem, ((String[])item.getData())[0]);
 			}
 		}
 		if(returnItem == null){
