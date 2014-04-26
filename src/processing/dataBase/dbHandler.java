@@ -47,8 +47,22 @@ public class dbHandler {
 	private String positionTable = "marketpositions";
 	private String offerTable = "marketoffer";
 	
-	private String rejectStateName = "Abgelehnt";
-			
+	//GLOBAL STRINGS FOR Assignment open; canceled; assigned; done
+	private String openStateName = "open";
+	private String rejectStateName = "canceled";
+	private String acceptStateName = "assigned"; //TODO
+	private String doneStateName = "done";
+	
+	//GLOBAL STRINGS FOR Offer 	open; declined; accepted; CanceledByAssignment
+	private String openStateOffer = "open";
+	private String declinedStateOffer = "declined";
+	private String acceptStateOffer = "accepted"; //TODO
+	private String doneStateOffer = "done";
+	private String rejctStateOffer = "rejected";
+	private String canceledStateOffer = "CanceledByAssignment";
+	
+	
+	
 	/**
 	 * default constructor	-	uses hard coded parameter for database connection 
 	 * 
@@ -317,9 +331,9 @@ public class dbHandler {
 			rowStr[5] = neu.getNString("Number");
 			rowStr[6] = String.valueOf(neu.getInt("Post_Code"));
 			rowStr[7] = neu.getNString("City");
-			rowStr[8] = neu.getNString("Email");
+			rowStr[10] = neu.getNString("Email");
 			rowStr[9] = neu.getNString("Phone");
-			rowStr[10] = neu.getNString("Company");
+			rowStr[8] = neu.getNString("Company");
 			rowStr[11] = neu.getNString("Gender");
 			con.close();
 			 }
@@ -428,14 +442,14 @@ public class dbHandler {
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */ 
 	//	TODO TEST!
-	public boolean createAssignment( String owner, String description, String dateOfCreation, String deadline , String status, String title, String dueDate) throws SQLException, IOException {
+	public boolean createAssignment( String owner, String description, String dateOfCreation, String deadline , String title, String dueDate) throws SQLException, IOException {
 	Connection con = setUpConnection();
 	try {	//TODO fix statement to create database structure
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + assingmentTable + " " +
 														"( Assignment_ID, Owner, Description , DateOfCreation , Deadline , Status , Title , DueDate )" +
 														//set NULL for ID for auto_increment and automatically generated id
 														" VALUES ( NULL, \"" + owner + "\" , \"" + description + "\" , \"" + dateOfCreation + "\" , \"" +
-														deadline + "\" , \"" + status + "\" , \"" + title + "\" , \"" + dueDate + "\" );");
+														deadline + "\" , \"" + openStateName + "\" , \"" + title + "\" , \"" + dueDate + "\" );");
 			pst.execute();
 	}
 	catch (SQLException ex) {
@@ -475,10 +489,10 @@ public class dbHandler {
 	 * @throws IOException		if output statement is corrupt 
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */  
-	public boolean updateAssignmentStatus(String assignment_ID, String Status) throws SQLException, IOException {
+	public boolean acceptAssignmentStatus(String assignment_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
 	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
-			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + assingmentTable + " SET Status=\"" + Status + "\"" +
+			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + assingmentTable + " SET Status=\"" + acceptStateName + "\"" +
 														"WHERE Assignment_ID=\"" + assignment_ID +"\";");
 			pst.execute();
 	}
@@ -488,6 +502,21 @@ public class dbHandler {
 	con.close();
 	return true;
 	}
+	
+	//TODO DOCUMENTATION + Test
+	public boolean finishAssignmentStatus(String assignment_ID) throws SQLException, IOException {
+		Connection con = setUpConnection();
+		try {	
+				PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + assingmentTable + " SET Status=\"" + doneStateName + "\"" +
+															"WHERE Assignment_ID=\"" + assignment_ID +"\";");
+				pst.execute();
+		}
+		catch (SQLException ex) {
+			throw new IOException("Auftrag konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+		}
+		con.close();
+		return true;
+		}
 
 	/**
 	 * Updates offer status in database table	
@@ -497,10 +526,10 @@ public class dbHandler {
 	 * @throws IOException		if output statement is corrupt 
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */   
-	public boolean updateOfferStatus(String Offer_ID, String Status) throws SQLException, IOException {
+	public boolean acceptOffer(String Offer_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
-			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + Status + "\"" +
+	try {	
+			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + acceptStateOffer + "\"" +
 														"WHERE Offer_ID=\"" + Offer_ID +"\";");
 			pst.execute();
 	}
@@ -510,6 +539,51 @@ public class dbHandler {
 	con.close();
 	return true;
 	}
+	
+	//TODO DOCU
+	public boolean rejectOffer(String Offer_ID) throws SQLException, IOException {
+		Connection con = setUpConnection();
+		try {	
+				PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + rejctStateOffer + "\"" +
+															"WHERE Offer_ID=\"" + Offer_ID +"\";");
+				pst.execute();
+		}
+		catch (SQLException ex) {
+			throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+		}
+		con.close();
+		return true;
+	}
+	
+	//TODO DOCU + test
+	public boolean cancelAllOtherOffer(String Assignment_ID, String Offer_ID) throws SQLException, IOException {
+		Connection con = setUpConnection();
+		try {	
+				PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + rejctStateOffer + "\"" +
+															"WHERE Assignment_ID=\"" + Assignment_ID +"\" AND Offer_ID!=\"" + Offer_ID +"\";");
+				pst.execute();
+		}
+		catch (SQLException ex) {
+			throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+		}
+		con.close();
+		return true;
+	}
+	
+	//TODO DOCU + test
+		public boolean cancelAllOffer(String Assignment_ID) throws SQLException, IOException {
+			Connection con = setUpConnection();
+			try {	
+					PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + canceledStateOffer + "\"" +
+																"WHERE Assignment_ID=\"" + Assignment_ID +"\";");
+					pst.execute();
+			}
+			catch (SQLException ex) {
+				throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+			}
+			con.close();
+			return true;
+		}
 
 	/**
 	 * Loads category list from database table	
@@ -645,6 +719,46 @@ public class dbHandler {
 		
 		return hOfferMap;
 	}
+	
+	//TODO DOCU
+	public HashMap<String,String[]> getSpecificOffer(String Offer_ID) throws SQLException, IOException {
+		boolean exists = false;
+		ResultSet neu = null;
+		HashMap<String,String[]> hOfferMap = new HashMap<>();
+		
+		Connection con = setUpConnection();
+		try {
+				PreparedStatement pst = con.prepareStatement("");
+				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE Offer_ID=\"" + Offer_ID + "\"");
+				exists = neu.first();
+				//TODO evaluate exists
+		}
+		catch (SQLException ex) {
+			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+		}
+		finally { 
+			int i = 0;
+			do {
+				//TODO ID needed?
+				String [] rowStr = new String[8];
+				rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
+				rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
+				rowStr[2] = neu.getNString("Company_ID");
+				rowStr[3] = String.valueOf(neu.getDouble("Price"));
+				rowStr[4] = neu.getNString("AmountOfTimeNeeded");
+				rowStr[5] = neu.getNString("Description");
+				rowStr[6] = neu.getNString("Date");
+				rowStr[7] = neu.getNString("Status");	
+				
+				hOfferMap.put(String.valueOf(i), rowStr);
+				i++;
+			} while (neu.next());
+			con.close(); 
+		}
+		
+		return hOfferMap;
+	}
+	
 	
 	/**
 	 * Loads position list from database table	

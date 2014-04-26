@@ -34,9 +34,10 @@ public class Offer {
 		this.status = data[7];
 	}
 	
-	public Offer(String offerID, String companyID, double price, String amountOfTimeNeeded,
+	public Offer(String offerID,String assignmentID, String companyID, double price, String amountOfTimeNeeded,
 			String status, String date, String description) {
 		this.offerID = offerID;
+		this.assignmentID = assignmentID;
 		this.companyID = companyID;
 		this.price = price;
 		this.amountOfTimeNeeded = amountOfTimeNeeded;
