@@ -39,14 +39,14 @@ public class ControllerTest {
 		
 //		PRINT ALL USER INFOS
 //		
-//		String [] x = ner.loadUserData("max32");
+		String [] x = ner.loadUserData("max32");
 //		
 //		for (String a : x ) {
 //			System.out.println(a);
 //		}
 //		
 //		
-//		neu.init(x, new dbHandler());
+		neu.init(x, new dbHandler());
 		
 		
 //		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
