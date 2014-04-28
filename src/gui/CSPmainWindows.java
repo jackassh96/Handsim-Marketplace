@@ -148,17 +148,17 @@ public class CSPmainWindows extends Shell {
 		dashboardAufträgeTable.setHeaderVisible(true);
 		dashboardAufträgeTable.setLinesVisible(true);
 		
+		controller.generateTableHeaderMyAssignments(dashboardAufträgeTable);
+		controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
+		
+		
+		
 		dashboardTermineTable = new Table(dashboardMiddleContainer, SWT.BORDER | SWT.FULL_SELECTION);
 		dashboardTermineTable.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		dashboardTermineTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		dashboardTermineTable.setHeaderVisible(true);
 		dashboardTermineTable.setLinesVisible(true);
-		
-		//TODO uncoment if working
-		//controller.generateTableHeaderMyAssignments(dashboardAufträgeTable);
-		//controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
-		
-		
+
 		//Composite for upper distance control
 		Composite dashboardTopContainer = new Composite(dashboardContainer, SWT.NONE);
 		dashboardTopContainer.setLayoutData(BorderLayout.NORTH);
@@ -226,7 +226,7 @@ public class CSPmainWindows extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					new AuftragErstellenPositionenWindow(null);
+					new AuftragErstellenPositionenWindow(null, null);
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
@@ -246,29 +246,19 @@ public class CSPmainWindows extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				for(TableItem item : meineAufträgeTable.getSelection()){
-					/* Not working this way because you can not create a dummy tree
-					Tree tempTree = new Tree(null, SWT.NONE);
 					try {
-						controller.builTreeWithPositons((String) item.getData("id"), tempTree);
-						ArrayList<TreeItem> items = new ArrayList<TreeItem>();
-						for(TreeItem treeItem : tempTree.getItems()){
-							AuftragErstellenPositionenWindow.getPositionItems(items, treeItem);
-						}
-						String[][] dataArray = new String[items.size()][];
-						for(int i = 0; i < items.size(); i++){
-							dataArray[i] = new String[]{((String[]) items.get(i).getData())[0], items.get(i).getText(1), items.get(i).getText(2)};
-						}
-						try {
-							new AuftragErstellenPositionenWindow(dataArray);
-						} catch (Exception e1) {
-							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+						if(antwort == 0){
+							controller.deleteAssignment((String) item.getData("id"));
+							new AuftragErstellenPositionenWindow(null,(String) item.getData("id"));
 						}
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					}
-					*/
 				}
 			}
 		});
@@ -570,6 +560,33 @@ public class CSPmainWindows extends Shell {
 				controller.generateMyAssignmentTableItems(meineAufträgeTable);
 				mainContainer.layout();
 			}
+		});
+		
+		dashboardAufträgeTable.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				Table table = (Table) e.getSource();
+				for(TableItem item : table.getSelection()){
+					try {
+						String auftragsID = (String) item.getData("id");
+						new AuftragsansichtWindow(auftragsID);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+				}
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+			}
+			
 		});
 		
 		meineAufträgeTable.addMouseListener(new MouseListener(){

@@ -60,7 +60,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AuftragErstellenPositionenWindow(String[][] dataArray) throws SQLException, IOException, Exception {
+	public AuftragErstellenPositionenWindow(String[][] dataArray, final String assignmentID) throws SQLException, IOException, Exception {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
@@ -201,6 +201,8 @@ public class AuftragErstellenPositionenWindow extends Shell {
 				}
 			}
 			
+		}else if(assignmentID != null){
+			controller.builTreeWithPositons(assignmentID, outputTree);
 		}
 		
 		einfugenButton.addSelectionListener(new SelectionAdapter() {
@@ -304,7 +306,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					for(TreeItem item : outputTree.getItems()){
 						getPositionItems(items, item);
 					}
-					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items);
+					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items, assignmentID);
 				}else{
 					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}

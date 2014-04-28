@@ -102,6 +102,7 @@ public class AngeboteansichtWindow extends Shell {
 		beschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		beschreibungText.setLayoutData(BorderLayout.CENTER);
 		beschreibungText.setText(angebotsInfo.get("description"));
+		beschreibungText.setEditable(false);
 		
 		Composite lowerContainer = new Composite(this, SWT.NONE);
 		lowerContainer.setLayoutData(BorderLayout.SOUTH);

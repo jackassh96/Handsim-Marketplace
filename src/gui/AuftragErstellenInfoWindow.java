@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -41,11 +42,12 @@ public class AuftragErstellenInfoWindow extends Shell {
 	 * @param treeItems 
 	 * @param display
 	 */
-	public AuftragErstellenInfoWindow(final ArrayList<TreeItem> outputItems) {
+	public AuftragErstellenInfoWindow(final ArrayList<TreeItem> outputItems, final String assignmentID) {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		
 		setLayout(new BorderLayout(0, 0));
 		
+		final Controller controller = Controller.getInstance();
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
@@ -140,6 +142,12 @@ public class AuftragErstellenInfoWindow extends Shell {
 		Label lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
 		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
 		
+		if(assignmentID != null){
+			HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
+			titelText.setText(auftragsInfo.get("title"));
+			beschreibungText.setText(auftragsInfo.get("description"));
+		}
+		
 		zurückButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -153,16 +161,13 @@ public class AuftragErstellenInfoWindow extends Shell {
 						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
 					}
 					((Button)e.getSource()).getShell().dispose();
-					new AuftragErstellenPositionenWindow(dataArray);
+					new AuftragErstellenPositionenWindow(dataArray, assignmentID);
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				}
 				
 			}				
@@ -189,7 +194,6 @@ public class AuftragErstellenInfoWindow extends Shell {
 					return;
 				}
 				try {
-					Controller controller = Controller.getInstance();
 					String auftragsID = controller.createAssignment(beschreibungText.getText(), date.toString(), null, titelText.getText(), chosenDate.toString());
 					for(TreeItem position : outputItems){
 						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));
