@@ -4,13 +4,17 @@ import gui.CSPmainWindows;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -90,6 +94,7 @@ public class Controller {
    /*
 	* Attributes
 	*/
+	protected boolean asc = false;
 	
 	private User activeUser;
 	private CSPmainWindows mainWindow;	
@@ -141,8 +146,8 @@ public class Controller {
 	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
 		instance = Controller.getInstance();
 		//initialize helper lists
-		instance.serviceTreeList = new ArrayList<>(); //TODO reset when method is called
-		instance.positionTreeList = new ArrayList<>(); //TODO reset when method is called
+		instance.serviceTreeList = new ArrayList<>(); 
+		instance.positionTreeList = new ArrayList<>();
 		
 		instance.dbHandler = dbHandler;
 		instance.activeUser = instance.importUser("max32");  //TODO remove hard coded name when login is implemented
@@ -560,13 +565,15 @@ public class Controller {
 	 * @throws SQLException 
 	 */
 	// assignmentID raus, positionlist raus 
-	public String createAssignment(String description, String dateOfCreation, String deadline,
-								   String title, String dueDate) throws SQLException, IOException {
+	public String createAssignment(String description, String dateOfCreation,String title, String dueDate) throws SQLException, IOException {
+//		deadline
+		DatumFull buf = new DatumFull(dueDate);
+		buf.minusDays(7);
 		//add entry in database
-		dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, deadline, title, dueDate);
+		String id = dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, buf.toMachineString(), title, dueDate);
 		
 		//string mit id zurückgeben
-		return null;
+		return id;
 	}
 	
 	
@@ -695,16 +702,55 @@ public class Controller {
 	//TODO'S
 	// could be global parameters at beginning of class definition! TODO 
 	// + documentation
-	public void generateTableHeaderMyAssignments(Table table) {
+	public void generateTableHeaderMyAssignments(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(200);
 		tblClmnTitle.setText("Bezeichnung");
+		tblClmnTitle.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsMyAssignments(table, 0, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsMyAssignments(table, 0, false);
+					asc = true;
+				}
+			}
+		});
 		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
+		tblClmnState.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsMyAssignments(table, 1, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsMyAssignments(table, 1, false);
+					asc = true;
+				}
+			}
+		});
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
 		tblClmnDeadline.setWidth(100);
 		tblClmnDeadline.setText("Deadline");
+		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortDateTableItemsMyAssignments(table, 2, asc);
+					asc = false;
+				}
+				else {
+					sortDateTableItemsMyAssignments(table, 2, false);
+					asc = true;
+				}
+			}
+		});
 		TableColumn tblClmnIcon = new TableColumn(table, SWT.CENTER);
 		tblClmnIcon.setWidth(25);
 		tblClmnIcon.setText("");
@@ -735,38 +781,142 @@ public class Controller {
 		}
 	}
 	
-	public void generateTableHeaderCompanyTable(Table table) {
+	public void generateTableHeaderCompanyTable(final Table table) {
 		TableColumn tblClmnName = new TableColumn(table, SWT.LEFT);
 		tblClmnName.setWidth(150);
 		tblClmnName.setText("Name");
+		tblClmnName.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 0, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 0, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnStreet = new TableColumn(table, SWT.LEFT);
 		tblClmnStreet.setWidth(150);
 		tblClmnStreet.setText("Straße");
+		tblClmnStreet.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 1, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 1, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnNumber = new TableColumn(table, SWT.LEFT);
 		tblClmnNumber.setWidth(80);
 		tblClmnNumber.setText("Nummer");
+		tblClmnNumber.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 2, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 2, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnPostcode = new TableColumn(table, SWT.LEFT);
 		tblClmnPostcode.setWidth(80);
 		tblClmnPostcode.setText("Postleitzahl");
+		tblClmnPostcode.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortNumberTableItemsCompanies(table, 3, asc);
+					asc = false;
+				}
+				else {
+					sortNumberTableItemsCompanies(table, 3, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnOwner = new TableColumn(table, SWT.LEFT);
 		tblClmnOwner.setWidth(100);
 		tblClmnOwner.setText("Eigentümer");
+		tblClmnOwner.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 4, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 4, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnPhone = new TableColumn(table, SWT.LEFT);
 		tblClmnPhone.setWidth(100);
 		tblClmnPhone.setText("Telefonnummer");
+		tblClmnPhone.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 5, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 5, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnEmail = new TableColumn(table, SWT.LEFT);
 		tblClmnEmail.setWidth(100);
 		tblClmnEmail.setText("Email");
+		tblClmnEmail.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 6, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 6, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDescription = new TableColumn(table, SWT.LEFT);
 		tblClmnDescription.setWidth(300);
 		tblClmnDescription.setText("Beschreibung");
+		tblClmnDescription.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsCompanies(table, 7, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsCompanies(table, 7, false);
+					asc = true;
+				}
+			}
+		});
 	}
 	
 	public void generateCompanyTableItems(Table table) {
@@ -778,30 +928,108 @@ public class Controller {
 		}
 	}
 	
-	public void generateTableHeaderAssignmentTable(Table table) {
+	public void generateTableHeaderAssignmentTable(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
 		tblClmnTitle.setWidth(200);
 		tblClmnTitle.setText("Bezeichnung");
+		tblClmnTitle.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsAssignments(table, 0, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsAssignments(table, 0, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
 		tblClmnCreation.setWidth(100);
 		tblClmnCreation.setText("Erstellungsdatum");
+		tblClmnCreation.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortDateTableItemsAssignments(table, 1, asc);
+					asc = false;
+				}
+				else {
+					sortDateTableItemsAssignments(table, 1, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
 		tblClmnDeadline.setWidth(100);
 		tblClmnDeadline.setText("Ausschreibungsende");
+		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortDateTableItemsAssignments(table, 2, asc);
+					asc = false;
+				}
+				else {
+					sortDateTableItemsAssignments(table, 2, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
 		tblClmnDuedate.setWidth(100);
 		tblClmnDuedate.setText("Fälligkeitsdatum");
+		tblClmnDuedate.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortDateTableItemsAssignments(table, 3, asc);
+					asc = false;
+				}
+				else {
+					sortDateTableItemsAssignments(table, 3, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
+		tblClmnState.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsAssignments(table, 4, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsAssignments(table, 4, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
 		tblClmnDescritpion.setWidth(250);
 		tblClmnDescritpion.setText("Beschreibung");
+		tblClmnDescritpion.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsAssignments(table, 5, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsAssignments(table, 5, false);
+					asc = true;
+				}
+			}
+		});
 	}
 	
 	
@@ -815,30 +1043,109 @@ public class Controller {
 		}
 	}
 	
-	public void generateTableHeaderOfferTable(Table table) {
+	public void generateTableHeaderOfferTable(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
 		tblClmnTitle.setWidth(200);
 		tblClmnTitle.setText("Firma");
+		tblClmnTitle.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsOffer(table, 0, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsOffer(table, 0, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
 		tblClmnCreation.setWidth(100);
-		tblClmnCreation.setText("Erstellungsdatum");
+		tblClmnCreation.setText("Preis");
+		tblClmnCreation.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortNumberTableItemsOffer(table, 1, asc);
+					asc = false;
+				}
+				else {
+					sortNumberTableItemsOffer(table, 1, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
 		tblClmnDeadline.setWidth(80);
-		tblClmnDeadline.setText("Preis");
+		tblClmnDeadline.setText("Benötigter Zeitraum");
+		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsOffer(table, 2, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsOffer(table, 2, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
 		tblClmnDuedate.setWidth(100);
-		tblClmnDuedate.setText("Benötigter Zeitraum");
+		tblClmnDuedate.setText("Beschreibung");
+		tblClmnDuedate.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsOffer(table, 3, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsOffer(table, 3, false);
+					asc = true;
+				}
+			}
+		});
 		
 		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
+		tblClmnState.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortStringTableItemsOffer(table, 4, asc);
+					asc = false;
+				}
+				else {
+					sortStringTableItemsOffer(table, 4, false);
+					asc = true;
+				}
+			}
+		});
+		
 		
 		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
 		tblClmnDescritpion.setWidth(100);
 		tblClmnDescritpion.setText("Erstellt am");
+		tblClmnDescritpion.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event arg0) {
+				if (asc) {
+					sortDateTableItemsOffer(table, 5, asc);
+					asc = false;
+				}
+				else {
+					sortDateTableItemsOffer(table, 5, false);
+					asc = true;
+				}
+			}
+		});
 	}
 	
 	public void generateOfferTableItems(Table table, String assignment_ID) throws SQLException, IOException {
@@ -950,6 +1257,511 @@ public class Controller {
 			result.put("description", comp.getDescription());
 		}
 		return result;
+
 	}
 
+	public void sortStringTableItemsMyAssignments(Table table, int columnindex, boolean asc) {
+	// TODO Auto-generated method stub
+	if (asc) {
+		asc = false;
+		TableItem[] items = table.getItems();
+        Collator collator = Collator.getInstance(Locale.getDefault());
+        int k = 0;
+        while (k < items.length) {
+	        for (int i = 1; i < items.length; i++) {
+	          String value1 = items[i].getText(columnindex);
+	          for (int j = 0; j < i; j++) {
+	            String value2 = items[j].getText(columnindex);
+	            if (collator.compare(value1, value2) < 0) {
+	              String[] values = { items[i].getText(0),
+	                  items[i].getText(1), items[i].getText(2) };
+	              Image buf = items[i].getImage(3);
+	              String data = (String) items[i].getData("id");
+	              items[i].dispose();
+	              TableItem item = new TableItem(table, SWT.NONE, j);
+	              item.setText(values);
+	              item.setImage(3,buf);
+	              item.setData("id",data);
+	              items = table.getItems();
+	            }
+	       
+	          }
+	        }
+        k++;
+        }
+	} else {
+			asc = true;
+			TableItem[] items = table.getItems();
+	        Collator collator = Collator.getInstance(Locale.getDefault());
+	        int k = 0;
+	        while (k < items.length) {
+		        for (int i = 1; i < items.length; i++) {
+		          String value1 = items[i].getText(columnindex);
+		          for (int j = 0; j < i; j++) {
+		            String value2 = items[j].getText(columnindex);
+		            if (collator.compare(value1, value2) > 0) {
+		              String[] values = { items[i].getText(0),
+		                  items[i].getText(1), items[i].getText(2) };
+		              String data = (String) items[i].getData("id");
+		              Image buf = items[i].getImage(3);
+		              items[i].dispose();
+		              TableItem item = new TableItem(table, SWT.NONE, j);
+		              item.setText(values);
+		              item.setImage(3,buf);
+		              item.setData("id",data);
+		              items = table.getItems();
+		            }
+		       
+		          }
+		        }
+	        k++;
+	        }
+		}
+	}
+	
+	public void sortDateTableItemsMyAssignments(Table table, int columnindex, boolean asc) {
+		// TODO Auto-generated method stub
+		if (asc) {
+			asc = false;
+			TableItem[] items = table.getItems();
+	        int k = 0;
+	        while (k < items.length) {
+	        for (int i = 1; i < items.length; i++) {
+	          String value1 = items[i].getText(columnindex);
+	          for (int j = 0; j < i; j++) {
+	            String value2 = items[j].getText(columnindex);
+	            if (new DatumFull(value1).compareTo(new DatumFull(value2)) < 0) {
+	              String[] values = { items[i].getText(0),
+	                  items[i].getText(1), items[i].getText(2) };
+	              String data = (String) items[i].getData("id");
+	              Image buf = items[i].getImage(3);
+	              items[i].dispose();
+	              TableItem item = new TableItem(table, SWT.NONE, j);
+	              item.setText(values);
+	              item.setImage(3,buf);
+	              item.setData("id",data);
+	              items = table.getItems();
+	            }
+	       
+	          }
+	        }
+	        k++;
+	        }
+			} else {
+				asc = true;
+				TableItem[] items = table.getItems();
+		        int k = 0;
+		        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (new DatumFull(value1).compareTo(new DatumFull(value2)) > 0) {
+			              String[] values = { items[i].getText(0),
+			                  items[i].getText(1), items[i].getText(2) };
+			              Image buf = items[i].getImage(3);
+			              String data = (String) items[i].getData("id");
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setImage(3,buf);
+			              item.setData("id",data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+		        k++;
+		        }
+			}
+		}
+	
+	//TODO DOCU
+	public void sortStringTableItemsCompanies(Table table, int columnindex, boolean asc) {
+		// TODO Auto-generated method stub
+		if (asc) {
+			asc = false;
+			TableItem[] items = table.getItems();
+	        Collator collator = Collator.getInstance(Locale.getDefault());
+	        int k = 0;
+	        while (k < items.length) {
+		        for (int i = 1; i < items.length; i++) {
+		          String value1 = items[i].getText(columnindex);
+		          for (int j = 0; j < i; j++) {
+		            String value2 = items[j].getText(columnindex);
+		            if (collator.compare(value1, value2) < 0) {
+		              String[] values = { items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
+		            		  			  items[i].getText(4), items[i].getText(5), items[i].getText(6), items[i].getText(7) };
+		              String data = (String) items[i].getData("id");
+		              items[i].dispose();
+		              TableItem item = new TableItem(table, SWT.NONE, j);
+		              item.setText(values);
+		              item.setData("id", data);
+		              items = table.getItems();
+		            }
+		       
+		          }
+		        }
+	        k++;
+	        }
+		} else {
+				asc = true;
+				TableItem[] items = table.getItems();
+		        Collator collator = Collator.getInstance(Locale.getDefault());
+		        int k = 0;
+		        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (collator.compare(value1, value2) > 0) {
+			              String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
+            		  			  items[i].getText(4), items[i].getText(5), items[i].getText(6), items[i].getText(7) };
+			              String data = (String) items[i].getData("id");
+			              Image buf = items[i].getImage(3);
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setImage(3,buf);
+			              item.setData("id", data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+		        k++;
+		        }
+			}
+		}
+
+	//TODO sortmethod for all other tables!
+//	c.getName(),c.getStreet(),c.getNumber(),String.valueOf(c.getPostCode()),
+//	c.getOwner(), c.getPhone(), c.getEMail(),c.getDescription()
+	
+	public void sortNumberTableItemsCompanies(Table table, int columnindex, boolean asc) {
+		// TODO Auto-generated method stub
+		if (asc) {
+			asc = false;
+			TableItem[] items = table.getItems();
+	        int k = 0;
+	        while (k < items.length) {
+		        for (int i = 1; i < items.length; i++) {
+		          String value1 = items[i].getText(columnindex);
+		          for (int j = 0; j < i; j++) {
+		            String value2 = items[j].getText(columnindex);
+		            if (((Integer.compare(Integer.parseInt(value1), Integer.parseInt(value2)))) < 0) {
+		              String[] values = { items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
+		            		  			  items[i].getText(4), items[i].getText(5), items[i].getText(6), items[i].getText(7) };
+		              String data = (String) items[i].getData("id");
+		              items[i].dispose();
+		              TableItem item = new TableItem(table, SWT.NONE, j);
+		              item.setText(values);
+		              item.setData("id",data);
+		              items = table.getItems();
+		            }
+		       
+		          }
+		        }
+	        k++;
+	        }
+		} else {
+				asc = true;
+				TableItem[] items = table.getItems();
+		        int k = 0;
+		        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (((Integer.compare(Integer.parseInt(value1), Integer.parseInt(value2)))) > 0) {
+			              String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
+            		  			  items[i].getText(4), items[i].getText(5), items[i].getText(6), items[i].getText(7) };
+			              String data = (String) items[i].getData("id");
+			              Image buf = items[i].getImage(3);
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setImage(3,buf);
+			              item.setData("id",data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+		        k++;
+		        }
+			}
+		}
+	
+	public void sortStringTableItemsAssignments(Table table, int columnindex, boolean asc) {
+		// TODO Auto-generated method stub
+		if (asc) {
+			asc = false;
+			TableItem[] items = table.getItems();
+	        Collator collator = Collator.getInstance(Locale.getDefault());
+	        int k = 0;
+	        while (k < items.length) {
+		        for (int i = 1; i < items.length; i++) {
+		          String value1 = items[i].getText(columnindex);
+		          for (int j = 0; j < i; j++) {
+		            String value2 = items[j].getText(columnindex);
+		            if (collator.compare(value1, value2) < 0) {
+		              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+		            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5) };
+		              String data = (String) items[i].getData("id");
+		              items[i].dispose();
+		              TableItem item = new TableItem(table, SWT.NONE, j);
+		              item.setText(values);
+		              item.setData("id",data);
+		              items = table.getItems();
+		            }
+		       
+		          }
+		        }
+	        k++;
+	        }
+		} else {
+				asc = true;
+				TableItem[] items = table.getItems();
+		        Collator collator = Collator.getInstance(Locale.getDefault());
+		        int k = 0;
+		        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (collator.compare(value1, value2) > 0) {
+			              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+			              String data = (String) items[i].getData("id");
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setData("id",data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+		        k++;
+		        }
+			}
+		}
+		
+		public void sortDateTableItemsAssignments(Table table, int columnindex, boolean asc) {
+			// TODO Auto-generated method stub
+			if (asc) {
+				asc = false;
+				TableItem[] items = table.getItems();
+		        int k = 0;
+		        while (k < items.length) {
+		        for (int i = 1; i < items.length; i++) {
+		          String value1 = items[i].getText(columnindex);
+		          for (int j = 0; j < i; j++) {
+		            String value2 = items[j].getText(columnindex);
+		            if (new DatumFull(value1).compareTo(new DatumFull(value2)) < 0) {
+		              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+        		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+		              String data = (String) items[i].getData("id");
+		              items[i].dispose();
+		              TableItem item = new TableItem(table, SWT.NONE, j);
+		              item.setText(values);
+		              item.setData("id",data);
+		              items = table.getItems();
+		            }
+		       
+		          }
+		        }
+		        k++;
+		        }
+				} else {
+					asc = true;
+					TableItem[] items = table.getItems();
+			        int k = 0;
+			        while (k < items.length) {
+				        for (int i = 1; i < items.length; i++) {
+				          String value1 = items[i].getText(columnindex);
+				          for (int j = 0; j < i; j++) {
+				            String value2 = items[j].getText(columnindex);
+				            if (new DatumFull(value1).compareTo(new DatumFull(value2)) > 0) {
+				              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+	            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+				              String data = (String) items[i].getData("id");
+				              items[i].dispose();
+				              TableItem item = new TableItem(table, SWT.NONE, j);
+				              item.setText(values);
+				              item.setData("id",data);
+				              items = table.getItems();
+				            }
+				       
+				          }
+				        }
+			        k++;
+			        }
+				}
+			}
+		
+		public void sortStringTableItemsOffer(Table table, int columnindex, boolean asc) {
+			// TODO Auto-generated method stub
+			if (asc) {
+				asc = false;
+				TableItem[] items = table.getItems();
+		        Collator collator = Collator.getInstance(Locale.getDefault());
+		        int k = 0;
+		        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (collator.compare(value1, value2) < 0) {
+			              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+			            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5) };
+			              String data = (String) items[i].getData("id");
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setData("id",data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+		        k++;
+		        }
+			} else {
+					asc = true;
+					TableItem[] items = table.getItems();
+			        Collator collator = Collator.getInstance(Locale.getDefault());
+			        int k = 0;
+			        while (k < items.length) {
+				        for (int i = 1; i < items.length; i++) {
+				          String value1 = items[i].getText(columnindex);
+				          for (int j = 0; j < i; j++) {
+				            String value2 = items[j].getText(columnindex);
+				            if (collator.compare(value1, value2) > 0) {
+				              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+	            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+				              String data = (String) items[i].getData("id");
+				              items[i].dispose();
+				              TableItem item = new TableItem(table, SWT.NONE, j);
+				              item.setText(values);
+				              items = table.getItems();
+				              item.setData("id",data);
+				            }
+				       
+				          }
+				        }
+			        k++;
+			        }
+				}
+			}
+			
+			public void sortDateTableItemsOffer(Table table, int columnindex, boolean asc) {
+				// TODO Auto-generated method stub
+				if (asc) {
+					asc = false;
+					TableItem[] items = table.getItems();
+			        int k = 0;
+			        while (k < items.length) {
+			        for (int i = 1; i < items.length; i++) {
+			          String value1 = items[i].getText(columnindex);
+			          for (int j = 0; j < i; j++) {
+			            String value2 = items[j].getText(columnindex);
+			            if (new DatumFull(value1).compareTo(new DatumFull(value2)) < 0) {
+			              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+	        		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+			              String data = (String) items[i].getData("id");
+			              items[i].dispose();
+			              TableItem item = new TableItem(table, SWT.NONE, j);
+			              item.setText(values);
+			              item.setData("id",data);
+			              items = table.getItems();
+			            }
+			       
+			          }
+			        }
+			        k++;
+			        }
+					} else {
+						asc = true;
+						TableItem[] items = table.getItems();
+				        int k = 0;
+				        while (k < items.length) {
+					        for (int i = 1; i < items.length; i++) {
+					          String value1 = items[i].getText(columnindex);
+					          for (int j = 0; j < i; j++) {
+					            String value2 = items[j].getText(columnindex);
+					            if (new DatumFull(value1).compareTo(new DatumFull(value2)) > 0) {
+					              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
+		            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+					              String data = (String) items[i].getData("id");
+					              items[i].dispose();
+					              TableItem item = new TableItem(table, SWT.NONE, j);
+					              item.setText(values);
+					              item.setData("id",data);
+					              items = table.getItems();
+					            }
+					       
+					          }
+					        }
+				        k++;
+				        }
+					}
+				}
+			
+			public void sortNumberTableItemsOffer(Table table, int columnindex, boolean asc) {
+				// TODO Auto-generated method stub
+				if (asc) {
+					asc = false;
+					TableItem[] items = table.getItems();
+			        int k = 0;
+			        while (k < items.length) {
+				        for (int i = 1; i < items.length; i++) {
+				          String value1 = items[i].getText(columnindex);
+				          for (int j = 0; j < i; j++) {
+				            String value2 = items[j].getText(columnindex);
+				            if (((Double.compare(Double.parseDouble(value1), Double.parseDouble(value2)))) < 0) {
+				              String[] values = { items[i].getText(0), items[i].getText(1), items[i].getText(2),
+				            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5) };
+				              String data = (String) items[i].getData("id");
+				              items[i].dispose();
+				              TableItem item = new TableItem(table, SWT.NONE, j);
+				              item.setText(values);
+				              item.setData("id",data);
+				              items = table.getItems();
+				            }
+				       
+				          }
+				        }
+			        k++;
+			        }
+				} else {
+						asc = true;
+						TableItem[] items = table.getItems();
+				        int k = 0;
+				        while (k < items.length) {
+					        for (int i = 1; i < items.length; i++) {
+					          String value1 = items[i].getText(columnindex);
+					          for (int j = 0; j < i; j++) {
+					            String value2 = items[j].getText(columnindex);
+					            if (((Double.compare(Double.parseDouble(value1), Double.parseDouble(value2)))) > 0) {
+					              String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2),
+					            		  			 items[i].getText(3), items[i].getText(4), items[i].getText(5)};
+					              Image buf = items[i].getImage(3);
+					              String data = (String) items[i].getData("id");
+					              items[i].dispose();
+					              TableItem item = new TableItem(table, SWT.NONE, j);
+					              item.setText(values);
+					              item.setData("id",data);
+					              item.setImage(3,buf);
+					              items = table.getItems();
+					            }
+					       
+					          }
+					        }
+				        k++;
+				        }
+					}
+				}
 }
+

@@ -29,13 +29,13 @@ public class Offer {
 		this.companyID = data[2];
 		this.price = Double.parseDouble(data[3]);
 		this.amountOfTimeNeeded = data[4];
-		this.description = data[5];
+		this.description = data[7];
 		this.date = data[6];
-		this.status = data[7];
+		this.status = data[5];
 	}
 	
 	public Offer(String offerID,String assignmentID, String companyID, double price, String amountOfTimeNeeded,
-			String status, String date, String description) {
+			String description, String date, String status) {
 		this.offerID = offerID;
 		this.assignmentID = assignmentID;
 		this.companyID = companyID;

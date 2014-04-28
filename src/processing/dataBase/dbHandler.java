@@ -442,8 +442,12 @@ public class dbHandler {
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */ 
 	//	TODO TEST!
-	public boolean createAssignment( String owner, String description, String dateOfCreation, String deadline , String title, String dueDate) throws SQLException, IOException {
+	public String createAssignment( String owner, String description, String dateOfCreation, String deadline , String title, String dueDate) throws SQLException, IOException {
 	Connection con = setUpConnection();
+	ResultSet neu = null;
+	boolean exists = false;
+	String temp = "";
+	
 	try {	//TODO fix statement to create database structure
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + assingmentTable + " " +
 														"( Assignment_ID, Owner, Description , DateOfCreation , Deadline , Status , Title , DueDate )" +
@@ -451,12 +455,28 @@ public class dbHandler {
 														" VALUES ( NULL, \"" + owner + "\" , \"" + description + "\" , \"" + dateOfCreation + "\" , \"" +
 														deadline + "\" , \"" + openStateName + "\" , \"" + title + "\" , \"" + dueDate + "\" );");
 			pst.execute();
+			
 	}
 	catch (SQLException ex) {
 		throw new IOException("Wert konnte nicht eingefuegt werden!\n" + ex.getMessage()); //TODO write Errortext
 	}
+	
+	try {
+		PreparedStatement pst2 = con.prepareStatement("");
+		neu = pst2.executeQuery("SELECT * FROM " + dbName + "." + assingmentTable + " WHERE Owner=\"" + owner + "\" AND Description=\"" + description + "\" " +
+								"AND DateOfCreation=\"" + dateOfCreation + "\" AND Deadline=\"" + deadline + "\" " +
+								"AND Status=\"" + openStateName + "\" AND Title=\"" + title + "\" " +
+								"AND DueDate=\"" + dueDate + "\"");
+		
+		exists = neu.first();
+		temp = String.valueOf(neu.getInt(1));
+		
+	} catch (Exception ex) {
+		throw new IOException(ex.getMessage());
+	}
+	
 	con.close();
-	return true;
+	return temp;
 	}
 	
 	/**
@@ -772,7 +792,6 @@ public class dbHandler {
 		boolean exists = false;
 		ResultSet neu = null;
 		HashMap<String,String[]> hPositionMap = new HashMap<>();
-		
 		Connection con = setUpConnection();
 		try {	
 			PreparedStatement pst = con.prepareStatement("");

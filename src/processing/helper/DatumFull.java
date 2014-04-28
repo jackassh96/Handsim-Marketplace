@@ -129,6 +129,13 @@ public class DatumFull implements Serializable, Comparable<DatumFull> {
 		}
 	}
 	
+	public DatumFull(String completeString) {
+		String [] date = completeString.split("\\.");
+		this.year = date[0];
+		this.month = date[1];
+		this.day = date [2];
+	}
+	
 	// check if date is within time period
 	public static boolean isInTime(DatumFull datum, DatumFull datumMin, DatumFull datumMax) {
 		boolean flag = false;
