@@ -40,11 +40,11 @@ public class AuftragsansichtWindow extends Shell {
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AuftragsansichtWindow(String assignmentID) throws SQLException, IOException {
+	public AuftragsansichtWindow(final String assignmentID) throws SQLException, IOException {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
-		Controller controller = Controller.getInstance();
+		final Controller controller = Controller.getInstance();
 		HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
@@ -215,6 +215,29 @@ public class AuftragsansichtWindow extends Shell {
 		Button bearbeitenButton = new Button(middleLeftLowContainer, SWT.NONE);
 		bearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		bearbeitenButton.setText("Bearbeiten");
+		bearbeitenButton.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+					try {
+						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+						if(antwort == 0){
+							int antwortBearbeiten = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+							if(antwortBearbeiten == 0){
+								new AuftragErstellenPositionenWindow(null,assignmentID);
+								((Button)e.getSource()).getShell().dispose();
+								controller.deleteAssignment(assignmentID);
+							}
+							
+						}
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+			}
+		});
 		
 		Button schließenButton = new Button(middleLeftLowContainer, SWT.NONE);
 		schließenButton.addSelectionListener(new SelectionAdapter() {
