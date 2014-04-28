@@ -3,6 +3,10 @@ package processing.helper;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 public class DatumFull implements Serializable, Comparable<DatumFull> {
 
@@ -14,6 +18,21 @@ public class DatumFull implements Serializable, Comparable<DatumFull> {
 	private String hours;
 	private String minutes;
 	private String seconds;
+	static final private HashMap<Integer, Integer> monthDayMap = new  HashMap<Integer, Integer>();
+	static{
+	    monthDayMap.put(1,31);
+	    monthDayMap.put(2,28);
+	    monthDayMap.put(3, 31);
+	    monthDayMap.put(4, 30);
+	    monthDayMap.put(5, 31);
+	    monthDayMap.put(6, 30);
+	    monthDayMap.put(7, 31);
+	    monthDayMap.put(8, 31);
+	    monthDayMap.put(9, 30);
+	    monthDayMap.put(10, 31);
+	    monthDayMap.put(11, 30);
+	    monthDayMap.put(12, 31);
+	}
 	
 	// default constructor to create Date with current time
 	public DatumFull() {
@@ -248,5 +267,22 @@ public class DatumFull implements Serializable, Comparable<DatumFull> {
 		}else{
 			return -1;
 		}
+	}
+	
+	/**
+	 * Subtracting the given number from the date (without considering leap-years)
+	 * @param minusDays to decrease the date with
+	 */
+	public void minusDays(int minusDays){
+		int temp =(Integer.parseInt(day) - minusDays);
+		while(temp <= 0){
+			month =""+ (Integer.parseInt(month) - 1);
+			if(month.equals("0")){
+				year = ""+ (Integer.parseInt(year)-1);
+				month = "12";
+			}
+			temp = monthDayMap.get(Integer.parseInt(month)) + temp;
+		}
+		day = ""+ temp;
 	}
 }
