@@ -123,40 +123,46 @@ public class AngeboteansichtWindow extends Shell {
 		middleRightLowerContainer.setLayoutData(BorderLayout.CENTER);
 		middleRightLowerContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button annehmenButton = new Button(middleRightLowerContainer, SWT.NONE);
-		annehmenButton.setText("Annehmen");
+		if(angebotsInfo.get("status").equals("open")){
+			
+			Button annehmenButton = new Button(middleRightLowerContainer, SWT.NONE);
+			annehmenButton.setText("Annehmen");
 		
-		Button ablehnenButton = new Button(middleRightLowerContainer, SWT.NONE);
-		ablehnenButton.setText("Ablehnen");
+			Button ablehnenButton = new Button(middleRightLowerContainer, SWT.NONE);
+			ablehnenButton.setText("Ablehnen");
+			
+			annehmenButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						controller.acceptOffer(angebotsID);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+				}
+			});
+		
+			ablehnenButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					try {
+						controller.declineOffer(angebotsID);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					}
+				}
+			});
+		}
+		
 		
 		Button schlieﬂenButton = new Button(middleRightLowerContainer, SWT.NONE);
 		schlieﬂenButton.setText("Schlieﬂen");
 		
-		annehmenButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					controller.acceptOffer(angebotsID);
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-				}
-			}
-		});
 		
-		ablehnenButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				try {
-					controller.declineOffer(angebotsID);
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-				}
-			}
-		});
 		
 		schlieﬂenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
