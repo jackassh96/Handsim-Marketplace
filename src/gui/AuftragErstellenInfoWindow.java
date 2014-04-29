@@ -198,10 +198,11 @@ public class AuftragErstellenInfoWindow extends Shell {
 					for(TreeItem position : outputItems){
 						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));
 					}
+					AuftragErstellenInfoWindow.this.close();
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!: ", 2);
 				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!: ", 2);
 				}
 			}
 		});

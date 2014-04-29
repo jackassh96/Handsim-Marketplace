@@ -148,17 +148,13 @@ public class Controller {
 		//initialize helper lists
 		instance.serviceTreeList = new ArrayList<>(); 
 		instance.positionTreeList = new ArrayList<>();
-		
 		instance.dbHandler = dbHandler;
-		instance.activeUser = instance.importUser("max32");  //TODO remove hard coded name when login is implemented
-
+		instance.activeUser = new User(userData);
 		Category [] buf = instance.importCategories();
 		instance.categoryList = instance.generateSubCategories(buf);
 		instance.majorCategoryList = instance.seperateMajorCategories(buf);		
 		instance.importCompanyList();
 		instance.importAssingments(instance.activeUser.getUserID());
-		//instance of cotroller must be input! TODO!
-//		CSPmainWindows.main(null);
 		return instance;
 	}
 
@@ -353,19 +349,22 @@ public class Controller {
 		}
 		Category [] subC = instance.seperateSubCategories(buffer);
 		//sort by id
-		subC = sortCategoryByID(subC);		
+		subC = sortCategoryByID(subC);
+
 		for (Category c : subC) {
-			TreeItem tItem = c.toSubTreeItem(findTreeItemWithID(c.getParentCategory()));
-			//TODO test!
-			if (c.getSubCategories().length < 1) {
-				for ( Position p : positions) {
-					if (p.getCategory_ID().equals(c.getCategoryID())) {
-						String [] vals = {c.getTitle(), p.getAmount(),p.getDescription()};
-						tItem.setText(vals);
+				TreeItem tItem = c.toSubTreeItem(findTreeItemWithID(c.getParentCategory()));
+			if (tItem != null) {	
+				//TODO test!
+				if (c.getSubCategories().length < 1) {
+					for ( Position p : positions) {
+						if (p.getCategory_ID().equals(c.getCategoryID())) {
+							String [] vals = {c.getTitle(), p.getAmount(),p.getDescription()};
+							tItem.setText(vals);
+						}
 					}
 				}
+				positionTreeList.add(tItem);
 			}
-			positionTreeList.add(tItem);
 		}
 		
 	}
@@ -503,19 +502,21 @@ public class Controller {
 	 */
 	private Offer [] generateOfferlistforAssignment(String assignment_ID) throws SQLException, IOException {
 		HashMap<String,String[]> offerDataFromDB = dbHandler.getOffer(assignment_ID);
-		
-		Offer [] result = new Offer[offerDataFromDB.size()];
-		String [] buf = new String[offerDataFromDB.get(String.valueOf(0)).length];
-		
-		for (int j = 0; j < offerDataFromDB.size(); j++) {
+		Offer [] result = new Offer[0];
+		if (offerDataFromDB.size() > 0) {
+			result = new Offer[offerDataFromDB.size()];
+			String [] buf = new String[offerDataFromDB.get(String.valueOf(0)).length];
 			
-			int i = 0;
-			for (String x : offerDataFromDB.get(String.valueOf(j))) {
-				buf[i] = x;	
-				i++;
+			for (int j = 0; j < offerDataFromDB.size(); j++) {
+				
+				int i = 0;
+				for (String x : offerDataFromDB.get(String.valueOf(j))) {
+					buf[i] = x;	
+					i++;
+				}
+	
+				result[j] = new Offer(buf[0], assignment_ID, buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 			}
-
-			result[j] = new Offer(buf[0], assignment_ID, buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 		}
 		return result;
 		}
@@ -692,7 +693,7 @@ public class Controller {
 		Arrays.sort(cats, new Comparator<Category>(){
 			@Override
 			public int compare(Category arg0, Category arg1) {
-				return arg0.getCategoryID().compareTo(arg1.getCategoryID());
+				return ((Integer)Integer.parseInt(arg0.getCategoryID())).compareTo((Integer)(Integer.parseInt(arg1.getCategoryID())));
 			}
 		});
 		return cats;	
@@ -1150,18 +1151,19 @@ public class Controller {
 	
 	public void generateOfferTableItems(Table table, String assignment_ID) throws SQLException, IOException {
 		Offer [] offerList = generateOfferlistforAssignment(assignment_ID);
-		for (Offer o : offerList) {
-			TableItem tableItem = new TableItem(table, SWT.LEFT);
-			String companyName = "";
-			
-			for (Company c : companyList) {
-				if (o.getCompanyID().equals(c.getCompanyID())) {
-					companyName = c.getName();
+		if (offerList.length > 0) {
+			for (Offer o : offerList) {
+				TableItem tableItem = new TableItem(table, SWT.LEFT);
+				String companyName = "";				
+				for (Company c : companyList) {
+					if (o.getCompanyID().equals(c.getCompanyID())) {
+						companyName = c.getName();
+					}
 				}
+				tableItem.setText(new String[] {companyName, String.valueOf(o.getPrice()), o.getAmountOfTimeNeeded(), 
+												o.getDescription(),	o.getStatus(), o.getDate()});
+				tableItem.setData("id", o.getOfferID());
 			}
-			tableItem.setText(new String[] {companyName, String.valueOf(o.getPrice()), o.getAmountOfTimeNeeded(), 
-											o.getDescription(),	o.getStatus(), o.getDate()});
-			tableItem.setData("id", o.getOfferID());
 		}
 	}
 

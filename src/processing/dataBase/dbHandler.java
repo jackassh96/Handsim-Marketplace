@@ -89,7 +89,7 @@ public class dbHandler {
 	 * @throws SQLException
 	 *            if object can't get database connection with a maximum of 3 tries 
 	 */
-	private Connection setUpConnection() throws SQLException {
+	public Connection setUpConnection() throws SQLException {
 		Connection con = null;
 		int tries = 0;
 		int maxTries = 3;
@@ -255,15 +255,17 @@ public class dbHandler {
 		Connection con = setUpConnection();
 		boolean correct = false; 
 		try {
-				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Passwort =\"" + password + "\"");
-				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Passwort =\"" + password + "\"");
+			
+				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Password =\"" + password + "\"");
+				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Password =\"" + password + "\"");
 				correct = neu.first();
+//				correct = true;
 		}
 		catch (SQLException ex) {
 			throw new IOException("Login fehlgeschlagen :(!\n" + ex.getMessage()); //TODO write Errortext
 		}
 		finally { con.close(); }
-	
+
 		return correct;
 	}
 	
@@ -674,7 +676,7 @@ public class dbHandler {
 			do {
 				//TODO ID needed?
 				//( Assignment_ID, Owner, PositionList , OfferHandler , Description , DateOfCreation , Deadline , Status , Title , DueDate )
-				String [] rowStr = new String[8];
+				String [] rowStr = new String[7];
 				rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
 //				rowStr[1] = neu.getNString("Owner");
 //				rowStr[2] = neu.getNString("PositionList");
@@ -720,18 +722,19 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				String [] rowStr = new String[8];
-				rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
-				rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
-				rowStr[2] = neu.getNString("Company_ID");
-				rowStr[3] = String.valueOf(neu.getDouble("Price"));
-				rowStr[4] = neu.getNString("AmountOfTimeNeeded");
-				rowStr[5] = neu.getNString("Description");
-				rowStr[6] = neu.getNString("Date");
-				rowStr[7] = neu.getNString("Status");	
-				
-				hOfferMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					//TODO ID needed?
+					String [] rowStr = new String[8];
+					rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
+					rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
+					rowStr[2] = neu.getNString("Company_ID");
+					rowStr[3] = String.valueOf(neu.getDouble("Price"));
+					rowStr[4] = neu.getNString("AmountOfTimeNeeded");
+					rowStr[5] = neu.getNString("Description");
+					rowStr[6] = neu.getNString("Date");
+					rowStr[7] = neu.getNString("Status");	
+					hOfferMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 

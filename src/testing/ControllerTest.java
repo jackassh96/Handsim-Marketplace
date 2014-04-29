@@ -26,7 +26,7 @@ public class ControllerTest {
 		// TODO Auto-generated method stub
 
 		
-		Controller neu = Controller.getInstance();
+		
 		dbHandler ner = new dbHandler();
 		
 		/**
@@ -34,24 +34,26 @@ public class ControllerTest {
 		 * 
 		 * 
 		 */
-		
-		
+//		ner.setUpConnection();
+//		System.out.println(ner.checkLogInData("max32", ner.encodePw("password")));
+//		System.out.println(ner.encodePw("password"));
 		
 //		PRINT ALL USER INFOS
 //		
-		String [] x = ner.loadUserData("max32");
+//		String [] x = ner.loadUserData("max32");
 //		
 //		for (String a : x ) {
 //			System.out.println(a);
 //		}
 //		
 //		
-		neu.init(x, new dbHandler());
-		
-		
-//		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
-		
-		CSPmainWindows window = new CSPmainWindows();
+//		Controller neu = Controller.getInstance();
+//		neu.init(x, new dbHandler());
+//		
+//		
+////		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
+//		
+//		CSPmainWindows window = new CSPmainWindows();
 		
 	
 		

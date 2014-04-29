@@ -113,7 +113,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Label inputTreeLabel = new Label(leftUpperMainContainer, SWT.NONE);
 		inputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		inputTreeLabel.setText("Mögliche \nAuftragselemente");
+		inputTreeLabel.setText("Mï¿½gliche \nAuftragselemente");
 		
 		Composite rightLeftUpperMainContainer = new Composite(leftUpperMainContainer, SWT.NONE);
 		rightLeftUpperMainContainer.setLayout(new BorderLayout());
@@ -135,14 +135,14 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Button einfugenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
 		einfugenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		einfugenButton.setText("Einfügen");
+		einfugenButton.setText("Einfï¿½gen");
 		
 		Composite rightUpperMainContainer = new Composite(upperMainContainer, SWT.NONE);
 		rightUpperMainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Label outputTreeLabel = new Label(rightUpperMainContainer, SWT.NONE);
 		outputTreeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		outputTreeLabel.setText("Ausgewählte \nAuftragselemente");
+		outputTreeLabel.setText("Ausgewï¿½hlte \nAuftragselemente");
 		
 		Composite rightRightUpperMainContainer = new Composite(rightUpperMainContainer, SWT.NONE);
 		rightRightUpperMainContainer.setLayout(new BorderLayout());
@@ -164,7 +164,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		
 		Button loschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
 		loschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		loschenButton.setText("Löschen");
+		loschenButton.setText("Lï¿½schen");
 		
 		Composite middleMainContainer = new Composite(mainContainer, SWT.NONE);
 		middleMainContainer.setLayoutData(BorderLayout.CENTER);
@@ -173,7 +173,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		final Tree inputTree = new Tree(middleMainContainer, SWT.BORDER);
 		inputTree.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		//TODO userdata
-		controller = controller.init(null, new dbHandler());
+//		controller = controller.init(null, new dbHandler());
 		controller.buildTreeFromMajorCategories(inputTree);
 		
 		final Tree outputTree = new Tree(middleMainContainer, SWT.BORDER);
@@ -221,9 +221,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 							JPanel pnl3 = new JPanel(new java.awt.BorderLayout());
 							pnl3.add(pnl, java.awt.BorderLayout.NORTH);
 							pnl3.add(pnl2, java.awt.BorderLayout.SOUTH);
-							pnl.add(new JLabel("Bitte geben Sie die gewünschte Anzahl an:"), java.awt.BorderLayout.NORTH);
+							pnl.add(new JLabel("Bitte geben Sie die gewï¿½nschte Anzahl an:"), java.awt.BorderLayout.NORTH);
 							pnl.add(mengeField, java.awt.BorderLayout.SOUTH);
-							pnl2.add(new JLabel("Hier, falls nötig, weitere Beschreibung einfügen:"), java.awt.BorderLayout.NORTH);
+							pnl2.add(new JLabel("Hier, falls nï¿½tig, weitere Beschreibung einfï¿½gen:"), java.awt.BorderLayout.NORTH);
 							pnl2.add(beschreibungArea, java.awt.BorderLayout.SOUTH);
 							int okCxl = JOptionPane.showConfirmDialog(null,pnl3,"Enter Data",JOptionPane.OK_CANCEL_OPTION);
                             if (okCxl == JOptionPane.OK_OPTION) {
@@ -308,7 +308,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					}
 					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items, assignmentID);
 				}else{
-					JOptionPane.showMessageDialog(null, "Bitte fügen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
+					JOptionPane.showMessageDialog(null, "Bitte fï¿½gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
 			}
 		});

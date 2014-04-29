@@ -1,5 +1,10 @@
 package gui;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -13,9 +18,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import processing.Controller;
+import processing.dataBase.dbHandler;
+
 public class LoginWindow extends Shell {
 	private Text passwortTextField;
 	private Text benutzernameTextField;
+	private dbHandler dbhandler = new dbHandler();
+	private Shell Tshell = null;
 
 	/**
 	 * Launch the application.
@@ -129,7 +139,32 @@ public class LoginWindow extends Shell {
 		loginButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				boolean isCorrect = false;
+				if (!(benutzernameTextField.getText().isEmpty()) && !(passwortTextField.getText().isEmpty()) ) {
+					try {
+						isCorrect = dbhandler.checkLogInData(benutzernameTextField.getText(), dbhandler.encodePw(passwortTextField.getText()));
+						if (isCorrect) {
+							String [] userdata = dbhandler.loadUserData(benutzernameTextField.getText());
+							Controller neu = Controller.getInstance();
+							neu.init(userdata, new dbHandler());
+							LoginWindow.this.dispose();
+							CSPmainWindows window = new CSPmainWindows();
+							
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Bitte überprüfen Sie Ihre Eingaben! \nDer Benutzername und das angegebene Password stimmen nicht überein.");
+						}
+						
+						
+					} catch (Exception e1) {
+						// TODO FIX ERRORHANDLING
+						e1.printStackTrace();
+	
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Bitte überprüfen Sie Ihre Eingaben! \nBeide Textfelder (Benutzername und Passwort) müssen dabei gefüllt werden.");
+				}
 			}
 		});
 		

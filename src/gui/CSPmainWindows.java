@@ -228,11 +228,14 @@ public class CSPmainWindows extends Shell {
 				try {
 					new AuftragErstellenPositionenWindow(null, null);
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				}
 			}
 		});
@@ -253,11 +256,11 @@ public class CSPmainWindows extends Shell {
 							new AuftragErstellenPositionenWindow(null,(String) item.getData("id"));
 						}
 					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 					}
 				}
 			}
@@ -572,8 +575,10 @@ public class CSPmainWindows extends Shell {
 						String auftragsID = (String) item.getData("id");
 						new AuftragsansichtWindow(auftragsID);
 					} catch (SQLException e1) {
+						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
+						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					}
 				}
