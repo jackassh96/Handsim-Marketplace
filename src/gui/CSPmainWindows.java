@@ -35,6 +35,7 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import processing.Controller;
@@ -249,19 +250,22 @@ public class CSPmainWindows extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				for(TableItem item : meineAufträgeTable.getSelection()){
-					try {
-						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-						if(antwort == 0){
-							controller.deleteAssignment((String) item.getData("id"));
-							new AuftragErstellenPositionenWindow(null,(String) item.getData("id"));
+					if(item.getText(4).equals("open")){
+						try {
+							int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+							if(antwort == 0){
+								controller.deleteAssignment((String) item.getData("id"));
+								new AuftragErstellenPositionenWindow(null,(String) item.getData("id"));
+							}
+						} catch (SQLException e1) {
+							JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
+						} catch (Exception e1) {
+							JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 						}
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
-					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 					}
+					
 				}
 			}
 		});
@@ -348,18 +352,15 @@ public class CSPmainWindows extends Shell {
 					return;
 				}
 				Controller controller = Controller.getInstance();
-				/*
+				
 				try {
-					//TODO password?
-					controller.updateUser(benutzernameTextField.getText(), null, vornameTextField.getText(), nachnameTextField.getText(), straßeTextField.getText(), hausnummerTextField.getText(), postleitzahlTextField.getText(), stadtTextField.getText(), emailTextField.getText(), telefonTextField.getText(), unternehmensTextField.getText(), geschlechtCombo.getText());
+					controller.updateUser(benutzernameTextField.getText(), vornameTextField.getText(), nachnameTextField.getText(), straßeTextField.getText(), hausnummerTextField.getText(), postleitzahlTextField.getText(), stadtTextField.getText(), emailTextField.getText(), telefonTextField.getText(), unternehmensTextField.getText(), geschlechtCombo.getText());
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				}
-				*/
+				
 			}
 		});
 		
@@ -521,9 +522,8 @@ public class CSPmainWindows extends Shell {
 		dashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				mainStack.topControl = dashboardContainer;
-				//TODO uncoment if working
-				//controller.generateTableHeaderMyAssignments(dashboardAufträgeTable);
-				//controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
+				dashboardAufträgeTable.removeAll();
+				controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
 				mainContainer.layout();
 			}
 		});
@@ -641,6 +641,8 @@ public class CSPmainWindows extends Shell {
 			}
 			
 		});
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			this.open();

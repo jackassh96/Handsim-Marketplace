@@ -7,6 +7,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -257,6 +258,8 @@ public class NeuerBenutzerWindow extends Shell {
 		profilTopContainer.setLayoutData(BorderLayout.NORTH);
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			this.open();

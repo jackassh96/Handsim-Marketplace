@@ -45,6 +45,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 
 import processing.Controller;
 import processing.data.Category;
@@ -321,6 +322,8 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			this.open();

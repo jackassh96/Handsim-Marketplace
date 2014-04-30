@@ -23,6 +23,7 @@ import processing.Controller;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 
 public class AngeboteansichtWindow extends Shell {
 	private Text beschreibungText;
@@ -172,6 +173,8 @@ public class AngeboteansichtWindow extends Shell {
 		});
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			this.open();

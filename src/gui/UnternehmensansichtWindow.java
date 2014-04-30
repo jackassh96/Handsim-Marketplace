@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Shell;
 import swing2swt.layout.BorderLayout;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -124,6 +125,8 @@ public class UnternehmensansichtWindow extends Shell {
 		beschreibungLabel.setText(unternehmensInfo.get("description"));
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			Display display = Display.getDefault();

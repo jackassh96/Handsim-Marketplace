@@ -29,6 +29,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 
 import processing.Controller;
 import processing.helper.DatumFull;
@@ -215,6 +216,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 		});
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
+		
 		try {
 			this.open();
 			this.layout();
