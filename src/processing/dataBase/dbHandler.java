@@ -55,10 +55,10 @@ public class dbHandler {
 	
 	//GLOBAL STRINGS FOR Offer 	open; declined; accepted; CanceledByAssignment
 	private String openStateOffer = "open";
-	private String declinedStateOffer = "declined";
+	private String declinedStateOffer = "rejected";
 	private String acceptStateOffer = "accepted"; //TODO
 	private String doneStateOffer = "done";
-	private String rejctStateOffer = "rejected";
+	private String rejctStateOffer = "declined";
 	private String canceledStateOffer = "CanceledByAssignment";
 	
 	

@@ -47,7 +47,7 @@ public class LoginWindow extends Shell {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null,(e.getStackTrace().toString()));
+//			JOptionPane.showMessageDialog(null,(e.getStackTrace().toString()));
 		}
 	}
 
