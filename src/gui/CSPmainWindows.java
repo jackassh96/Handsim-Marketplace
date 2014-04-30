@@ -616,7 +616,7 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
+						new AuftragsansichtWindow(((Table)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -643,7 +643,7 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
+						new AuftragsansichtWindow(((Table)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
