@@ -280,7 +280,6 @@ public class AuftragsansichtWindow extends Shell {
 		try {
 			Controller.init(null, null);
 			angeboteTable.removeAll();
-			controller.generateTableHeaderOfferTable(angeboteTable);
 			controller.generateOfferTableItems(angeboteTable, assignmentID);
 			HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
 			statusText.setText(auftragsInfo.get("status"));

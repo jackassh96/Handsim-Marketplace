@@ -195,7 +195,14 @@ public class AuftragErstellenInfoWindow extends Shell {
 					return;
 				}
 				try {
-					controller.deleteAssignment(assignmentID);
+					if(assignmentID != null){
+						int antwort = JOptionPane.showOptionDialog(null, "Wollen Sie den Auftrag in seiner alten Form löschen (dabei werden alle Angebote abgelehnt) oder wollen Sie einen neuen Auftrag in der jetzigen Form anlegen?", "Auftrag Erstellen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Bearbeiten","Neu"}, "Ja");
+						if(antwort == 0){
+							controller.deleteAssignment(assignmentID);
+						}else if(antwort == -1){
+							return;
+						}
+					}
 					String auftragsID = controller.createAssignment(beschreibungText.getText(), date.toMachineString(), titelText.getText(), chosenDate.toMachineString());
 					for(TreeItem position : outputItems){
 						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));
