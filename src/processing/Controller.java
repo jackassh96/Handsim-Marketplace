@@ -882,7 +882,7 @@ public class Controller {
 		});
 		
 		TableColumn tblClmnPhone = new TableColumn(table, SWT.CENTER);
-		tblClmnPhone.setWidth(100);
+		tblClmnPhone.setWidth(120);
 		tblClmnPhone.setText("Telefonnummer");
 		tblClmnPhone.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -1540,11 +1540,9 @@ public class Controller {
 			              String[] values = {items[i].getText(0), items[i].getText(1), items[i].getText(2), items[i].getText(3),
             		  			  items[i].getText(4), items[i].getText(5), items[i].getText(6), items[i].getText(7) };
 			              String data = (String) items[i].getData("id");
-			              Image buf = items[i].getImage(3);
 			              items[i].dispose();
 			              TableItem item = new TableItem(table, SWT.NONE, j);
 			              item.setText(values);
-			              item.setImage(3,buf);
 			              item.setData("id", data);
 			              items = table.getItems();
 			            }
@@ -1630,11 +1628,13 @@ public class Controller {
 		            if (collator.compare(value1, value2) < 0) {
 		              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
 		            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5) };
+		              Image buf = items[i].getImage(6);
 		              String data = (String) items[i].getData("id");
 		              items[i].dispose();
 		              TableItem item = new TableItem(table, SWT.NONE, j);
 		              item.setText(values);
 		              item.setData("id",data);
+		              item.setImage(6, buf);
 		              items = table.getItems();
 		            }
 		       
@@ -1655,11 +1655,13 @@ public class Controller {
 			            if (collator.compare(value1, value2) > 0) {
 			              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
             		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+			              Image buf = items[i].getImage(6);
 			              String data = (String) items[i].getData("id");
 			              items[i].dispose();
 			              TableItem item = new TableItem(table, SWT.NONE, j);
 			              item.setText(values);
 			              item.setData("id",data);
+			              item.setImage(6,buf);
 			              items = table.getItems();
 			            }
 			       
@@ -1685,10 +1687,12 @@ public class Controller {
 		              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
         		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
 		              String data = (String) items[i].getData("id");
+		              Image buf = items[i].getImage(6);
 		              items[i].dispose();
 		              TableItem item = new TableItem(table, SWT.NONE, j);
 		              item.setText(values);
 		              item.setData("id",data);
+		              item.setImage(6,buf);
 		              items = table.getItems();
 		            }
 		       
@@ -1708,11 +1712,13 @@ public class Controller {
 				            if (new DatumFull(value1).compareTo(new DatumFull(value2)) > 0) {
 				              String[] values = { items[i].getText(0),items[i].getText(1), items[i].getText(2),
 	            		  			  items[i].getText(3), items[i].getText(4), items[i].getText(5)  };
+				              Image buf = items[i].getImage(6);
 				              String data = (String) items[i].getData("id");
 				              items[i].dispose();
 				              TableItem item = new TableItem(table, SWT.NONE, j);
 				              item.setText(values);
 				              item.setData("id",data);
+				              item.setImage(6, buf);
 				              items = table.getItems();
 				            }
 				       
