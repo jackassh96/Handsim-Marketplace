@@ -274,18 +274,20 @@ public class CSPmainWindows extends Shell {
 		aufträgeLöschenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int antwort = JOptionPane.showOptionDialog(null, "Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-				if(antwort == 0){
-					for(TableItem item : meineAufträgeTable.getSelection()){
-						try {
-							controller.deleteAssignment((String) item.getData("id"));
-							CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
-							main.updateContent();
-						} catch (SQLException e1) {
-							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-						} catch (IOException e1) {
-							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				for(TableItem item : meineAufträgeTable.getSelection()){
+					try {
+						if(item.getText(4).equals("open")){
+							int antwort = JOptionPane.showOptionDialog(null, "Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+							if(antwort == 0){
+								controller.deleteAssignment((String) item.getData("id"));
+								CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
+								main.updateContent();
+							}
 						}
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					}
 				}
 			}
