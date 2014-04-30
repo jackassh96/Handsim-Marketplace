@@ -148,8 +148,13 @@ public class Controller {
 		//initialize helper lists
 		instance.serviceTreeList = new ArrayList<>(); 
 		instance.positionTreeList = new ArrayList<>();
-		instance.dbHandler = dbHandler;
-		instance.activeUser = new User(userData);
+		if (dbHandler != null) {
+			instance.dbHandler = dbHandler;	
+		}
+		
+		if (userData != null) {
+			instance.activeUser = new User(userData);
+		}
 		Category [] buf = instance.importCategories();
 		instance.categoryList = instance.generateSubCategories(buf);
 		instance.majorCategoryList = instance.seperateMajorCategories(buf);		
