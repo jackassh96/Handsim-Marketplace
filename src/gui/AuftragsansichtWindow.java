@@ -11,6 +11,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -253,6 +254,8 @@ public class AuftragsansichtWindow extends Shell {
 		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
 		
 		createContents();
+		
+		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 		
 		try {
 			this.open();
