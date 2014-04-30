@@ -66,8 +66,10 @@ public class CSPmainWindows extends Shell {
 
 	/**
 	 * Create the shell.
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public CSPmainWindows() {
+	public CSPmainWindows() throws SQLException, IOException {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		controller = Controller.getInstance();
@@ -161,6 +163,9 @@ public class CSPmainWindows extends Shell {
 		dashboardTermineTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		dashboardTermineTable.setHeaderVisible(true);
 		dashboardTermineTable.setLinesVisible(true);
+		
+		controller.generateTableHeaderNextOfferTable(dashboardTermineTable);
+		controller.generateNextOfferTableItems(dashboardTermineTable);
 
 		//Composite for upper distance control
 		Composite dashboardTopContainer = new Composite(dashboardContainer, SWT.NONE);
