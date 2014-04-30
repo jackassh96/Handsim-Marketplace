@@ -718,7 +718,7 @@ public class Controller {
 	// + documentation
 	public void generateTableHeaderMyAssignments(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
-		tblClmnTitle.setWidth(200);
+		tblClmnTitle.setWidth(218);
 		tblClmnTitle.setText("Bezeichnung");
 		tblClmnTitle.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -734,7 +734,7 @@ public class Controller {
 			}
 		});
 		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
-		tblClmnState.setWidth(100);
+		tblClmnState.setWidth(121);
 		tblClmnState.setText("Status");
 		tblClmnState.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -750,7 +750,7 @@ public class Controller {
 			}
 		});
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
-		tblClmnDeadline.setWidth(100);
+		tblClmnDeadline.setWidth(153);
 		tblClmnDeadline.setText("Deadline");
 		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -766,13 +766,13 @@ public class Controller {
 			}
 		});
 		TableColumn tblClmnIcon = new TableColumn(table, SWT.CENTER);
-		tblClmnIcon.setWidth(25);
+		tblClmnIcon.setWidth(43);
 		tblClmnIcon.setText("");
 	}
 	
 	public void generateMyAssignmentTableItemsDashboard(Table table) {
 		for (Assignment a : assignmentHandler.getAssignmentList()) {
-			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			TableItem tableItem = new TableItem(table, SWT.CENTER);
 			tableItem.setText(new String[] {a.getTitle(), a.getStatus(), a.getDeadline()});
 			tableItem.setData("id", a.getAssignmentID());
 			
@@ -796,7 +796,7 @@ public class Controller {
 	}
 	
 	public void generateTableHeaderCompanyTable(final Table table) {
-		TableColumn tblClmnName = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnName = new TableColumn(table, SWT.CENTER);
 		tblClmnName.setWidth(150);
 		tblClmnName.setText("Name");
 		tblClmnName.addListener(SWT.Selection, new Listener() {
@@ -813,7 +813,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnStreet = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnStreet = new TableColumn(table, SWT.CENTER);
 		tblClmnStreet.setWidth(150);
 		tblClmnStreet.setText("Straße");
 		tblClmnStreet.addListener(SWT.Selection, new Listener() {
@@ -830,7 +830,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnNumber = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnNumber = new TableColumn(table, SWT.CENTER);
 		tblClmnNumber.setWidth(80);
 		tblClmnNumber.setText("Nummer");
 		tblClmnNumber.addListener(SWT.Selection, new Listener() {
@@ -847,7 +847,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnPostcode = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnPostcode = new TableColumn(table, SWT.CENTER);
 		tblClmnPostcode.setWidth(80);
 		tblClmnPostcode.setText("Postleitzahl");
 		tblClmnPostcode.addListener(SWT.Selection, new Listener() {
@@ -864,7 +864,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnOwner = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnOwner = new TableColumn(table, SWT.CENTER);
 		tblClmnOwner.setWidth(100);
 		tblClmnOwner.setText("Eigentümer");
 		tblClmnOwner.addListener(SWT.Selection, new Listener() {
@@ -881,7 +881,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnPhone = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnPhone = new TableColumn(table, SWT.CENTER);
 		tblClmnPhone.setWidth(100);
 		tblClmnPhone.setText("Telefonnummer");
 		tblClmnPhone.addListener(SWT.Selection, new Listener() {
@@ -898,8 +898,8 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnEmail = new TableColumn(table, SWT.LEFT);
-		tblClmnEmail.setWidth(100);
+		TableColumn tblClmnEmail = new TableColumn(table, SWT.CENTER);
+		tblClmnEmail.setWidth(140);
 		tblClmnEmail.setText("Email");
 		tblClmnEmail.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -915,7 +915,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDescription = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDescription = new TableColumn(table, SWT.CENTER);
 		tblClmnDescription.setWidth(300);
 		tblClmnDescription.setText("Beschreibung");
 		tblClmnDescription.addListener(SWT.Selection, new Listener() {
@@ -935,7 +935,7 @@ public class Controller {
 	
 	public void generateCompanyTableItems(Table table) {
 		for (Company c : companyList) {
-			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			TableItem tableItem = new TableItem(table, SWT.CENTER);
 			tableItem.setText(new String[] {c.getName(),c.getStreet(),c.getNumber(),String.valueOf(c.getPostCode()),
 											c.getOwner(), c.getPhone(), c.getEMail(),c.getDescription()});
 			tableItem.setData("id", c.getCompanyID());
@@ -943,8 +943,8 @@ public class Controller {
 	}
 	
 	public void generateTableHeaderAssignmentTable(final Table table) {
-		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
-		tblClmnTitle.setWidth(200);
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
+		tblClmnTitle.setWidth(220);
 		tblClmnTitle.setText("Bezeichnung");
 		tblClmnTitle.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -960,7 +960,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnCreation = new TableColumn(table, SWT.CENTER);
 		tblClmnCreation.setWidth(100);
 		tblClmnCreation.setText("Erstellungsdatum");
 		tblClmnCreation.addListener(SWT.Selection, new Listener() {
@@ -977,7 +977,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
 		tblClmnDeadline.setWidth(100);
 		tblClmnDeadline.setText("Ausschreibungsende");
 		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
@@ -994,7 +994,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDuedate = new TableColumn(table, SWT.CENTER);
 		tblClmnDuedate.setWidth(100);
 		tblClmnDuedate.setText("Fälligkeitsdatum");
 		tblClmnDuedate.addListener(SWT.Selection, new Listener() {
@@ -1011,7 +1011,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
 		tblClmnState.addListener(SWT.Selection, new Listener() {
@@ -1028,7 +1028,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.CENTER);
 		tblClmnDescritpion.setWidth(250);
 		tblClmnDescritpion.setText("Beschreibung");
 		tblClmnDescritpion.addListener(SWT.Selection, new Listener() {
@@ -1044,21 +1044,41 @@ public class Controller {
 				}
 			}
 		});
+		
+		TableColumn tblClmnIcon = new TableColumn(table, SWT.CENTER);
+		tblClmnIcon.setWidth(25);
+		tblClmnIcon.setText("");
 	}
 	
 	
 	
 	public void generateMyAssignmentTableItems(Table table) {
 		for (Assignment a : assignmentHandler.getAssignmentList()) {
-			TableItem tableItem = new TableItem(table, SWT.LEFT);
+			TableItem tableItem = new TableItem(table, SWT.CENTER);
 			tableItem.setText(new String[] {a.getTitle(), a.getDateOfCreation(), a.getDeadline(),
 											a.getDueDate(), a.getStatus(), a.getDescription()});
 			tableItem.setData("id", a.getAssignmentID());
+			
+			switch (a.getStatus()) {
+				//TODO add different states
+				case "open": 		tableItem.setImage(6, new Image(null, ".\\images\\openState.png"));
+									break;
+				
+				case "canceled": 	tableItem.setImage(6, new Image(null, ".\\images\\declinedState.png"));
+									break;
+									
+				case "assigned": 	tableItem.setImage(6, new Image(null, ".\\images\\assignedState.png"));
+									break;
+									
+				default :			tableItem.setImage(6, new Image(null, ".\\images\\doneState.png"));
+									break;
+									
+			}
 		}
 	}
 	
 	public void generateTableHeaderOfferTable(final Table table) {
-		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(200);
 		tblClmnTitle.setText("Firma");
 		tblClmnTitle.addListener(SWT.Selection, new Listener() {
@@ -1075,7 +1095,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnCreation = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnCreation = new TableColumn(table, SWT.CENTER);
 		tblClmnCreation.setWidth(100);
 		tblClmnCreation.setText("Preis");
 		tblClmnCreation.addListener(SWT.Selection, new Listener() {
@@ -1092,7 +1112,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDeadline = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
 		tblClmnDeadline.setWidth(80);
 		tblClmnDeadline.setText("Benötigter Zeitraum");
 		tblClmnDeadline.addListener(SWT.Selection, new Listener() {
@@ -1109,7 +1129,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDuedate = new TableColumn(table, SWT.CENTER);
 		tblClmnDuedate.setWidth(100);
 		tblClmnDuedate.setText("Beschreibung");
 		tblClmnDuedate.addListener(SWT.Selection, new Listener() {
@@ -1126,7 +1146,7 @@ public class Controller {
 			}
 		});
 		
-		TableColumn tblClmnState = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
 		tblClmnState.addListener(SWT.Selection, new Listener() {
@@ -1144,7 +1164,7 @@ public class Controller {
 		});
 		
 		
-		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.LEFT);
+		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.CENTER);
 		tblClmnDescritpion.setWidth(100);
 		tblClmnDescritpion.setText("Erstellt am");
 		tblClmnDescritpion.addListener(SWT.Selection, new Listener() {
@@ -1166,7 +1186,7 @@ public class Controller {
 		Offer [] offerList = generateOfferlistforAssignment(assignment_ID);
 		if (offerList.length > 0) {
 			for (Offer o : offerList) {
-				TableItem tableItem = new TableItem(table, SWT.LEFT);
+				TableItem tableItem = new TableItem(table, SWT.CENTER);
 				String companyName = "";				
 				for (Company c : companyList) {
 					if (o.getCompanyID().equals(c.getCompanyID())) {
@@ -1182,8 +1202,8 @@ public class Controller {
 	
 	
 	public void generateTableHeaderNextOfferTable(final Table table) {
-		TableColumn tblClmnTitle = new TableColumn(table, SWT.LEFT);
-		tblClmnTitle.setWidth(200);
+		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
+		tblClmnTitle.setWidth(215);
 		tblClmnTitle.setText("Auftrag");
 		tblClmnTitle.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -1198,8 +1218,8 @@ public class Controller {
 				}
 			}
 		});
-		TableColumn tblClmnComp = new TableColumn(table, SWT.LEFT);
-		tblClmnComp.setWidth(100);
+		TableColumn tblClmnComp = new TableColumn(table, SWT.CENTER);
+		tblClmnComp.setWidth(144);
 		tblClmnComp.setText("Firma");
 		tblClmnComp.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -1214,8 +1234,8 @@ public class Controller {
 				}
 			}
 		});
-		TableColumn tblClmnPrice = new TableColumn(table, SWT.LEFT);
-		tblClmnPrice.setWidth(80);
+		TableColumn tblClmnPrice = new TableColumn(table, SWT.CENTER);
+		tblClmnPrice.setWidth(98);
 		tblClmnPrice.setText("Preis");
 		tblClmnPrice.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -1230,8 +1250,8 @@ public class Controller {
 				}
 			}
 		});
-		TableColumn tblClmnDuedate = new TableColumn(table, SWT.LEFT);
-		tblClmnDuedate.setWidth(100);
+		TableColumn tblClmnDuedate = new TableColumn(table, SWT.CENTER);
+		tblClmnDuedate.setWidth(134);
 		tblClmnDuedate.setText("Erstellt am:");
 		tblClmnDuedate.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -1253,7 +1273,7 @@ public class Controller {
 			Offer [] offerList = generateOfferlistforAssignment(a.getAssignmentID());
 			if (offerList.length > 0) {
 				for (Offer o : offerList) {
-					TableItem tableItem = new TableItem(table, SWT.LEFT);
+					TableItem tableItem = new TableItem(table, SWT.CENTER);
 					String companyName = "";				
 					for (Company c : companyList) {
 						if (o.getCompanyID().equals(c.getCompanyID())) {
