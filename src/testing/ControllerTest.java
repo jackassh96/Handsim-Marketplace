@@ -28,7 +28,6 @@ public class ControllerTest {
 		
 		
 		dbHandler ner = new dbHandler();
-		
 		/**
 		 * 
 		 * 

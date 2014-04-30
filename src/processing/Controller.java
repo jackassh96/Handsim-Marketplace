@@ -325,6 +325,8 @@ public class Controller {
 	 */
 	public void builTreeWithPositons(String Assignment_ID, Tree tree) throws SQLException, IOException { 
 		positionTreeList = new ArrayList<>();
+		idspuffer = new ArrayList<>();
+		catpuffer = new ArrayList<>();
 		Assignment assign = instance.searchForID(Assignment_ID);
 		Position [] positions = assign.getPositionList();
 		
@@ -417,16 +419,17 @@ public class Controller {
 	private Position [] importPositionsForAssignment(String Assignment_ID) throws SQLException, IOException { 
 		HashMap<String, String[]> dataFromDB = dbHandler.getPositionList(Assignment_ID);
 		Position [] result = new Position[dataFromDB.size()];
-		String [] buf = new String[dataFromDB.get(String.valueOf(0)).length];
-		
-		for (int j = 0; j < dataFromDB.size(); j++) {
-			
-			int i = 0;
-			for (String x : dataFromDB.get(String.valueOf(j))) {
-				buf[i] = x;	
-				i++;
+		if (dataFromDB.size() > 0) {
+			String [] buf = new String[dataFromDB.get(String.valueOf(0)).length];
+			for (int j = 0; j < dataFromDB.size(); j++) {
+				
+				int i = 0;
+				for (String x : dataFromDB.get(String.valueOf(j))) {
+					buf[i] = x;	
+					i++;
+				}
+				result[j] = new Position(buf[1], buf[2], buf[3], buf[4]); 
 			}
-			result[j] = new Position(buf[1], buf[2], buf[3], buf[4]); 
 		}
 		return result;
 }
@@ -443,17 +446,19 @@ public class Controller {
 		
 		HashMap<String,String[]> assignmentDataFromDB = dbHandler.getAssignments(User_ID);
 		Assignment [] result = new Assignment[assignmentDataFromDB.size()];
-		String [] buf = new String[assignmentDataFromDB.get(String.valueOf(0)).length];
 		
-		for (int j = 0; j < assignmentDataFromDB.size(); j++) {
-			
-			int i = 0;
-			for (String x : assignmentDataFromDB.get(String.valueOf(j))) {
-				buf[i] = x;	
-				i++;
+		if (assignmentDataFromDB.size() > 0) {
+			String [] buf = new String[assignmentDataFromDB.get(String.valueOf(0)).length];
+			for (int j = 0; j < assignmentDataFromDB.size(); j++) {
+				
+				int i = 0;
+				for (String x : assignmentDataFromDB.get(String.valueOf(j))) {
+					buf[i] = x;	
+					i++;
+				}
+				Position [] temp = importPositionsForAssignment(buf[0]);
+				result[j] = new Assignment(buf[0], temp, buf[1], buf[2], buf[3], buf[4], buf[5], buf[6]); 
 			}
-			Position [] temp = importPositionsForAssignment(buf[0]);
-			result[j] = new Assignment(buf[0], temp, buf[1], buf[2], buf[3], buf[4], buf[5], buf[6]); 
 		}
 		this.assignmentHandler = new AssignmentHandler(result);
 		}
@@ -471,22 +476,23 @@ public class Controller {
 		try{
 			//get HashMap from DB
 			HashMap<String,String[]> dataFromDB = this.dbHandler.getCompanyList();
-			//for loop for parsing the HashMap
-			for (int j = 0; j < dataFromDB.size(); j++) { 
-				Company[] temporaryCompanyList = new Company[j+1]; 
-				Company temporaryCompany;
-				//gets Array from HashMap which represents a data record for a company
-				String [] buff = dataFromDB.get(String.valueOf(j));
-				//creates object out of new data record
-				temporaryCompany= new Company(buff);
-				//add new object to Controller.companyList
-				for (int i = 0; i < j; i++){
-					temporaryCompanyList[i] = this.companyList[i];
+			if (dataFromDB.size() > 0) {	
+				//for loop for parsing the HashMap
+				for (int j = 0; j < dataFromDB.size(); j++) { 
+					Company[] temporaryCompanyList = new Company[j+1]; 
+					Company temporaryCompany;
+					//gets Array from HashMap which represents a data record for a company
+					String [] buff = dataFromDB.get(String.valueOf(j));
+					//creates object out of new data record
+					temporaryCompany= new Company(buff);
+					//add new object to Controller.companyList
+					for (int i = 0; i < j; i++){
+						temporaryCompanyList[i] = this.companyList[i];
+					}
+					temporaryCompanyList[j] = temporaryCompany;
+					this.companyList = temporaryCompanyList;
 				}
-				temporaryCompanyList[j] = temporaryCompany;
-				this.companyList = temporaryCompanyList;
 			}
-			
 		}catch (SQLException e) {
 			throw new SQLException("Datenbankfehler beim Importieren der Firmenliste: " + e.getMessage());
 		}
@@ -534,10 +540,10 @@ public class Controller {
 	 * @throws SQLException Exception is thrown when a data base connection error occurs.
 	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
 	 */
-	public void updateUser(String Username, String Password, String Vorname, String Nachname, String Strasse,
+	public void updateUser(String Username, String Vorname, String Nachname, String Strasse,
 						 String Hausnummer, String Postleitzahl, String Stadt, String Email, String Telefonnummer,
 						 String Firma, String Geschlecht) throws SQLException, IOException { 
-		dbHandler.updateUser(Username, Password, Vorname, Nachname, Strasse, Hausnummer, Postleitzahl, Stadt, Email, Telefonnummer, Firma, Geschlecht);
+		dbHandler.updateUser(Username, Vorname, Nachname, Strasse, Hausnummer, Postleitzahl, Stadt, Email, Telefonnummer, Firma, Geschlecht);
 	}
 
 	/**

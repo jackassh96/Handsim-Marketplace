@@ -219,13 +219,13 @@ public class dbHandler {
 	 * @throws IOException		input data or output statement is corrupt 
 	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
 	 */  
-	public boolean updateUser(String Username, String Password, String Vorname, String Nachname, String Strasse, String Hausnummer,
+	public boolean updateUser(String Username, String Vorname, String Nachname, String Strasse, String Hausnummer,
 							  String Postleitzahl, String Stadt, String Email, String Telefonnummer, String Firma, String Geschlecht) throws SQLException, IOException {
 		Connection con = setUpConnection();
 		try {
 //			UPDATE `marketuser` SET  `User_ID`='peterX',  `Password`='000',  `First_Name`='Peter',  `Last_Name`='Pan',  `Street`='Freidrichstr.',  `Number`='104',  `Post_Code`='13317',  `City`='Berlin',  `Email`='ppan@pan.de',  `Phone`='0190123456',  `Company`='Pan AG',  `Gender`='maennlich' WHERE `User_ID` = '';
 				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + 
-						" SET User_ID=\"" + Username + "\" , Password=\"" + Password + "\" , First_Name=\"" + Vorname + 
+						" SET User_ID=\"" + Username + "\" , First_Name=\"" + Vorname + 
 						"\" , Last_Name=\"" + Nachname + "\" , Street=\"" + Strasse + "\" , Number=\"" + Hausnummer +
 						"\" , Post_Code=\"" + Postleitzahl + "\" , City=\"" + Stadt + "\" , Email=\"" + Email +
 						"\" , Phone=\"" + Telefonnummer + "\" , Company=\"" + Firma + "\" , Gender=\"" + Geschlecht +
@@ -259,7 +259,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Password =\"" + password + "\"");
 				ResultSet neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + username + "\" AND Password =\"" + password + "\"");
 				correct = neu.first();
-//				correct = true;
 		}
 		catch (SQLException ex) {
 			throw new IOException("Login fehlgeschlagen :(!\n" + ex.getMessage()); //TODO write Errortext
@@ -316,27 +315,27 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + User_id  + "\"");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + User_id + "\"");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage gescheitert :(!\n" + ex.getMessage()); //TODO write Errortext
 		}
 		finally { 
 			
-			
-			rowStr = new String[12];
-			rowStr[0] = neu.getNString("User_ID");
-			rowStr[1] = neu.getNString("Password");
-			rowStr[2] = neu.getNString("First_Name");
-			rowStr[3] = neu.getNString("Last_Name");
-			rowStr[4] = neu.getNString("Street");
-			rowStr[5] = neu.getNString("Number");
-			rowStr[6] = String.valueOf(neu.getInt("Post_Code"));
-			rowStr[7] = neu.getNString("City");
-			rowStr[10] = neu.getNString("Email");
-			rowStr[9] = neu.getNString("Phone");
-			rowStr[8] = neu.getNString("Company");
-			rowStr[11] = neu.getNString("Gender");
+			if (exists) {
+				rowStr = new String[12];
+				rowStr[0] = neu.getNString("User_ID");
+				rowStr[1] = neu.getNString("Password");
+				rowStr[2] = neu.getNString("First_Name");
+				rowStr[3] = neu.getNString("Last_Name");
+				rowStr[4] = neu.getNString("Street");
+				rowStr[5] = neu.getNString("Number");
+				rowStr[6] = String.valueOf(neu.getInt("Post_Code"));
+				rowStr[7] = neu.getNString("City");
+				rowStr[10] = neu.getNString("Email");
+				rowStr[9] = neu.getNString("Phone");
+				rowStr[8] = neu.getNString("Company");
+				rowStr[11] = neu.getNString("Gender");
+			}
 			con.close();
 			 }
 		return rowStr;
@@ -353,6 +352,7 @@ public class dbHandler {
 	 */ 
 	public String encodePw(String password) throws ParseException, EncodingException {
 		
+		//TODO change after last github commit!
 		String randomString = "RaJzEkTSFRbW54oBwkfryQ"; 
 		try {
 		      // byte-Array erzeugen
@@ -404,7 +404,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + companyTable + " ORDER BY firma ASC");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Unternehmensliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -412,19 +411,19 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				String [] rowStr = new String[9];
-				rowStr[0] = String.valueOf(neu.getInt("t_id"));
-				rowStr[1] = neu.getNString("firma");
-				rowStr[2] = neu.getNString("street");
-				rowStr[3] = neu.getNString("number");
-				rowStr[4] = neu.getNString("postcode");
-				rowStr[5] = neu.getNString("vorname") + " " + neu.getNString("nachname");
-				rowStr[6] = neu.getNString("phone");
-				rowStr[7] = neu.getNString("email");
-				rowStr[8] = neu.getNString("description");
-				
-				hFirmenMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[9];
+					rowStr[0] = String.valueOf(neu.getInt("t_id"));
+					rowStr[1] = neu.getNString("firma");
+					rowStr[2] = neu.getNString("street");
+					rowStr[3] = neu.getNString("number");
+					rowStr[4] = neu.getNString("postcode");
+					rowStr[5] = neu.getNString("vorname") + " " + neu.getNString("nachname");
+					rowStr[6] = neu.getNString("phone");
+					rowStr[7] = neu.getNString("email");
+					rowStr[8] = neu.getNString("description");
+					hFirmenMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next()); 
 			con.close(); 
@@ -633,13 +632,13 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				String [] rowStr = new String[3];
-				rowStr[0] = String.valueOf(neu.getInt("Category_ID"));
-				rowStr[1] = neu.getNString("Title");
-				rowStr[2] = String.valueOf(neu.getInt("Parent_Category"));
-//				rowStr[3] = neu.getNString("Sub_Category_List"); 
-				
-				hCategoryMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[3];
+					rowStr[0] = String.valueOf(neu.getInt("Category_ID"));
+					rowStr[1] = neu.getNString("Title");
+					rowStr[2] = String.valueOf(neu.getInt("Parent_Category"));
+					hCategoryMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 
@@ -666,7 +665,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + assingmentTable + " WHERE Owner=\"" + owner + "\"");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Auftraege/Ausschreibungen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -674,21 +672,20 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				//( Assignment_ID, Owner, PositionList , OfferHandler , Description , DateOfCreation , Deadline , Status , Title , DueDate )
-				String [] rowStr = new String[7];
-				rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
-//				rowStr[1] = neu.getNString("Owner");
-//				rowStr[2] = neu.getNString("PositionList");
-//				rowStr[3] = neu.getNString("OfferHandler");
-				rowStr[1] = neu.getNString("Description");
-				rowStr[2] = neu.getNString("DateOfCreation");
-				rowStr[3] = neu.getNString("Deadline");
-				rowStr[4] = neu.getNString("Status");
-				rowStr[5] = neu.getNString("Title");
-				rowStr[6] = neu.getNString("DueDate");
-				
-				hAssignmentMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[7];
+					rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
+	//				rowStr[1] = neu.getNString("Owner");
+	//				rowStr[2] = neu.getNString("PositionList");
+	//				rowStr[3] = neu.getNString("OfferHandler");
+					rowStr[1] = neu.getNString("Description");
+					rowStr[2] = neu.getNString("DateOfCreation");
+					rowStr[3] = neu.getNString("Deadline");
+					rowStr[4] = neu.getNString("Status");
+					rowStr[5] = neu.getNString("Title");
+					rowStr[6] = neu.getNString("DueDate");
+					hAssignmentMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 
@@ -714,7 +711,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE Assignment_ID=\"" + Assignment_ID + "\"");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -723,7 +719,6 @@ public class dbHandler {
 			int i = 0;
 			do {
 				if (exists) {
-					//TODO ID needed?
 					String [] rowStr = new String[8];
 					rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
 					rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
@@ -754,7 +749,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + offerTable + " WHERE Offer_ID=\"" + Offer_ID + "\"");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -762,18 +756,18 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				String [] rowStr = new String[8];
-				rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
-				rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
-				rowStr[2] = neu.getNString("Company_ID");
-				rowStr[3] = String.valueOf(neu.getDouble("Price"));
-				rowStr[4] = neu.getNString("AmountOfTimeNeeded");
-				rowStr[5] = neu.getNString("Description");
-				rowStr[6] = neu.getNString("Date");
-				rowStr[7] = neu.getNString("Status");	
-				
-				hOfferMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[8];
+					rowStr[0] = String.valueOf(neu.getInt("Offer_ID"));
+					rowStr[1] = String.valueOf(neu.getInt("Assignment_ID"));
+					rowStr[2] = neu.getNString("Company_ID");
+					rowStr[3] = String.valueOf(neu.getDouble("Price"));
+					rowStr[4] = neu.getNString("AmountOfTimeNeeded");
+					rowStr[5] = neu.getNString("Description");
+					rowStr[6] = neu.getNString("Date");
+					rowStr[7] = neu.getNString("Status");	
+					hOfferMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 
@@ -799,9 +793,7 @@ public class dbHandler {
 		try {	
 			PreparedStatement pst = con.prepareStatement("");
 			neu = pst.executeQuery("SELECT * FROM " + dbName + "." + positionTable + " WHERE Assignment_ID=\"" + Assignment_ID + "\"");
-			
 			exists = neu.first();
-			//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Positionen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -809,16 +801,15 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				//(`Position_ID`, `Category`, `Description`, `Amount`)
-				String [] rowStr = new String[5];
-				rowStr[0] = String.valueOf(neu.getInt("Position_ID"));
-				rowStr[1] = String.valueOf(neu.getInt("Category_ID"));
-				rowStr[2] = String.valueOf(neu.getInt("Assignment_ID"));
-				rowStr[3] = neu.getNString("Description");
-				rowStr[4] = neu.getNString("Amount");
-				
-				hPositionMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[5];
+					rowStr[0] = String.valueOf(neu.getInt("Position_ID"));
+					rowStr[1] = String.valueOf(neu.getInt("Category_ID"));
+					rowStr[2] = String.valueOf(neu.getInt("Assignment_ID"));
+					rowStr[3] = neu.getNString("Description");
+					rowStr[4] = neu.getNString("Amount");
+					hPositionMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 
@@ -844,7 +835,6 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + Username + "\"");
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
 			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
@@ -852,21 +842,21 @@ public class dbHandler {
 		finally { 
 			int i = 0;
 			do {
-				//TODO ID needed?
-				String [] rowStr = new String[11];
-				rowStr[0] = neu.getNString("User_ID");
-				rowStr[1] = neu.getNString("First_Name");
-				rowStr[2] = neu.getNString("Last_Name");
-				rowStr[3] = neu.getNString("Street");
-				rowStr[4] = neu.getNString("Number");
-				rowStr[5] = String.valueOf(neu.getInt("Post_Code"));
-				rowStr[6] = neu.getNString("City");
-				rowStr[7] = neu.getNString("Email");
-				rowStr[8] = neu.getNString("Phone");
-				rowStr[9] = neu.getNString("Company");
-				rowStr[10] = neu.getNString("Gender");
-				
-				hUserMap.put(String.valueOf(i), rowStr);
+				if (exists) {
+					String [] rowStr = new String[11];
+					rowStr[0] = neu.getNString("User_ID");
+					rowStr[1] = neu.getNString("First_Name");
+					rowStr[2] = neu.getNString("Last_Name");
+					rowStr[3] = neu.getNString("Street");
+					rowStr[4] = neu.getNString("Number");
+					rowStr[5] = String.valueOf(neu.getInt("Post_Code"));
+					rowStr[6] = neu.getNString("City");
+					rowStr[7] = neu.getNString("Email");
+					rowStr[8] = neu.getNString("Phone");
+					rowStr[9] = neu.getNString("Company");
+					rowStr[10] = neu.getNString("Gender");
+					hUserMap.put(String.valueOf(i), rowStr);
+				}
 				i++;
 			} while (neu.next());
 			con.close(); 

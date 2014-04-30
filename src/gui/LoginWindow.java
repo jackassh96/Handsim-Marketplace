@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -17,6 +18,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 
 import processing.Controller;
 import processing.dataBase.dbHandler;
@@ -35,6 +37,7 @@ public class LoginWindow extends Shell {
 		try {
 			Display display = Display.getDefault();
 			LoginWindow shell = new LoginWindow(display);
+			shell.setImage(new Image(null, ".\\images\\handsimIcon.png"));
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -44,6 +47,7 @@ public class LoginWindow extends Shell {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,(e.getStackTrace().toString()));
 		}
 	}
 
@@ -54,7 +58,6 @@ public class LoginWindow extends Shell {
 	public LoginWindow(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
-		
 		Composite lowerContainer = new Composite(this, SWT.NONE);
 		lowerContainer.setLayoutData(BorderLayout.SOUTH);
 		lowerContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -159,7 +162,7 @@ public class LoginWindow extends Shell {
 					} catch (Exception e1) {
 						// TODO FIX ERRORHANDLING
 						e1.printStackTrace();
-	
+						JOptionPane.showMessageDialog(null,(e1.getMessage()));
 					}
 				}
 				else {
