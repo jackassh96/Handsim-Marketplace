@@ -136,9 +136,13 @@ public class AngeboteansichtWindow extends Shell {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try {
-						controller.acceptOffer(angebotsID);
-						AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
-						parentWindow.updateContent();
+						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot annehmen werden alle anderen Angebote abgeleht. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+						if(antwort == 0){
+							controller.acceptOffer(angebotsID);
+							AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
+							parentWindow.updateContent();
+							((Button)e.getSource()).getShell().dispose();
+						}
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -151,9 +155,13 @@ public class AngeboteansichtWindow extends Shell {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					try {
-						controller.declineOffer(angebotsID);
-						AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
-						parentWindow.updateContent();
+						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot ablehnen kann dies nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+						if(antwort == 0){
+							controller.declineOffer(angebotsID);
+							AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
+							parentWindow.updateContent();
+							((Button)e.getSource()).getShell().dispose();
+						}
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {

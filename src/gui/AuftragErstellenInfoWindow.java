@@ -195,6 +195,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 					return;
 				}
 				try {
+					controller.deleteAssignment(assignmentID);
 					String auftragsID = controller.createAssignment(beschreibungText.getText(), date.toMachineString(), titelText.getText(), chosenDate.toMachineString());
 					for(TreeItem position : outputItems){
 						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));

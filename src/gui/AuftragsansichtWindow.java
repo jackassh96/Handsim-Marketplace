@@ -182,7 +182,7 @@ public class AuftragsansichtWindow extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String angebotsID = (String) item.getData("id");
-						new AngeboteansichtWindow(((Button)e.getSource()).getShell(), angebotsID);
+						new AngeboteansichtWindow(((Table)e.getSource()).getShell(), angebotsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {

@@ -253,7 +253,6 @@ public class CSPmainWindows extends Shell {
 						try {
 							int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
 							if(antwort == 0){
-								controller.deleteAssignment((String) item.getData("id"));
 								new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null,(String) item.getData("id"));
 								CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
 								main.updateContent();
@@ -616,7 +615,7 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
+						new AuftragsansichtWindow(((Table)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -643,7 +642,7 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
+						new AuftragsansichtWindow(((Table)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
