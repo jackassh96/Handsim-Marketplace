@@ -161,8 +161,8 @@ public class AuftragErstellenInfoWindow extends Shell {
 					for(int i = 0; i < returnItems.size(); i++){
 						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
 					}
-					((Button)e.getSource()).getShell().dispose();
 					new AuftragErstellenPositionenWindow((Shell) ((Button)e.getSource()).getShell().getParent(), dataArray, assignmentID);
+					((Button)e.getSource()).getShell().dispose();
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {

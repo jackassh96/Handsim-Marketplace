@@ -303,12 +303,12 @@ public class AuftragErstellenPositionenWindow extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(outputTree.getItems().length > 0){
-					((Button)e.getSource()).getShell().setVisible(false);
 					ArrayList<TreeItem> items = new ArrayList<TreeItem>();
 					for(TreeItem item : outputTree.getItems()){
 						getPositionItems(items, item);
 					}
 					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow((Shell) ((Button)e.getSource()).getShell().getParent(), items, assignmentID);
+					((Button)e.getSource()).getShell().dispose();
 				}else{
 					JOptionPane.showMessageDialog(null, "Bitte f�gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
