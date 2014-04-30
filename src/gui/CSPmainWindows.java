@@ -42,7 +42,6 @@ import processing.Controller;
 
 
 public class CSPmainWindows extends Shell {
-	private Text suchfeld;
 	private Text benutzernameTextField;
 	private Text vornameTextField;
 	private Text nachnameTextField;
@@ -103,16 +102,14 @@ public class CSPmainWindows extends Shell {
 		leftHeader.setLayoutData(BorderLayout.WEST);
 		
 		Label unternehmensLogo = new Label(leftHeader, SWT.NONE);
-		unternehmensLogo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		unternehmensLogo.setBounds(0, 0, 81, 25);
-		unternehmensLogo.setText("LOGO");
+		unternehmensLogo.setFont(SWTResourceManager.getFont("Calibri", 12, SWT.NORMAL));
+		unternehmensLogo.setSize(250, 25);
+		unternehmensLogo.setText("HANDSIM-Marketplace");
 		
 		Composite middleHeader = new Composite(headerContainer, SWT.NONE);
 		middleHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		suchfeld = new Text(middleHeader, SWT.BORDER);
-		suchfeld.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		suchfeld.setText("Suche");
+		Label middleHeaderLabel = new Label(middleHeader, SWT.NONE);
 		
 		//Composite for distance controll in every direction
 		Composite lowContainer = new Composite(this, SWT.NONE);
@@ -256,12 +253,9 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : meineAufträgeTable.getSelection()){
 					if(item.getText(4).equals("open")){
 						try {
-							int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-							if(antwort == 0){
-								new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null,(String) item.getData("id"));
-								CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
-								main.updateContent();
-							}
+							new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null,(String) item.getData("id"));
+							CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
+							main.updateContent();
 						} catch (SQLException e1) {
 							JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 						} catch (IOException e1) {
@@ -282,12 +276,9 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : meineAufträgeTable.getSelection()){
 					try {
 						if(item.getText(4).equals("open")){
-							int antwort = JOptionPane.showOptionDialog(null, "Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-							if(antwort == 0){
-								controller.deleteAssignment((String) item.getData("id"));
-								CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
-								main.updateContent();
-							}
+							controller.deleteAssignment((String) item.getData("id"));
+							CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
+							main.updateContent();
 						}
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
