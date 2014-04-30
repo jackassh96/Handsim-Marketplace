@@ -151,9 +151,18 @@ public class Controller {
 		if (dbHandler != null) {
 			instance.dbHandler = dbHandler;	
 		}
-		
 		if (userData != null) {
 			instance.activeUser = new User(userData);
+		}
+		else {
+			System.out.println("!!!! " + instance.activeUser.getUserID());
+//			System.out.println("...." + dbHandler.loadUserData(instance.activeUser.getUserID()));
+			User u = instance.importUser(instance.activeUser.getUserID());
+			System.out.println("----" + u.getUserID());
+			instance.activeUser = u;
+			
+//			instance.activeUser = new User(dbHandler.loadUserData(instance.activeUser.getUserID()));
+			System.out.println("username: " + instance.activeUser.getUserID());
 		}
 		Category [] buf = instance.importCategories();
 		instance.categoryList = instance.generateSubCategories(buf);
