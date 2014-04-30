@@ -60,6 +60,9 @@ public class CSPmainWindows extends Shell {
 	private Label unternehmensLabel;
 	private Combo geschlechtCombo;
 	private Controller controller;
+	private StackLayout mainStack;
+	private Composite aufträgeContainer;
+	private Composite mainContainer;
 
 	/**
 	 * Create the shell.
@@ -119,10 +122,9 @@ public class CSPmainWindows extends Shell {
 		Composite rightContainer = new Composite(this, SWT.NONE);
 		rightContainer.setLayoutData(BorderLayout.EAST);
 		
-		//MainContainer containing the 4 Views of the Mainwindow (all final to access them from ActionHandlers)
-		final Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer = new Composite(this, SWT.NONE);
 		mainContainer.setLayoutData(BorderLayout.CENTER);
-		final StackLayout mainStack = new StackLayout();
+		mainStack = new StackLayout();
 		mainContainer.setLayout(mainStack);
 		
 		//DashboardContainer with the tables for quick access - first selected
@@ -193,8 +195,7 @@ public class CSPmainWindows extends Shell {
 		
 		Composite unternehmenTableButtonContainer = new Composite(unternehmenMidleHeaderContainer, SWT.NONE);
 		
-		//Container with the Assignmentview
-		final Composite aufträgeContainer = new Composite(mainContainer, SWT.NONE);
+		aufträgeContainer = new Composite(mainContainer, SWT.NONE);
 		aufträgeContainer.setLayout(new BorderLayout(0, 0));
 		
 		Composite aufträgeMiddleContainer = new Composite(aufträgeContainer, SWT.NONE);
@@ -227,15 +228,13 @@ public class CSPmainWindows extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				try {
-					new AuftragErstellenPositionenWindow(null, null);
+					((Button)e.getSource()).getShell();
+					new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null, null);
 				} catch (SQLException e1) {
-					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				} catch (IOException e1) {
-					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				} catch (Exception e1) {
-					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
 				}
 			}
@@ -255,7 +254,9 @@ public class CSPmainWindows extends Shell {
 							int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
 							if(antwort == 0){
 								controller.deleteAssignment((String) item.getData("id"));
-								new AuftragErstellenPositionenWindow(null,(String) item.getData("id"));
+								new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null,(String) item.getData("id"));
+								CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
+								main.updateContent();
 							}
 						} catch (SQLException e1) {
 							JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!", 2);
@@ -279,6 +280,8 @@ public class CSPmainWindows extends Shell {
 					for(TableItem item : meineAufträgeTable.getSelection()){
 						try {
 							controller.deleteAssignment((String) item.getData("id"));
+							CSPmainWindows main = (CSPmainWindows) ((Button)e.getSource()).getShell();
+							main.updateContent();
 						} catch (SQLException e1) {
 							JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 						} catch (IOException e1) {
@@ -521,47 +524,87 @@ public class CSPmainWindows extends Shell {
 		//SelectionListener of the Button of the Header to switch between views
 		dashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				mainStack.topControl = dashboardContainer;
-				dashboardAufträgeTable.removeAll();
-				controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
-				mainContainer.layout();
+				try {
+					controller.init(null, null);
+					mainStack.topControl = dashboardContainer;
+					dashboardAufträgeTable.removeAll();
+					controller.generateMyAssignmentTableItemsDashboard(dashboardAufträgeTable);
+					mainContainer.layout();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+				
 			}
 		});
 		
 		profilButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				mainStack.topControl = profilContainer;
-				HashMap<String, String> profilInfo = controller.genereateMyProfileHashMap();
-				benutzernameTextField.setText(profilInfo.get("id"));
-				vornameTextField.setText(profilInfo.get("firstname"));
-				nachnameTextField.setText(profilInfo.get("lastname"));
-				straßeTextField.setText(profilInfo.get("street"));
-				hausnummerTextField.setText(profilInfo.get("number"));
-				postleitzahlTextField.setText(profilInfo.get("postcode"));
-				stadtTextField.setText(profilInfo.get("city"));
-				unternehmensTextField.setText(profilInfo.get("company"));
-				telefonTextField.setText(profilInfo.get("phone"));
-				emailTextField.setText(profilInfo.get("email"));
-				geschlechtCombo.setText(profilInfo.get("gender"));
-				mainContainer.layout();
+				try {
+					controller.init(null, null);
+					mainStack.topControl = profilContainer;
+					HashMap<String, String> profilInfo = controller.genereateMyProfileHashMap();
+					benutzernameTextField.setText(profilInfo.get("id"));
+					vornameTextField.setText(profilInfo.get("firstname"));
+					nachnameTextField.setText(profilInfo.get("lastname"));
+					straßeTextField.setText(profilInfo.get("street"));
+					hausnummerTextField.setText(profilInfo.get("number"));
+					postleitzahlTextField.setText(profilInfo.get("postcode"));
+					stadtTextField.setText(profilInfo.get("city"));
+					unternehmensTextField.setText(profilInfo.get("company"));
+					telefonTextField.setText(profilInfo.get("phone"));
+					emailTextField.setText(profilInfo.get("email"));
+					geschlechtCombo.setText(profilInfo.get("gender"));
+					mainContainer.layout();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+				
 			}
 		});
 		
 		unternehmensButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				mainStack.topControl = unternehmenContainer;
-				unternehmensTable.removeAll();
-				controller.generateCompanyTableItems(unternehmensTable);
-				mainContainer.layout();
+				try {
+					controller.init(null, null);
+					mainStack.topControl = unternehmenContainer;
+					unternehmensTable.removeAll();
+					controller.generateCompanyTableItems(unternehmensTable);
+					mainContainer.layout();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+				
 			}
 		});
 		
 		auftragsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				mainStack.topControl = aufträgeContainer;
-				meineAufträgeTable.removeAll();
-				controller.generateMyAssignmentTableItems(meineAufträgeTable);
-				mainContainer.layout();
+				try {
+					controller.init(null, null);
+					mainStack.topControl = aufträgeContainer;
+					meineAufträgeTable.removeAll();
+					controller.generateMyAssignmentTableItems(meineAufträgeTable);
+					mainContainer.layout();
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+				
 			}
 		});
 		
@@ -573,12 +616,10 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(auftragsID);
+						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
-						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
-						e1.printStackTrace();
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					}
 				}
@@ -602,7 +643,7 @@ public class CSPmainWindows extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String auftragsID = (String) item.getData("id");
-						new AuftragsansichtWindow(auftragsID);
+						new AuftragsansichtWindow(((Button)e.getSource()).getShell(), auftragsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -669,5 +710,21 @@ public class CSPmainWindows extends Shell {
 
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+	
+	public void updateContent(){
+		try {
+			controller.init(null, null);
+			mainStack.topControl = aufträgeContainer;
+			meineAufträgeTable.removeAll();
+			controller.generateMyAssignmentTableItems(meineAufträgeTable);
+			mainContainer.layout();
+		} catch (SQLException e1) {
+			JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+		}
 	}
 }

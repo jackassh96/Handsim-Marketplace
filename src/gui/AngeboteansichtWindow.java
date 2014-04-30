@@ -33,8 +33,8 @@ public class AngeboteansichtWindow extends Shell {
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AngeboteansichtWindow(final String angebotsID) throws SQLException, IOException {
-		super(Display.getDefault(), SWT.SHELL_TRIM);
+	public AngeboteansichtWindow(final Shell parent ,final String angebotsID) throws SQLException, IOException {
+		super(parent, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
 		final Controller controller = Controller.getInstance();
@@ -137,6 +137,8 @@ public class AngeboteansichtWindow extends Shell {
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						controller.acceptOffer(angebotsID);
+						AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
+						parentWindow.updateContent();
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -150,6 +152,8 @@ public class AngeboteansichtWindow extends Shell {
 				public void widgetSelected(SelectionEvent e) {
 					try {
 						controller.declineOffer(angebotsID);
+						AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
+						parentWindow.updateContent();
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {

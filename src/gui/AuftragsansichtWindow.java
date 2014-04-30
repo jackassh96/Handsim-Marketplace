@@ -35,17 +35,20 @@ public class AuftragsansichtWindow extends Shell {
 	private Text statusText;
 	private Table angeboteTable;
 	private Text erstelldatumField;
+	private String assignmentID;
+	private final Controller controller = Controller.getInstance();
 
 	/**
 	 * Create the shell.
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AuftragsansichtWindow(final String assignmentID) throws SQLException, IOException {
-		super(Display.getDefault(), SWT.SHELL_TRIM);
+	public AuftragsansichtWindow(Shell parent, final String assignmentID) throws SQLException, IOException {
+		super(parent, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
-		final Controller controller = Controller.getInstance();
+		this.assignmentID = assignmentID;
+		
 		HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
 		
 		Composite upperContainer = new Composite(this, SWT.NONE);
@@ -179,7 +182,7 @@ public class AuftragsansichtWindow extends Shell {
 				for(TableItem item : table.getSelection()){
 					try {
 						String angebotsID = (String) item.getData("id");
-						new AngeboteansichtWindow(angebotsID);
+						new AngeboteansichtWindow(((Button)e.getSource()).getShell(), angebotsID);
 					} catch (SQLException e1) {
 						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 					} catch (IOException e1) {
@@ -224,7 +227,7 @@ public class AuftragsansichtWindow extends Shell {
 						if(antwort == 0){
 							int antwortBearbeiten = JOptionPane.showOptionDialog(null, "Wenn Sie einen Auftrag bearbeiten wird der bestehende Auftrag gelöscht und alle Angebote gehen verlohren. Wollen Sie diesen Auftrag wirklich löschen?", "Auftrag Löschen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
 							if(antwortBearbeiten == 0){
-								new AuftragErstellenPositionenWindow(null,assignmentID);
+								new AuftragErstellenPositionenWindow(((Button)e.getSource()).getShell(), null,assignmentID);
 								((Button)e.getSource()).getShell().dispose();
 								controller.deleteAssignment(assignmentID);
 							}
@@ -267,6 +270,21 @@ public class AuftragsansichtWindow extends Shell {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void updateContent(){
+		try {
+			Controller.init(null, null);
+			angeboteTable.removeAll();
+			controller.generateTableHeaderOfferTable(angeboteTable);
+			controller.generateOfferTableItems(angeboteTable, assignmentID);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, e, "Fehler!", 2);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, e, "Fehler!", 2);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e, "Fehler!", 2);
 		}
 	}
 

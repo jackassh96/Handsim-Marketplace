@@ -56,13 +56,14 @@ public class AuftragErstellenPositionenWindow extends Shell {
 
 	/**
 	 * Create the shell.
+	 * @param shell 
 	 * @param dataArray 
 	 * @throws Exception 
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public AuftragErstellenPositionenWindow(String[][] dataArray, final String assignmentID) throws SQLException, IOException, Exception {
-		super(Display.getDefault(), SWT.SHELL_TRIM);
+	public AuftragErstellenPositionenWindow(Shell parent, String[][] dataArray, final String assignmentID) throws SQLException, IOException, Exception {
+		super(parent, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
 		
 		Controller controller = Controller.getInstance();
@@ -307,7 +308,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					for(TreeItem item : outputTree.getItems()){
 						getPositionItems(items, item);
 					}
-					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow(items, assignmentID);
+					AuftragErstellenInfoWindow nextPage = new AuftragErstellenInfoWindow((Shell) ((Button)e.getSource()).getShell().getParent(), items, assignmentID);
 				}else{
 					JOptionPane.showMessageDialog(null, "Bitte f�gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}

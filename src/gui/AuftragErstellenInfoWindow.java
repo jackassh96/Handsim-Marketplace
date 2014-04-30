@@ -43,8 +43,8 @@ public class AuftragErstellenInfoWindow extends Shell {
 	 * @param treeItems 
 	 * @param display
 	 */
-	public AuftragErstellenInfoWindow(final ArrayList<TreeItem> outputItems, final String assignmentID) {
-		super(Display.getDefault(), SWT.SHELL_TRIM);
+	public AuftragErstellenInfoWindow(Shell parent, final ArrayList<TreeItem> outputItems, final String assignmentID) {
+		super(parent, SWT.SHELL_TRIM);
 		
 		setLayout(new BorderLayout(0, 0));
 		
@@ -162,7 +162,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
 					}
 					((Button)e.getSource()).getShell().dispose();
-					new AuftragErstellenPositionenWindow(dataArray, assignmentID);
+					new AuftragErstellenPositionenWindow((Shell) ((Button)e.getSource()).getShell().getParent(), dataArray, assignmentID);
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
@@ -199,7 +199,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 					for(TreeItem position : outputItems){
 						controller.createPosition(((String[])position.getData())[0], auftragsID, position.getText(2), position.getText(1));
 					}
-					AuftragErstellenInfoWindow.this.close();
+					CSPmainWindows parent = (CSPmainWindows) ((Button)e.getSource()).getShell().getParent();
+					parent.updateContent();
+					((Button)e.getSource()).getShell().dispose();
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1.getStackTrace(), "Fehler!: ", 2);
 				} catch (IOException e1) {
@@ -211,6 +213,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				System.out.println();
 				((Button)e.getSource()).getShell().dispose();
 			}
 		});
