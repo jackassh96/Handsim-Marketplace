@@ -37,7 +37,8 @@ public class AuftragsansichtWindow extends Shell {
 	private Text erstelldatumField;
 	private String assignmentID;
 	private final Controller controller = Controller.getInstance();
-
+	private CSPmainWindows parent;
+	
 	/**
 	 * Create the shell.
 	 * @throws IOException 
@@ -46,6 +47,8 @@ public class AuftragsansichtWindow extends Shell {
 	public AuftragsansichtWindow(Shell parent, final String assignmentID) throws SQLException, IOException {
 		super(parent, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
+		
+		this.parent = (CSPmainWindows) parent;
 		
 		this.assignmentID = assignmentID;
 		
@@ -279,6 +282,9 @@ public class AuftragsansichtWindow extends Shell {
 			angeboteTable.removeAll();
 			controller.generateTableHeaderOfferTable(angeboteTable);
 			controller.generateOfferTableItems(angeboteTable, assignmentID);
+			HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
+			statusText.setText(auftragsInfo.get("status"));
+			parent.updateContent();
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, e, "Fehler!", 2);
 		} catch (IOException e) {
