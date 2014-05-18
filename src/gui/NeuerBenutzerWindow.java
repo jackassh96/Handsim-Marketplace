@@ -19,56 +19,42 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import processing.Controller;
 import swing2swt.layout.BorderLayout;
 
 public class NeuerBenutzerWindow extends Shell {
-	private Text vornameTextField;
-	private Text nachnameTextField;
-	private Text straﬂeTextField;
-	private Text postleitzahlTextField;
-	private Text stadtTextField;
-	private Text hausnummerTextField;
-	private Text unternehmensTextField;
-	private Text emailTextField;
-	private Text telefonTextField;
-	private Label unternehmensLabel;
+	
+	private Text vornameTextField, nachnameTextField, straﬂeTextField, postleitzahlTextField, stadtTextField, 
+	hausnummerTextField, unternehmensTextField, emailTextField, telefonTextField, passwortTextField, benutzernameTextField;
+	private Label unternehmensLabel, benutzernameLabel, passwortLabel, vornameLabel, nachnameLabel, emailLabel,
+	straﬂeLabel, telefonLabel, hausnummerLabel, geschlechtLabel, postleitzahlLabel, stadtLabel;
 	private Combo geschlechtCombo;
-	private Text passwortTextField;
-	private Text benutzernameTextField;
+	private Composite profilContainer, profilLowContainer, profilLeftLowContainer, profilRightLowContainer, 
+	profilRightRightLowContainer, profilMiddleContainer, profilTopContainer;
+	private Button profilSpeichernButton;
 
 	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String args[]) {
-		
-	}
-
-	/**
-	 * Create the shell.
-	 * @param display
+	 * Creates a Window that can be used to create a new User for the application
 	 */
 	public NeuerBenutzerWindow() {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new FillLayout());
 		
-		final Composite profilContainer = new Composite(this, SWT.NONE);
+		profilContainer = new Composite(this, SWT.NONE);
 		profilContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite profilLowContainer = new Composite(profilContainer, SWT.NONE);
+		profilLowContainer = new Composite(profilContainer, SWT.NONE);
 		profilLowContainer.setLayoutData(BorderLayout.SOUTH);
 		profilLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite profilLeftLowContainer = new Composite(profilLowContainer, SWT.NONE);
+		profilLeftLowContainer = new Composite(profilLowContainer, SWT.NONE);
 		
-		Composite profilRightLowContainer = new Composite(profilLowContainer, SWT.NONE);
+		profilRightLowContainer = new Composite(profilLowContainer, SWT.NONE);
 		profilRightLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Composite profilRightRightLowContainer = new Composite(profilRightLowContainer, SWT.NONE);
+		profilRightRightLowContainer = new Composite(profilRightLowContainer, SWT.NONE);
 		profilRightRightLowContainer.setLayoutData(BorderLayout.EAST);
 		
-		Button profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
+		profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
 		profilSpeichernButton.setBounds(0, 0, 105, 35);
 		profilSpeichernButton.setText("Speichern");
 		profilSpeichernButton.addSelectionListener(new SelectionAdapter(){
@@ -104,15 +90,15 @@ public class NeuerBenutzerWindow extends Shell {
 			}
 		});
 		
-		Composite profilMiddleContainer = new Composite(profilContainer, SWT.NONE);
+		profilMiddleContainer = new Composite(profilContainer, SWT.NONE);
 		profilMiddleContainer.setLayoutData(BorderLayout.CENTER);
 		profilMiddleContainer.setLayout(new GridLayout(2, false));
 		
-		Label benutzernameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		benutzernameLabel = new Label(profilMiddleContainer, SWT.NONE);
 		benutzernameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		benutzernameLabel.setText("Benutzername");
 		
-		Label passwortLabel = new Label(profilMiddleContainer, SWT.NONE);
+		passwortLabel = new Label(profilMiddleContainer, SWT.NONE);
 		passwortLabel.setText("Passwort");
 		
 		benutzernameTextField = new Text(profilMiddleContainer, SWT.BORDER);
@@ -121,7 +107,7 @@ public class NeuerBenutzerWindow extends Shell {
 		passwortTextField = new Text(profilMiddleContainer, SWT.BORDER | SWT.PASSWORD);
 		passwortTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label vornameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		vornameLabel = new Label(profilMiddleContainer, SWT.NONE);
 		vornameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		vornameLabel.setText("Vorname");
 		
@@ -147,12 +133,11 @@ public class NeuerBenutzerWindow extends Shell {
 		unternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		unternehmensTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label nachnameLabel = new Label(profilMiddleContainer, SWT.NONE);
+		nachnameLabel = new Label(profilMiddleContainer, SWT.NONE);
 		nachnameLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		nachnameLabel.
-		setText("Nachname");
+		nachnameLabel.setText("Nachname");
 		
-		Label emailLabel = new Label(profilMiddleContainer, SWT.NONE);
+		emailLabel = new Label(profilMiddleContainer, SWT.NONE);
 		emailLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		emailLabel.setText("E-Mail");
 		
@@ -174,11 +159,11 @@ public class NeuerBenutzerWindow extends Shell {
 		emailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		emailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		Label straﬂeLabel = new Label(profilMiddleContainer, SWT.NONE);
+		straﬂeLabel = new Label(profilMiddleContainer, SWT.NONE);
 		straﬂeLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		straﬂeLabel.setText("Straﬂe");
 		
-		Label telefonLabel = new Label(profilMiddleContainer, SWT.NONE);
+		telefonLabel = new Label(profilMiddleContainer, SWT.NONE);
 		telefonLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		telefonLabel.setText("Telefon");
 		
@@ -210,11 +195,11 @@ public class NeuerBenutzerWindow extends Shell {
 	        	}
 	        });
 		
-		Label hausnummerLabel = new Label(profilMiddleContainer, SWT.NONE);
+		hausnummerLabel = new Label(profilMiddleContainer, SWT.NONE);
 		hausnummerLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		hausnummerLabel.setText("Hausnummer");
 		
-		Label geschlechtLabel = new Label(profilMiddleContainer, SWT.NONE);
+		geschlechtLabel = new Label(profilMiddleContainer, SWT.NONE);
 		geschlechtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		geschlechtLabel.setText("Geschlecht");
 		
@@ -228,11 +213,11 @@ public class NeuerBenutzerWindow extends Shell {
 		geschlechtCombo.add("M‰nnlich");
 		geschlechtCombo.add("Weiblich");
 		
-		Label postleitzahlLabel = new Label(profilMiddleContainer, SWT.NONE);
+		postleitzahlLabel = new Label(profilMiddleContainer, SWT.NONE);
 		postleitzahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		postleitzahlLabel.setText("Postleitzahl");
 		
-		Label stadtLabel = new Label(profilMiddleContainer, SWT.NONE);
+		stadtLabel = new Label(profilMiddleContainer, SWT.NONE);
 		stadtLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		stadtLabel.setText("Stadt");
 		
@@ -254,13 +239,19 @@ public class NeuerBenutzerWindow extends Shell {
         	}
         });
 		
-		Composite profilTopContainer = new Composite(profilContainer, SWT.NONE);
+		profilTopContainer = new Composite(profilContainer, SWT.NONE);
 		profilTopContainer.setLayoutData(BorderLayout.NORTH);
 		
 		createContents();
-		
+	}
+
+	/**
+	 * Create contents of the shell.
+	 */
+	protected void createContents() {
+		setText("SWT Application");
+		setSize(966, 580);
 		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
-		
 		try {
 			this.open();
 			this.layout();
@@ -272,15 +263,6 @@ public class NeuerBenutzerWindow extends Shell {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Create contents of the shell.
-	 */
-	protected void createContents() {
-		setText("SWT Application");
-		setSize(966, 580);
-
 	}
 
 	@Override

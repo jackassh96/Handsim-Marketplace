@@ -1,19 +1,15 @@
 package gui;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 
 import swing2swt.layout.BorderLayout;
 
@@ -22,14 +18,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -44,7 +37,7 @@ import processing.Controller;
 public class CSPmainWindows extends Shell {
 	
 	//Unterstützung
-	private Controller controller;
+	private final Controller controller = Controller.getInstance();
 	
 	//Hauptfenster
 	private StackLayout mainStack;
@@ -91,7 +84,6 @@ public class CSPmainWindows extends Shell {
 	public CSPmainWindows() throws SQLException, IOException {
 		super(Display.getDefault(), SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
-		controller = Controller.getInstance();
 
 		this.createHeader();
 		

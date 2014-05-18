@@ -26,75 +26,88 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 
 public class AngeboteansichtWindow extends Shell {
+	
+	private final Controller controller = Controller.getInstance();
+	private Composite upperContainer, leftUpperContainer, rightUpperContainer, middleContainer, leftMiddleContainer,
+	rightMiddleContainer, lowerContainer, leftLowerContainer, rightLowerContainer, middleRightLowerContainer;
+	private HashMap<String, String> angebotsInfo;
+	private Label unternehmensnameTextLabel, preisTextLabel, zeitLabel, zeitTextLabel, datumLabel, datumTextLabel,
+	statusLabel, statusTextLabel, beschreibungLabel, upperRightLowerLabel, lowerRightLowerLabel;
+	private Button annehmenButton, ablehnenButton, schließenButton;
 	private Text beschreibungText;
+	private String angebotsID;
+	private Shell parent;
 
 	/**
-	 * Create the shell.
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * Creating a window to display the information about an Assignment
+	 * @param parent of the shell
+	 * @param angebotsID, the assignmentID of the Assignment to display
+	 * @throws SQLException
+	 * @throws IOException
 	 */
 	public AngeboteansichtWindow(final Shell parent ,final String angebotsID) throws SQLException, IOException {
 		super(parent, SWT.SHELL_TRIM);
 		setLayout(new BorderLayout(0, 0));
+		this.angebotsID = angebotsID;
+		this.parent = parent;
+
+		angebotsInfo = controller.genereateOfferHashMap(angebotsID);
 		
-		final Controller controller = Controller.getInstance();
-		HashMap<String, String> angebotsInfo = controller.genereateOfferHashMap(angebotsID);
-		
-		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
 		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
+		leftUpperContainer = new Composite(upperContainer, SWT.NONE);
 		leftUpperContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label unternehmensnameTextLabel = new Label(leftUpperContainer, SWT.NONE);
+		unternehmensnameTextLabel = new Label(leftUpperContainer, SWT.NONE);
 		unternehmensnameTextLabel.setFont(SWTResourceManager.getFont("Calibri", 20, SWT.NORMAL));
 		unternehmensnameTextLabel.setLayoutData(BorderLayout.CENTER);
 		unternehmensnameTextLabel.setText(angebotsInfo.get("company"));
 		
-		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
+		rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		rightUpperContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label preisTextLabel = new Label(rightUpperContainer, SWT.NONE);
+		preisTextLabel = new Label(rightUpperContainer, SWT.NONE);
 		preisTextLabel.setFont(SWTResourceManager.getFont("Calibri", 20, SWT.NORMAL));
 		preisTextLabel.setLayoutData(BorderLayout.CENTER);
 		preisTextLabel.setText(angebotsInfo.get("price"));
 		
-		Composite middleContainer = new Composite(this, SWT.NONE);
+		middleContainer = new Composite(this, SWT.NONE);
 		middleContainer.setLayoutData(BorderLayout.CENTER);
 		middleContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite leftMiddleContainer = new Composite(middleContainer, SWT.NONE);
+		leftMiddleContainer = new Composite(middleContainer, SWT.NONE);
 		leftMiddleContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label zeitLabel = new Label(leftMiddleContainer, SWT.NONE);
+		zeitLabel = new Label(leftMiddleContainer, SWT.NONE);
 		zeitLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		zeitLabel.setText("Benötigte Zeit zur Ausführung:");
 		
-		Label zeitTextLabel = new Label(leftMiddleContainer, SWT.NONE);
+		zeitTextLabel = new Label(leftMiddleContainer, SWT.NONE);
 		zeitTextLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		zeitTextLabel.setText(angebotsInfo.get("amountoftimeneeded"));
 		
-		Label datumLabel = new Label(leftMiddleContainer, SWT.NONE);
+		datumLabel = new Label(leftMiddleContainer, SWT.NONE);
 		datumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		datumLabel.setText("Datum der Ausführung:");
 		
-		Label datumTextLabel = new Label(leftMiddleContainer, SWT.NONE);
+		datumTextLabel = new Label(leftMiddleContainer, SWT.NONE);
 		datumTextLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		datumTextLabel.setText(angebotsInfo.get("date"));
 		
-		Label statusLabel = new Label(leftMiddleContainer, SWT.NONE);
+		statusLabel = new Label(leftMiddleContainer, SWT.NONE);
 		statusLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		statusLabel.setText("Status des Angebots:");
 		
-		Label statusTextLabel = new Label(leftMiddleContainer, SWT.NONE);
+		statusTextLabel = new Label(leftMiddleContainer, SWT.NONE);
 		statusTextLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		statusTextLabel.setText(angebotsInfo.get("status"));
 		
-		Composite rightMiddleContainer = new Composite(middleContainer, SWT.NONE);
+		rightMiddleContainer = new Composite(middleContainer, SWT.NONE);
 		rightMiddleContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label beschreibungLabel = new Label(rightMiddleContainer, SWT.NONE);
+		beschreibungLabel = new Label(rightMiddleContainer, SWT.NONE);
 		beschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		beschreibungLabel.setLayoutData(BorderLayout.NORTH);
 		beschreibungLabel.setText("Zusätzliche Beschreibung:");
@@ -105,78 +118,37 @@ public class AngeboteansichtWindow extends Shell {
 		beschreibungText.setText(angebotsInfo.get("description"));
 		beschreibungText.setEditable(false);
 		
-		Composite lowerContainer = new Composite(this, SWT.NONE);
+		lowerContainer = new Composite(this, SWT.NONE);
 		lowerContainer.setLayoutData(BorderLayout.SOUTH);
 		lowerContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite leftLowerContainer = new Composite(lowerContainer, SWT.NONE);
+		leftLowerContainer = new Composite(lowerContainer, SWT.NONE);
 		
-		Composite rightLowerContainer = new Composite(lowerContainer, SWT.NONE);
+		rightLowerContainer = new Composite(lowerContainer, SWT.NONE);
 		rightLowerContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label upperRightLowerLabel = new Label(rightLowerContainer, SWT.NONE);
+		upperRightLowerLabel = new Label(rightLowerContainer, SWT.NONE);
 		upperRightLowerLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Label lowerRightLowerLabel = new Label(rightLowerContainer, SWT.NONE);
+		lowerRightLowerLabel = new Label(rightLowerContainer, SWT.NONE);
 		lowerRightLowerLabel.setLayoutData(BorderLayout.SOUTH);
 		
-		Composite middleRightLowerContainer = new Composite(rightLowerContainer, SWT.NONE);
+		middleRightLowerContainer = new Composite(rightLowerContainer, SWT.NONE);
 		middleRightLowerContainer.setLayoutData(BorderLayout.CENTER);
 		middleRightLowerContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		if(angebotsInfo.get("status").equals("open")){
-			
-			Button annehmenButton = new Button(middleRightLowerContainer, SWT.NONE);
+			annehmenButton = new Button(middleRightLowerContainer, SWT.NONE);
 			annehmenButton.setText("Annehmen");
+			annehmenButton.addSelectionListener(getAcceptOfferSelectionAdapter(true));
 		
-			Button ablehnenButton = new Button(middleRightLowerContainer, SWT.NONE);
-			ablehnenButton.setText("Ablehnen");
-			
-			annehmenButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot annehmen werden alle anderen Angebote abgeleht. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-						if(antwort == 0){
-							controller.acceptOffer(angebotsID);
-							AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
-							parentWindow.updateContent();
-							((Button)e.getSource()).getShell().dispose();
-						}
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-					}
-				}
-			});
-		
-			ablehnenButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					try {
-						int antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot ablehnen kann dies nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
-						if(antwort == 0){
-							controller.declineOffer(angebotsID);
-							AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
-							parentWindow.updateContent();
-							((Button)e.getSource()).getShell().dispose();
-						}
-					} catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
-					}
-				}
-			});
+			ablehnenButton = new Button(middleRightLowerContainer, SWT.NONE);
+			ablehnenButton.setText("Ablehnen");	
+			ablehnenButton.addSelectionListener(getAcceptOfferSelectionAdapter(false));
 		}
 		
-		
-		Button schließenButton = new Button(middleRightLowerContainer, SWT.NONE);
-		schließenButton.setText("Schließen");
-		
-		
-		
+		schließenButton = new Button(middleRightLowerContainer, SWT.NONE);
+		schließenButton.setText("Schließen");		
 		schließenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -185,9 +157,15 @@ public class AngeboteansichtWindow extends Shell {
 		});
 		
 		createContents();
-		
+	}
+
+	/**
+	 * Create contents of the shell.
+	 */
+	protected void createContents() {
+		setText("Angebotsansicht");
+		setSize(757, 484);
 		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
-		
 		try {
 			this.open();
 			this.layout();
@@ -200,14 +178,39 @@ public class AngeboteansichtWindow extends Shell {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
-	 * Create contents of the shell.
+	 * A Method that returns a SelectionAdapter for an accept or if false for a decline
+	 * @param accept if true or decline if false
 	 */
-	protected void createContents() {
-		setText("Angebotsansicht");
-		setSize(757, 484);
-
+	private SelectionAdapter getAcceptOfferSelectionAdapter(final boolean accept){
+		return new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+					int antwort = 1;
+					if(accept){
+						antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot annehmen werden alle anderen Angebote abgeleht. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+					}else{
+						antwort = JOptionPane.showOptionDialog(null, "Wenn Sie dieses Angebot ablehnen kann dies nicht rückgängig gemacht werden. Wollen Sie wirklich fortfahren?", "Angebot Annehmen", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[]{"Ja","Nein"}, "Ja");
+					}
+					if(antwort == 0){
+						if(accept){
+							controller.acceptOffer(angebotsID);
+						}else{
+							controller.declineOffer(angebotsID);
+						}
+						AuftragsansichtWindow parentWindow = (AuftragsansichtWindow) parent;
+						parentWindow.updateContent();
+						((Button)e.getSource()).getShell().dispose();
+					}
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
+				}
+			}
+		};
 	}
 
 	@Override

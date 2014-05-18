@@ -3,21 +3,17 @@ package gui;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import swing2swt.layout.BorderLayout;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -25,8 +21,6 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -35,49 +29,56 @@ import processing.Controller;
 import processing.helper.DatumFull;
 
 public class AuftragErstellenInfoWindow extends Shell {
-	private Text titelText;
-	private Text beschreibungText;
+	
+	private final Controller controller = Controller.getInstance();
+	private Composite upperContainer, leftUpperContainer, rightUpperContainer, mainContainer, rightMainContainer, 
+	upperRightMainContainer, lowContainer, rightLowContainer, leftLowContainer, middleLeftLowContainer;
+	private Label upperLeftUpperLabel, ihreAuswahlLabel, titelLabel, datumLabel, beschreibungLabel, upperLeftLowLabel
+	, lowerLeftLowLabel;
+	private Text titelText, beschreibungText;
+	private DateTime dateField;
+	private Tree auftragsTree;
+	private TreeColumn dienstleistungColumn, anzahlColumn, beschreibungColumn;
+	private Button zurückButton, erstellenButton, abbrechenButton;
 
 	/**
-	 * Create the shell.
-	 * @param treeItems 
-	 * @param display
+	 * Creates a window to add more information to a given List of the selected services to make an complied Assignment
+	 * @param parent of the Window to return to if necessary
+	 * @param outputItems that had been selected from this new Assignment
+	 * @param assignmentID if it is an already existing Assignment that will be edited
 	 */
 	public AuftragErstellenInfoWindow(Shell parent, final ArrayList<TreeItem> outputItems, final String assignmentID) {
 		super(parent, SWT.SHELL_TRIM);
-		
 		setLayout(new BorderLayout(0, 0));
 		
-		final Controller controller = Controller.getInstance();
-		
-		Composite upperContainer = new Composite(this, SWT.NONE);
+		upperContainer = new Composite(this, SWT.NONE);
 		upperContainer.setLayoutData(BorderLayout.NORTH);
 		upperContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite leftUpperContainer = new Composite(upperContainer, SWT.NONE);
+		leftUpperContainer = new Composite(upperContainer, SWT.NONE);
 		leftUpperContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label upperLeftUpperLabel = new Label(leftUpperContainer, SWT.NONE);
+		upperLeftUpperLabel = new Label(leftUpperContainer, SWT.NONE);
 		
-		Label ihreAuswahlLabel = new Label(leftUpperContainer, SWT.NONE);
+		ihreAuswahlLabel = new Label(leftUpperContainer, SWT.NONE);
 		ihreAuswahlLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		ihreAuswahlLabel.setText("\tIhre ausgewählten Leistungen");
 		
-		Composite rightUpperContainer = new Composite(upperContainer, SWT.NONE);
+		rightUpperContainer = new Composite(upperContainer, SWT.NONE);
 		
-		Composite mainContainer = new Composite(this, SWT.NONE);
+		mainContainer = new Composite(this, SWT.NONE);
 		mainContainer.setLayoutData(BorderLayout.CENTER);
 		mainContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		final Tree auftragsTree = new Tree(mainContainer, SWT.BORDER);
+		auftragsTree = new Tree(mainContainer, SWT.BORDER);
 		auftragsTree.setHeaderVisible(true);
-		TreeColumn dienstleistungColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		dienstleistungColumn = new TreeColumn(auftragsTree, SWT.NONE);
 		dienstleistungColumn.setText("Dienstleistung");
 		dienstleistungColumn.setWidth(300);
-		TreeColumn anzahlColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		anzahlColumn = new TreeColumn(auftragsTree, SWT.NONE);
 		anzahlColumn.setText("Anzahl");
 		anzahlColumn.setWidth(100);
-		TreeColumn beschreibungColumn = new TreeColumn(auftragsTree, SWT.NONE);
+		beschreibungColumn = new TreeColumn(auftragsTree, SWT.NONE);
 		beschreibungColumn.setText("Beschreibung");
 		beschreibungColumn.setWidth(200);
 		auftragsTree.setLinesVisible(true);
@@ -85,70 +86,52 @@ public class AuftragErstellenInfoWindow extends Shell {
 			AuftragErstellenPositionenWindow.getSameTreeItem(outputItem, auftragsTree);
 		}
 		
-		Composite rightMainContainer = new Composite(mainContainer, SWT.NONE);
+		rightMainContainer = new Composite(mainContainer, SWT.NONE);
 		rightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Composite upperRightMainContainer = new Composite(rightMainContainer, SWT.NONE);
+		upperRightMainContainer = new Composite(rightMainContainer, SWT.NONE);
 		upperRightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
 		
-		Label titelLabel = new Label(upperRightMainContainer, SWT.NONE);
+		titelLabel = new Label(upperRightMainContainer, SWT.NONE);
 		titelLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		titelLabel.setText("Titel des Auftrags");
 		
 		titelText = new Text(upperRightMainContainer, SWT.BORDER);
 		titelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Label datumLabel = new Label(upperRightMainContainer, SWT.NONE);
+		datumLabel = new Label(upperRightMainContainer, SWT.NONE);
 		datumLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		datumLabel.setText("Datum der Ausführung");
 		
-		final DateTime dateField = new DateTime(upperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG) ;
+		dateField = new DateTime(upperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
 		dateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
 		
-		Label beschreibungLabel = new Label(upperRightMainContainer, SWT.NONE);
+		beschreibungLabel = new Label(upperRightMainContainer, SWT.NONE);
 		beschreibungLabel.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		beschreibungLabel.setText("Zusätzliche Beschreibungen");
 		
 		beschreibungText = new Text(rightMainContainer, SWT.BORDER);
 		beschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
-		Composite lowContainer = new Composite(this, SWT.NONE);
+		lowContainer = new Composite(this, SWT.NONE);
 		lowContainer.setLayoutData(BorderLayout.SOUTH);
 		lowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Composite rightLowContainer = new Composite(lowContainer, SWT.NONE);
+		rightLowContainer = new Composite(lowContainer, SWT.NONE);
 		
-		Composite leftLowContainer = new Composite(lowContainer, SWT.NONE);
+		leftLowContainer = new Composite(lowContainer, SWT.NONE);
 		leftLowContainer.setLayout(new BorderLayout(0, 0));
 		
-		Label upperLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		upperLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
 		upperLeftLowLabel.setLayoutData(BorderLayout.NORTH);
 		
-		Composite middleLeftLowContainer = new Composite(leftLowContainer, SWT.NONE);
+		middleLeftLowContainer = new Composite(leftLowContainer, SWT.NONE);
 		middleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		Button zurückButton = new Button(middleLeftLowContainer, SWT.NONE);
+		zurückButton = new Button(middleLeftLowContainer, SWT.NONE);
 		zurückButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		zurückButton.setText("Zurück");
-		
-		Button erstellenButton = new Button(middleLeftLowContainer, SWT.NONE);
-		erstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		erstellenButton.setText("Erstellen");
-		
-		Button abbrechenButton = new Button(middleLeftLowContainer, SWT.NONE);
-		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
-		abbrechenButton.setText("Abbrechen");
-		
-		Label lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
-		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
-		
-		if(assignmentID != null){
-			HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
-			titelText.setText(auftragsInfo.get("title"));
-			beschreibungText.setText(auftragsInfo.get("description"));
-		}
-		
 		zurückButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -174,6 +157,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 			}				
 		});
 		
+		erstellenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		erstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		erstellenButton.setText("Erstellen");
 		erstellenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -218,6 +204,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 			}
 		});
 		
+		abbrechenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		abbrechenButton.setText("Abbrechen");
 		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -226,10 +215,25 @@ public class AuftragErstellenInfoWindow extends Shell {
 			}
 		});
 		
+		lowerLeftLowLabel = new Label(leftLowContainer, SWT.NONE);
+		lowerLeftLowLabel.setLayoutData(BorderLayout.SOUTH);
+		
+		if(assignmentID != null){
+			HashMap<String, String> auftragsInfo = controller.genereateAssignmentHashMap(assignmentID);
+			titelText.setText(auftragsInfo.get("title"));
+			beschreibungText.setText(auftragsInfo.get("description"));
+		}
+		
 		createContents();
-		
+	}
+
+	/**
+	 * Create contents of the shell.
+	 */
+	protected void createContents() {
+		setText("Auftrag Erstellen");
+		setSize(900, 700);
 		this.setImage(new Image(null, ".\\images\\handsimIcon.png"));
-		
 		try {
 			this.open();
 			this.layout();
@@ -241,15 +245,6 @@ public class AuftragErstellenInfoWindow extends Shell {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Create contents of the shell.
-	 */
-	protected void createContents() {
-		setText("Auftrag Erstellen");
-		setSize(900, 700);
-
 	}
 
 	@Override
