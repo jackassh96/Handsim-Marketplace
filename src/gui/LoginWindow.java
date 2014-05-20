@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -101,6 +103,12 @@ public class LoginWindow extends Shell {
 		
 		loginButton.setLayoutData(BorderLayout.CENTER);
 		loginButton.setText("Login");
+		loginButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+					 login();
+			}
+		});
 		
 		Composite leftContainer = new Composite(this, SWT.NONE);
 		leftContainer.setLayoutData(BorderLayout.WEST);
@@ -125,6 +133,13 @@ public class LoginWindow extends Shell {
 		
 		passwortTextField = new Text(middleContainer, SWT.BORDER | SWT.PASSWORD);
 		passwortTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		passwortTextField.addKeyListener(new KeyAdapter(){ 
+			public void keyPressed(KeyEvent e){ 
+				 if(e.keyCode == SWT.CR){ 
+					 login(); 
+				 } 
+			} 
+		});
 		
 		Label logoLabel = new Label(this, SWT.NONE);
 		logoLabel.setFont(SWTResourceManager.getFont("Calibri", 18, SWT.NORMAL));
@@ -140,37 +155,7 @@ public class LoginWindow extends Shell {
 			}
 		});
 		
-		loginButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				boolean isCorrect = false;
-				if (!(benutzernameTextField.getText().isEmpty()) && !(passwortTextField.getText().isEmpty()) ) {
-					try {
-						isCorrect = dbhandler.checkLogInData(benutzernameTextField.getText(), dbhandler.encodePw(passwortTextField.getText()));
-						if (isCorrect) {
-							String [] userdata = dbhandler.loadUserData(benutzernameTextField.getText());
-							Controller neu = Controller.getInstance();
-							neu.init(userdata, new dbHandler());
-							LoginWindow.this.dispose();
-							CSPmainWindows window = new CSPmainWindows();
-							
-						}
-						else {
-							JOptionPane.showMessageDialog(null, "Bitte überprüfen Sie Ihre Eingaben! \nDer Benutzername und das angegebene Password stimmen nicht überein.");
-						}
-						
-						
-					} catch (Exception e1) {
-						// TODO FIX ERRORHANDLING
-						e1.printStackTrace();
-						JOptionPane.showMessageDialog(null,(e1.getMessage()));
-					}
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "Bitte überprüfen Sie Ihre Eingaben! \nBeide Textfelder (Benutzername und Passwort) müssen dabei gefüllt werden.");
-				}
-			}
-		});
+		
 		
 		createContents();
 	}
@@ -183,6 +168,36 @@ public class LoginWindow extends Shell {
 		setSize(450, 300);
 
 	}
+	
+
+	/**
+	* Starts the login of the user
+	*/
+	private void login(){
+		boolean isCorrect = false;
+	 	if (!(benutzernameTextField.getText().isEmpty()) && !(passwortTextField.getText().isEmpty()) ) {
+	 		try {
+	 				isCorrect = dbhandler.checkLogInData(benutzernameTextField.getText(), dbhandler.encodePw(passwortTextField.getText()));
+	 				if (isCorrect) {
+	 					String [] userdata = dbhandler.loadUserData(benutzernameTextField.getText());
+	 					Controller neu = Controller.getInstance();
+	 					neu.init(userdata, new dbHandler());
+	 					LoginWindow.this.dispose();
+	 					new CSPmainWindows();
+	 				}
+	 				else {
+	 					JOptionPane.showMessageDialog(null, "Bitte ï¿½berprï¿½fen Sie Ihre Eingaben! \nDer Benutzername und das angegebene Password stimmen nicht ï¿½berein.");
+	 				}
+	 		} catch (Exception e1) {
+	 			// TODO FIX ERRORHANDLING
+	 			e1.printStackTrace();
+	 			JOptionPane.showMessageDialog(null,(e1.getMessage()));
+	 		}
+	 	}
+	 	else {
+	 			JOptionPane.showMessageDialog(null, "Bitte ï¿½berprï¿½fen Sie Ihre Eingaben! \nBeide Textfelder (Benutzername und Passwort) mï¿½ssen dabei gefï¿½llt werden.");
+	 		}
+	 }
 
 	@Override
 	protected void checkSubclass() {
