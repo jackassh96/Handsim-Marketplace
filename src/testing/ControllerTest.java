@@ -23,38 +23,57 @@ public class ControllerTest {
 	 * @throws SQLException 
 	 */
 	public static void main(String[] args) throws SQLException, IOException, Exception {
-		// TODO Auto-generated method stub
+
+		/*************************************************************************************
+		 ************************************************************************************
+		 ** 
+		 **		GENERAL TESTCLASS FOR CONTROLLER
+		 **
+		 ************************************************************************************
+		 **
+		 **
+		 **
+		 *************************************************************************************/
+		
+
+		dbHandler ner = new dbHandler();
+		
+		String [] x = ner.loadUserData("max32");
+
+		Controller neu = Controller.getInstance();
+		neu = neu.init(x, new dbHandler());
+		
+		System.out.println("\n\n------------------------------------------------------------------- \n" +
+				   "-------------------------------------------------------------------\n\n");
+		
+		/*************************************************************************************
+		 ************************************************************************************
+		 **
+		 **		Tree Tests
+		 **
+		 ************************************************************************************ 
+		 *************************************************************************************/
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+		//
+		//	1) buildTreeFormMajorCategories
+		//
+		//////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		//TODO !!!
+		
+		System.out.println("\n\n ------------------------------------------------------------------- \n\n");
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+		//
+		//	2) buildTreeWithPositions
+		//
+		//////////////////////////////////////////////////////////////////////////////////////
+		
 
 		
-		
-		dbHandler ner = new dbHandler();
-		/**
-		 * 
-		 * 
-		 * 
-		 */
-//		ner.setUpConnection();
-//		System.out.println(ner.checkLogInData("max32", ner.encodePw("password")));
-//		System.out.println(ner.encodePw("password"));
-		
-//		PRINT ALL USER INFOS
-//		
-//		String [] x = ner.loadUserData("max32");
-//		
-//		for (String a : x ) {
-//			System.out.println(a);
-//		}
-//		
-//		
-//		Controller neu = Controller.getInstance();
-//		neu.init(x, new dbHandler());
-//		
-//		
-////		AuftragErstellenPositionenWindow bla = new AuftragErstellenPositionenWindow();
-//		
-//		CSPmainWindows window = new CSPmainWindows();
-		
-	
+		//TODO !!!!
 		
 		
 			}

@@ -8,6 +8,7 @@ import java.util.Set;
 import processing.data.Assignment;
 import processing.data.Offer;
 import processing.data.Position;
+import processing.data.User;
 import processing.dataBase.dbHandler;
 
 public class DbTest {
@@ -25,18 +26,14 @@ public class DbTest {
 			/*************************************************************************************
 			 ************************************************************************************
 			 ** 
-			 **		GENERAL TESTS
+			 **		GENERAL TESTCLASS FOR DATABASE HANDLER
 			 **
 			 ************************************************************************************
+			 **
+			 **
+			 **
 			 *************************************************************************************/
 			
-			//1) SetUpConnection
-			//-> will be tested with different methods (no possibility to create anything within the database without connection!)
-			
-			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
-			
-			//2) specific constructor
-			//->3
 			
 			
 			System.out.println("\n\n------------------------------------------------------------------- \n" +
@@ -55,6 +52,13 @@ public class DbTest {
 			//	1) checkLogin
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
+//			boolean checkLoginWorked = dbhandler.checkLogInData("max32", dbhandler.encodePw("password"));
+//			if (checkLoginWorked) {
+//				System.out.println("checkLogin wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("checkLogin wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
 			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
@@ -63,6 +67,13 @@ public class DbTest {
 			//	2) checkUserExistence 
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
+//			boolean checkUserExistenceWorked = dbhandler.checkUserExistence("max32");
+//			if (checkUserExistenceWorked) {
+//				System.out.println("checkUserExistence wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("checkUserExistence wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
 			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
@@ -71,6 +82,14 @@ public class DbTest {
 			//	3) createUser
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
+//			dbhandler.createUser("bob123456789", "password", "Vorname", "Nachname", "Strasse", "Hausnummer", "0", "Stadt", "Email", "Telefonnummer", "Firma", "Geschlecht");
+//			boolean createUserWorked = dbhandler.checkUserExistence("bob808");
+//			if (createUserWorked) {
+//				System.out.println("createUser wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("createUser wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
 			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
@@ -79,7 +98,17 @@ public class DbTest {
 			//	4) deleteUser
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
-			
+//			dbhandler.createUser("timXpc", "password", "Vorname", "Nachname", "Strasse", "Hausnummer", "0", "Stadt", "Email", "Telefonnummer", "Firma", "Geschlecht");
+//			dbhandler.deleteUser("timXpc");
+//			boolean deleteUserFailed = dbhandler.checkUserExistence("timXpc");
+//			if (!deleteUserFailed) {
+//				System.out.println("deleteUser wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("deleteUser wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
+//			
+//			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
 			//////////////////////////////////////////////////////////////////////////////////////
@@ -87,15 +116,18 @@ public class DbTest {
 			//5) updateUser
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
-			
-			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
-			
-			//////////////////////////////////////////////////////////////////////////////////////
-			//
-			//6) updateUserNamePW
-			//
-			//////////////////////////////////////////////////////////////////////////////////////
-			
+//			dbhandler.updateUser("bob808", "xxx", "xxx", "xxx", "xxx", "0", "xxx", "xxx", "xxx", "xxxx", "xxx");
+//			User testUser = new User(dbhandler.loadUserData("bob808"));
+//			if (testUser.getCity().equals("xxx") && testUser.getCompany().equals("xxx") && testUser.geteMail().equals("xxx") &&
+//				testUser.getFirstName().equals("xxx") && testUser.getGender().equals("xxx") && testUser.getLastName().equals("xxx") &&
+//				testUser.getNumber().equals("xxx") && testUser.getPhone().equals("xxx") && (testUser.getPostCode() == 0) &&
+//				testUser.getStreet().equals("xxx") ) {
+//				System.out.println("updateUser wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("updateUser wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
+//			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
 			//////////////////////////////////////////////////////////////////////////////////////
@@ -103,6 +135,20 @@ public class DbTest {
 			//	7) loadUserdata
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
+//			String [] userData = dbhandler.loadUserData("max32");
+//			System.out.println("Attribut: UserID \t\t--->\t\t\t\t " + userData[0]);
+//			System.out.println("Attribut: PW \t\t\t--->\t\t\t\t " + userData[1]);
+//			System.out.println("Attribut: FirstName \t\t--->\t\t\t\t " + userData[2]);
+//			System.out.println("Attribut: LastName \t\t--->\t\t\t\t " + userData[3]);
+//			System.out.println("Attribut: Street \t\t--->\t\t\t\t " + userData[4]);
+//			System.out.println("Attribut: Number \t\t--->\t\t\t\t " + userData[5]);
+//			System.out.println("Attribut: Postcode \t\t--->\t\t\t\t " + userData[6]);
+//			System.out.println("Attribut: City \t\t--->\t\t\t\t " + userData[7]);
+//			System.out.println("Attribut: Company \t\t--->\t\t\t\t " + userData[8]);
+//			System.out.println("Attribut: Phone \t\t--->\t\t\t\t " + userData[9]);
+//			System.out.println("Attribut: Email \t\t--->\t\t\t\t " + userData[10]);
+//			System.out.println("Attribut: Gender \t\t--->\t\t\t\t " + userData[11]);
+			
 			
 			System.out.println("\n\n------------------------------------------------------------------- \n" +
 					   "-------------------------------------------------------------------\n\n");
@@ -121,13 +167,13 @@ public class DbTest {
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
 			
-			HashMap<String, String[]> companyMap = dbhandler.getCompanyList();
-			String [] comp = companyMap.get("0");
-			System.out.println("Attribut: PositionID \t\t--->\t\t\t\t " + comp[0]);
-			System.out.println("Attribut: Category_ID \t\t--->\t\t\t\t " + comp[1]);
-			System.out.println("Attribut: Assignment_ID \t--->\t\t\t\t " + comp[2]);
-			System.out.println("Attribut: Description \t\t--->\t\t\t\t " + comp[3]);
-			System.out.println("Attribut: Amount \t\t--->\t\t\t\t " + comp[4]);
+//			HashMap<String, String[]> companyMap = dbhandler.getCompanyList();
+//			String [] comp = companyMap.get("0");
+//			System.out.println("Attribut: PositionID \t\t--->\t\t\t\t " + comp[0]);
+//			System.out.println("Attribut: Category_ID \t\t--->\t\t\t\t " + comp[1]);
+//			System.out.println("Attribut: Assignment_ID \t--->\t\t\t\t " + comp[2]);
+//			System.out.println("Attribut: Description \t\t--->\t\t\t\t " + comp[3]);
+//			System.out.println("Attribut: Amount \t\t--->\t\t\t\t " + comp[4]);
 			
 			System.out.println("\n\n------------------------------------------------------------------- \n" +
 					   "-------------------------------------------------------------------\n\n");
@@ -145,13 +191,13 @@ public class DbTest {
 			//	1) getPositionList
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
-			HashMap<String, String[]> positionMap = dbhandler.getPositionList("12345");
-			String [] posi = positionMap.get("0");
-			System.out.println("Attribut: PositionID \t\t--->\t\t\t\t " + posi[0]);
-			System.out.println("Attribut: Category_ID \t\t--->\t\t\t\t " + posi[1]);
-			System.out.println("Attribut: Assignment_ID \t--->\t\t\t\t " + posi[2]);
-			System.out.println("Attribut: Description \t\t--->\t\t\t\t " + posi[3]);
-			System.out.println("Attribut: Amount \t\t--->\t\t\t\t " + posi[4]);
+//			HashMap<String, String[]> positionMap = dbhandler.getPositionList("12345");
+//			String [] posi = positionMap.get("0");
+//			System.out.println("Attribut: PositionID \t\t--->\t\t\t\t " + posi[0]);
+//			System.out.println("Attribut: Category_ID \t\t--->\t\t\t\t " + posi[1]);
+//			System.out.println("Attribut: Assignment_ID \t--->\t\t\t\t " + posi[2]);
+//			System.out.println("Attribut: Description \t\t--->\t\t\t\t " + posi[3]);
+//			System.out.println("Attribut: Amount \t\t--->\t\t\t\t " + posi[4]);
 
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
@@ -160,23 +206,23 @@ public class DbTest {
 			//	2) createPosition
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
-			dbhandler.createPosition("104", "987654987", "...", "99");
-			dbhandler.createPosition("999", "987654987", "description999%%99", "99");
-			HashMap<String, String[]> positionList = dbhandler.getPositionList("987654987");
-			String idPosi = "";
-			boolean createPositionWorked = false;
-			for (String index : positionList.keySet()) {
-				if (positionList.get(index)[1].equals("999") && positionList.get(index)[3].equals("description999%%99")) {
-					createPositionWorked = true;
-					idPosi = positionList.get(index)[0];
-				}
-			}
-			if (createPositionWorked) {
-				System.out.println("createPosition wurde erfolgreich ausgeführt");
-			}
-			else {
-				System.out.println("createPosition wurde fehlerhaft ausgeführt !!!ERROR!!!");
-			}
+//			dbhandler.createPosition("104", "987654987", "...", "99");
+//			dbhandler.createPosition("999", "987654987", "description999%%99", "99");
+//			HashMap<String, String[]> positionList = dbhandler.getPositionList("987654987");
+//			String idPosi = "";
+//			boolean createPositionWorked = false;
+//			for (String index : positionList.keySet()) {
+//				if (positionList.get(index)[1].equals("999") && positionList.get(index)[3].equals("description999%%99")) {
+//					createPositionWorked = true;
+//					idPosi = positionList.get(index)[0];
+//				}
+//			}
+//			if (createPositionWorked) {
+//				System.out.println("createPosition wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("createPosition wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
 			
 			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
 			
@@ -185,20 +231,20 @@ public class DbTest {
 			//	3) deletePosition
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
-			dbhandler.deletePosition(idPosi);
-			positionList = dbhandler.getPositionList("987654987");
-			boolean deletePositionWorked = true;
-			for (String index : positionList.keySet()) {
-				if (positionList.get(index)[0].equals(idPosi)) {
-					deletePositionWorked = false;
-				}
-			}
-			if (deletePositionWorked) {
-				System.out.println("deletePosition wurde erfolgreich ausgeführt");
-			}
-			else {
-				System.out.println("deletePosition wurde fehlerhaft ausgeführt !!!ERROR!!!");
-			}
+//			dbhandler.deletePosition(idPosi);
+//			positionList = dbhandler.getPositionList("987654987");
+//			boolean deletePositionWorked = true;
+//			for (String index : positionList.keySet()) {
+//				if (positionList.get(index)[0].equals(idPosi)) {
+//					deletePositionWorked = false;
+//				}
+//			}
+//			if (deletePositionWorked) {
+//				System.out.println("deletePosition wurde erfolgreich ausgeführt");
+//			}
+//			else {
+//				System.out.println("deletePosition wurde fehlerhaft ausgeführt !!!ERROR!!!");
+//			}
 			
 			System.out.println("\n\n------------------------------------------------------------------- \n" +
 								   "-------------------------------------------------------------------\n\n");
@@ -423,16 +469,7 @@ public class DbTest {
 //			
 			//////////////////////////////////////////////////////////////////////////////////////
 			//
-			//	5) cancelAllOtherOffer
-			//
-			//////////////////////////////////////////////////////////////////////////////////////
-			//TODO
-//			
-//			System.out.println("\n\n ------------------------------------------------------------------- \n\n");
-//			
-			//////////////////////////////////////////////////////////////////////////////////////
-			//
-			//	6) getSpecifcOffer
+			//	5) getSpecificOffer
 			//
 			//////////////////////////////////////////////////////////////////////////////////////
 //			HashMap<String,String[]> oMap = dbhandler.getSpecificOffer(offer[0]);
