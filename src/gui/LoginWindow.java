@@ -134,8 +134,9 @@ public class LoginWindow extends Shell {
 		neuButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				LoginWindow.this.dispose();
 				new NeuerBenutzerWindow();
-				((Button)e.getSource()).getShell().dispose();
+				
 			}
 		});
 		

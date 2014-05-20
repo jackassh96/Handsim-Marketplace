@@ -34,8 +34,8 @@ public class NeuerBenutzerWindow extends Shell {
 	private Label unternehmensLabel, benutzernameLabel, passwortLabel, vornameLabel, nachnameLabel, emailLabel,
 	straßeLabel, telefonLabel, hausnummerLabel, geschlechtLabel, postleitzahlLabel, stadtLabel;
 	private Combo geschlechtCombo;
-	private Composite profilContainer, profilLowContainer, profilLeftLowContainer, profilRightLowContainer, 
-	profilRightRightLowContainer, profilMiddleContainer, profilTopContainer;
+	private Composite profilContainer, profilLowContainer, profilRightLowContainer, 
+	profilRightRightLowContainer, profilMiddleContainer, profilTopContainer, profilLeftLowContainer;
 	private Button profilSpeichernButton, profilAbbrechenButton;
 	
 	String errmsg = "Es ist ein Fehler aufgetreten, \nbitte überprüfen Sie folgende Felder:\n";
@@ -74,7 +74,7 @@ public class NeuerBenutzerWindow extends Shell {
 		profilLowContainer.setLayoutData(BorderLayout.SOUTH);
 		profilLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-//		profilLeftLowContainer = new Composite(profilLowContainer, SWT.NONE);
+		profilLeftLowContainer = new Composite(profilLowContainer, SWT.NONE);
 		
 		
 		profilRightLowContainer = new Composite(profilLowContainer, SWT.NONE);
