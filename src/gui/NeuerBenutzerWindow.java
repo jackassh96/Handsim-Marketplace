@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import javax.swing.JOptionPane;
 
@@ -23,11 +24,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import processing.dataBase.dbHandler;
+import sun.security.pkcs.EncodingException;
 import swing2swt.layout.BorderLayout;
 
 public class NeuerBenutzerWindow extends Shell {
-	boolean boolVorname = false, boolNachname = false, boolStraﬂe = false, boolPlz = false, boolStadt = false, boolNummer = false,
-	boolUnternehmen = false, boolEmail = false, boolTelefon = false, boolGeschlecht = false, boolPasswort = false,boolBenutzername = false;
+	
 	
 	private Text vornameTextField, nachnameTextField, straﬂeTextField, postleitzahlTextField, stadtTextField, 
 	hausnummerTextField, unternehmensTextField, emailTextField, telefonTextField, passwortTextField, benutzernameTextField;
@@ -38,7 +39,7 @@ public class NeuerBenutzerWindow extends Shell {
 	profilRightRightLowContainer, profilMiddleContainer, profilTopContainer, profilLeftLowContainer;
 	private Button profilSpeichernButton, profilAbbrechenButton;
 	
-	String errmsg = "Es ist ein Fehler aufgetreten, \nbitte ¸berpr¸fen Sie folgende Felder:\n";
+	
 
 	/**
 	 * Launch the application.
@@ -97,52 +98,96 @@ public class NeuerBenutzerWindow extends Shell {
 		profilSpeichernButton.setText("Speichern");
 		profilSpeichernButton.addSelectionListener(new SelectionAdapter(){
 			public void widgetSelected(SelectionEvent e) {
+				boolean boolVorname = false, boolNachname = false, boolStraﬂe = false, boolPlz = false, boolStadt = false, boolNummer = false,
+						boolUnternehmen = false, boolEmail = false, boolTelefon = false, boolGeschlecht = false, boolPasswort = false,boolBenutzername = false;
+				String errmsg = "Es ist ein Fehler aufgetreten, \nbitte ¸berpr¸fen Sie folgende Felder:\n\n";
+				
+				
 				if(stadtTextField.getText().isEmpty()){
 					boolStadt = true;
-					errmsg += "Stadt\n";
+					errmsg += String.format("%20s", "Stadt") + "\n";
 				}
 				if(vornameTextField.getText().isEmpty()){
 					boolVorname = true;
-					errmsg += "Vorname\n";
+					errmsg += String.format("%20s", "Vorname") + "\n";
 				}
 				if(nachnameTextField.getText().isEmpty()){
 					boolNachname = true;
-					errmsg += "Nachname\n";
+					errmsg += String.format("%20s", "Nachname") + "\n";
 				}
 				if(telefonTextField.getText().isEmpty()){
 					boolTelefon = true;
-					errmsg += "Telefon\n";
+					errmsg += String.format("%20s", "Telefon") + "\n";
 				}
 				if(straﬂeTextField.getText().isEmpty()){
 					boolStraﬂe = true;
-					errmsg += "Straﬂe\n";
+					errmsg += String.format("%20s", "Straﬂe") + "\n";
 				}
 				if(hausnummerTextField.getText().isEmpty()){
 					boolNummer = true;
-					errmsg += "Hausnummer\n";
+					errmsg += String.format("%20s", "Hausnummer") + "\n";
 				}
 				if(!(emailTextField.getText().contains("@") && emailTextField.getText().contains("."))){
 					boolEmail = true;
-					errmsg += "Email\n";
+					errmsg += String.format("%20s", "Email") + "\n";
+				}
+				if(unternehmensTextField.getText().isEmpty()){
+					boolUnternehmen = true;
+					errmsg += String.format("%20s", "Unternehmen") + "\n";
+				}
+				if(postleitzahlTextField.getText().isEmpty()){
+					boolPlz = true;
+					errmsg += String.format("%20s", "Postleitzahl") + "\n";
+				}
+				if(passwortTextField.getText().isEmpty()){
+					boolPasswort = true;
+					errmsg += String.format("%20s", "Passwort") + "\n";
+				}
+				if(geschlechtCombo.getText().isEmpty() || ((!geschlechtCombo.getText().equals("M‰nnlich")) && (!geschlechtCombo.getText().equals("Weiblich")))){
+					boolGeschlecht = true;
+					errmsg += String.format("%20s", "Geschlecht") + "\n";
 				}
 				if(benutzernameTextField.getText().isEmpty()){
 					boolBenutzername = true;
-					errmsg += "Benutzername\n";
+					errmsg += String.format("%20s", "\tBenutzername") + "\n";
 				}
 				else {
 					dbHandler dbH = new dbHandler();
 					try {
-						dbH.checkUserExistence(benutzernameTextField.getText());
+						boolean exists = dbH.checkUserExistence(benutzernameTextField.getText());
+						if (exists) errmsg += String.format("%20s", "\tBenutzername (existiert bereits!)") + "\n";
 					} catch (Exception e1) {
+						//TODO
 						JOptionPane.showMessageDialog(null, e1.getMessage());
-						return;
 					}
 				}
-				//TODO finish check for every field adjust geschlechtscheck
 				//if any field was filled incorrect create error message
-				if (boolBenutzername || boolEmail || boolGeschlecht || boolNachname || boolNummer || boolNummer || boolPasswort ||
+				if (boolBenutzername || boolEmail || boolGeschlecht || boolNachname || boolNummer || boolPasswort ||
 					boolPlz || boolStadt || boolStraﬂe || boolTelefon || boolUnternehmen || boolVorname) {
+					errmsg += "\n\n";
 					JOptionPane.showMessageDialog(null, errmsg);
+				}
+				else {
+					dbHandler dbH = new dbHandler();
+					try {
+						dbH.createUser(benutzernameTextField.getText(), dbH.encodePw(passwortTextField.getText()), vornameTextField.getText(), nachnameTextField.getText(),
+									   straﬂeTextField.getText(), hausnummerTextField.getText(), postleitzahlTextField.getText(), stadtTextField.getText(),
+									   emailTextField.getText(), telefonTextField.getText(), unternehmensTextField.getText(), geschlechtCombo.getText());
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (EncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					JOptionPane.showMessageDialog(null, "Benutzer wurde erfolgreich angelegt.\n");
+					NeuerBenutzerWindow.this.dispose();
 				}
 			}
 		});

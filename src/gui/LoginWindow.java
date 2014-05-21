@@ -1,9 +1,5 @@
 package gui;
 
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.sql.SQLException;
-
 import javax.swing.JOptionPane;
 
 import org.eclipse.swt.SWT;
@@ -29,7 +25,6 @@ public class LoginWindow extends Shell {
 	private Text passwortTextField;
 	private Text benutzernameTextField;
 	private dbHandler dbhandler = new dbHandler();
-	private Shell Tshell = null;
 
 	/**
 	 * Launch the application.
