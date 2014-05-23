@@ -148,6 +148,7 @@ public class AngeboteansichtWindow extends Shell {
 		}
 		
 		schlieﬂenButton = new Button(middleRightLowerContainer, SWT.NONE);
+		schlieﬂenButton.setToolTipText("Fenster schlie\u00DFen");
 		schlieﬂenButton.setText("Schlieﬂen");		
 		schlieﬂenButton.addSelectionListener(new SelectionAdapter() {
 			@Override

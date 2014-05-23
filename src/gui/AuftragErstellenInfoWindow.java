@@ -85,6 +85,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		for(TreeItem outputItem : outputItems){
 			AuftragErstellenPositionenWindow.getSameTreeItem(outputItem, auftragsTree);
 		}
+		outputItems.get(0).getParent().getShell().dispose();
 		
 		rightMainContainer = new Composite(mainContainer, SWT.NONE);
 		rightMainContainer.setLayout(new FillLayout(SWT.VERTICAL));
@@ -97,6 +98,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		titelLabel.setText("Titel des Auftrags");
 		
 		titelText = new Text(upperRightMainContainer, SWT.BORDER);
+		titelText.setToolTipText("Hier Titel des Auftrags eintragen");
 		titelText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
 		datumLabel = new Label(upperRightMainContainer, SWT.NONE);
@@ -104,6 +106,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		datumLabel.setText("Datum der Ausführung");
 		
 		dateField = new DateTime(upperRightMainContainer, SWT.BORDER | SWT.DROP_DOWN | SWT.LONG);
+		dateField.setToolTipText("Hier Datum der Ausf\u00FChrung festlegen");
 		dateField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
 		
@@ -112,6 +115,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		beschreibungLabel.setText("Zusätzliche Beschreibungen");
 		
 		beschreibungText = new Text(rightMainContainer, SWT.BORDER);
+		beschreibungText.setToolTipText("Hier zus\u00E4tzliche Beschreibungen f\u00FCr den Auftrag eintragen");
 		beschreibungText.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
 		lowContainer = new Composite(this, SWT.NONE);
@@ -130,6 +134,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		middleLeftLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		zurückButton = new Button(middleLeftLowContainer, SWT.NONE);
+		zurückButton.setToolTipText("Zur Leistungsauswahl zur\u00FCckkehren");
 		zurückButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		zurückButton.setText("Zurück");
 		zurückButton.addSelectionListener(new SelectionAdapter() {
@@ -144,8 +149,9 @@ public class AuftragErstellenInfoWindow extends Shell {
 					for(int i = 0; i < returnItems.size(); i++){
 						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
 					}
-					new AuftragErstellenPositionenWindow((Shell) ((Button)e.getSource()).getShell().getParent(), dataArray, assignmentID);
+					Shell parent = (Shell) ((Button)e.getSource()).getShell().getParent();
 					((Button)e.getSource()).getShell().dispose();
+					new AuftragErstellenPositionenWindow(parent, dataArray, assignmentID);
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(null, e1, "Fehler!", 2);
 				} catch (IOException e1) {
@@ -158,6 +164,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 		});
 		
 		erstellenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		erstellenButton.setToolTipText("Auftrag erstellen");
 		erstellenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		erstellenButton.setText("Erstellen");
 		erstellenButton.addSelectionListener(new SelectionAdapter() {
@@ -205,12 +212,12 @@ public class AuftragErstellenInfoWindow extends Shell {
 		});
 		
 		abbrechenButton = new Button(middleLeftLowContainer, SWT.NONE);
+		abbrechenButton.setToolTipText("Auftragserstellung abbrechen");
 		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		abbrechenButton.setText("Abbrechen");
 		abbrechenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				System.out.println();
 				((Button)e.getSource()).getShell().dispose();
 			}
 		});

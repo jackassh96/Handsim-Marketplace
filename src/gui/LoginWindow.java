@@ -69,6 +69,7 @@ public class LoginWindow extends Shell {
 		lowerLeftLowerLabel.setLayoutData(BorderLayout.SOUTH);
 		
 		Button neuButton = new Button(leftLowerContainer, SWT.NONE);
+		neuButton.setToolTipText("Neuen Benutzer anlegen");
 		
 		neuButton.setLayoutData(BorderLayout.CENTER);
 		neuButton.setText("Neu...");
@@ -95,6 +96,7 @@ public class LoginWindow extends Shell {
 		rightRightLowerContainer.setLayoutData(BorderLayout.EAST);
 		
 		Button loginButton = new Button(rightLowerContainer, SWT.NONE);
+		loginButton.setToolTipText("Mit eingegebenen Benutzerdaten anmelden");
 		
 		loginButton.setLayoutData(BorderLayout.CENTER);
 		loginButton.setText("Login");
@@ -120,6 +122,7 @@ public class LoginWindow extends Shell {
 		benutzernameLabel.setText("Benutzername:");
 		
 		benutzernameTextField = new Text(middleContainer, SWT.BORDER);
+		benutzernameTextField.setToolTipText("Hier Benutzernamen eintragen");
 		benutzernameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		
 		Label passwortLabel = new Label(middleContainer, SWT.NONE);
@@ -127,6 +130,7 @@ public class LoginWindow extends Shell {
 		passwortLabel.setText("Passwort:");
 		
 		passwortTextField = new Text(middleContainer, SWT.BORDER | SWT.PASSWORD);
+		passwortTextField.setToolTipText("Hier Passwort einf\u00FCgen");
 		passwortTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		passwortTextField.addKeyListener(new KeyAdapter(){ 
 			public void keyPressed(KeyEvent e){ 

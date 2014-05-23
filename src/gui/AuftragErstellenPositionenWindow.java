@@ -105,6 +105,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		middleRightLowContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		weiterButton = new Button(middleRightLowContainer, SWT.NONE);
+		weiterButton.setToolTipText("Mit der erstellung des Auftrags fortfahren");
 		weiterButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		weiterButton.setText("Weiter");
 		weiterButton.addSelectionListener(new SelectionAdapter() {
@@ -115,8 +116,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					for(TreeItem item : outputTree.getItems()){
 						getPositionItems(items, item);
 					}
-					new AuftragErstellenInfoWindow((Shell) ((Button)e.getSource()).getShell().getParent(), items, assignmentID);
-					((Button)e.getSource()).getShell().dispose();
+					Shell parent = (Shell) ((Button)e.getSource()).getShell().getParent();
+					((Button)e.getSource()).getShell().setVisible(false);
+					new AuftragErstellenInfoWindow(parent, items, assignmentID);
 				}else{
 					JOptionPane.showMessageDialog(null, "Bitte fï¿½gen Sie Services zu Ihrer Auswahl hinzu", "Fehler!", 2);
 				}
@@ -124,6 +126,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 		
 		abbrechenButton = new Button(middleRightLowContainer, SWT.NONE);
+		abbrechenButton.setToolTipText("Auftragserstellung abbrechen");
 		abbrechenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		abbrechenButton.setText("Abbrechen");
 		abbrechenButton.addSelectionListener(new SelectionAdapter() {
@@ -165,6 +168,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		lowerRightLeftUpperMainContainer.setLayout(new FillLayout());
 				
 		leftKlappenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		leftKlappenButton.setToolTipText("Gesamten Leistungsbaum aufklappen");
 		leftKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		leftKlappenButton.setText("Auflappen");
 		leftKlappenButton.addSelectionListener(new SelectionAdapter(){
@@ -176,6 +180,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 				
 		leftZuklappenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		leftZuklappenButton.setToolTipText("Gesamten Leistungsbaum zuklappen");
 		leftZuklappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		leftZuklappenButton.setText("Zuklappen");
 		leftZuklappenButton.addSelectionListener(new SelectionAdapter(){
@@ -187,6 +192,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 		
 		einfugenButton = new Button(lowerRightLeftUpperMainContainer, SWT.NONE);
+		einfugenButton.setToolTipText("Ausgew\u00E4hlte Leistung zum Auftrag hinzuf\u00FCgen");
 		einfugenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		einfugenButton.setText("Einfï¿½gen");
 		einfugenButton.addSelectionListener(new SelectionAdapter() {
@@ -209,25 +215,29 @@ public class AuftragErstellenPositionenWindow extends Shell {
 							pnl.add(mengeField, java.awt.BorderLayout.SOUTH);
 							pnl2.add(new JLabel("Hier, falls nötig, weitere Beschreibung einfügen:"), java.awt.BorderLayout.NORTH);
 							pnl2.add(beschreibungArea, java.awt.BorderLayout.SOUTH);
-							int okCxl = JOptionPane.showConfirmDialog(null,pnl3,"Enter Data",JOptionPane.OK_CANCEL_OPTION);
-                            if (okCxl == JOptionPane.OK_OPTION) {
-                            	menge = mengeField.getText();
-                            	beschreibung = beschreibungArea.getText();
-                            }
-							int zusatzlicheMenge;
-							try{
-								zusatzlicheMenge = Integer.parseInt(menge);
-							}catch(NumberFormatException notInt){
-								JOptionPane.showMessageDialog(null, "Bitte eine Zahl eingeben", "Fehler!", 2);
-								return;
-							}
-							TreeItem outputItem = getSameTreeItem(item, outputTree);
-							if(outputItem.getText(1).equals("")){
-								outputItem.setText(new String[]{item.getText(), ""+menge, beschreibung});
-							}else{
-								int alteMenge = Integer.parseInt(outputItem.getText(1));
-								outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusatzlicheMenge), beschreibung});
-							}
+							boolean inputCheck;
+							do{
+								inputCheck = false;
+								int okCxl = JOptionPane.showConfirmDialog(null,pnl3,"Enter Data",JOptionPane.OK_CANCEL_OPTION);
+	                            if (okCxl == JOptionPane.OK_OPTION) {
+	                            	menge = mengeField.getText();
+	                            	beschreibung = beschreibungArea.getText();
+		                            int zusatzlicheMenge;
+									try{
+										zusatzlicheMenge = Integer.parseInt(menge);
+										TreeItem outputItem = getSameTreeItem(item, outputTree);
+										if(outputItem.getText(1).equals("")){
+											outputItem.setText(new String[]{item.getText(), ""+menge, beschreibung});
+										}else{
+											int alteMenge = Integer.parseInt(outputItem.getText(1));
+											outputItem.setText(new String[]{item.getText(), ""+(alteMenge + zusatzlicheMenge), beschreibung});
+										}
+									}catch(NumberFormatException notInt){
+										JOptionPane.showMessageDialog(null, "Bitte eine Zahl eingeben", "Fehler!", 2);
+										inputCheck = true;
+									}
+	                            }
+							}while(inputCheck);
 						}
 					}
 				}
@@ -253,6 +263,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		lowerRightRightUpperMainContainer.setLayout(new FillLayout());
 		
 		rightKlappenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		rightKlappenButton.setToolTipText("Gesamten Leistungsbaum aufklappen");
 		rightKlappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		rightKlappenButton.setText("Aufklappen");
 		rightKlappenButton.addSelectionListener(new SelectionAdapter(){
@@ -264,6 +275,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 		
 		rightZuklappenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		rightZuklappenButton.setToolTipText("Gesamten Leistungsbaum zuklappen");
 		rightZuklappenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		rightZuklappenButton.setText("Zuklappen");
 		rightZuklappenButton.addSelectionListener(new SelectionAdapter(){
@@ -275,6 +287,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 		});
 		
 		loschenButton = new Button(lowerRightRightUpperMainContainer, SWT.NONE);
+		loschenButton.setToolTipText("Ausgew\u00E4hlte Leistung aus dem Auftrag entfernen");
 		loschenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		loschenButton.setText("Lï¿½schen");
 		loschenButton.addSelectionListener(new SelectionAdapter(){

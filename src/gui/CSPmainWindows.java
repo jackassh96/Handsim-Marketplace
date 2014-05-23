@@ -75,6 +75,7 @@ public class CSPmainWindows extends Shell {
 	private Label meineAufträgeLabel, aufträgeUpperTableButtonLabel;
 	private Button aufträgeNeuButton, aufträgeBearbeitenButton, aufträgeLöschenButton;
 	private Table meineAufträgeTable;
+	private Composite rightMiddleContainer;
 
 	/**
 	 * Create the shell.
@@ -135,7 +136,7 @@ public class CSPmainWindows extends Shell {
 	 * Creates all the components of the Header of the CSPmainWindow
 	 */
 	private void createHeader(){
-		headerContainer = new Composite(this, SWT.NONE);
+		headerContainer = new Composite(this, SWT.BORDER);
 		headerContainer.setLayoutData(BorderLayout.NORTH);
 		headerContainer.setLayout(new BorderLayout(0, 0));
 		
@@ -144,7 +145,8 @@ public class CSPmainWindows extends Shell {
 		rightHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		dashboardButton = new Button(rightHeader, SWT.NONE);
-		dashboardButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		dashboardButton.setToolTipText("Wechseln zur Dashboardansicht mit den Schnellzugriffen");
+		dashboardButton.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
 		dashboardButton.setText("Dashboard");
 		dashboardButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -156,7 +158,8 @@ public class CSPmainWindows extends Shell {
 		});
 		
 		profilButton = new Button(rightHeader, SWT.NONE);
-		profilButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		profilButton.setToolTipText("Wechseln zur Ansicht mit den eigenen Profilinformationen zur Bearbeitung");
+		profilButton.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
 		profilButton.setText("Profil");
 		profilButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -178,7 +181,8 @@ public class CSPmainWindows extends Shell {
 		});
 		
 		unternehmensButton = new Button(rightHeader, SWT.NONE);
-		unternehmensButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		unternehmensButton.setToolTipText("Wechseln zur Liste mit den in HANDSIM eingetragenen Unternehmen");
+		unternehmensButton.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
 		unternehmensButton.setText("Unternehmen");
 		unternehmensButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -190,7 +194,8 @@ public class CSPmainWindows extends Shell {
 		});
 		
 		auftragsButton = new Button(rightHeader, SWT.NONE);
-		auftragsButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
+		auftragsButton.setToolTipText("Wechseln zur Liste mit den eigenen Auftr\u00E4gen");
+		auftragsButton.setFont(SWTResourceManager.getFont("Calibri", 11, SWT.BOLD));
 		auftragsButton.setText("Aufträge");
 		auftragsButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -213,6 +218,8 @@ public class CSPmainWindows extends Shell {
 		middleHeader.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		middleHeaderLabel = new Label(middleHeader, SWT.NONE);
+		
+		rightMiddleContainer = new Composite(middleHeader, SWT.NONE);
 	}
 	
 	/**
@@ -362,6 +369,7 @@ public class CSPmainWindows extends Shell {
 		aufträgeLowerTableButtonContainer.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		aufträgeNeuButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeNeuButton.setToolTipText("Neuen Auftrag anlegen");
 		aufträgeNeuButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -381,6 +389,7 @@ public class CSPmainWindows extends Shell {
 		aufträgeNeuButton.setText("Neu");
 		
 		aufträgeBearbeitenButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeBearbeitenButton.setToolTipText("Bestehenden ausgew\u00E4hlten Auftrag bearbeiten");
 		aufträgeBearbeitenButton.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		aufträgeBearbeitenButton.setText("Bearbeiten");
 		aufträgeBearbeitenButton.addSelectionListener(new SelectionAdapter(){
@@ -405,6 +414,7 @@ public class CSPmainWindows extends Shell {
 		});
 		
 		aufträgeLöschenButton = new Button(aufträgeLowerTableButtonContainer, SWT.NONE);
+		aufträgeLöschenButton.setToolTipText("Ausgew\u00E4hlten Auftrag l\u00F6schen");
 		aufträgeLöschenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -477,6 +487,7 @@ public class CSPmainWindows extends Shell {
 		profilRightRightLowContainer.setLayoutData(BorderLayout.EAST);
 		
 		profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
+		profilSpeichernButton.setToolTipText("Neue Profildaten speichern und alte \u00FCberschreiben");
 		profilSpeichernButton.setBounds(0, 0, 105, 35);
 		profilSpeichernButton.setText("Speichern");
 		profilSpeichernButton.addSelectionListener(new SelectionAdapter(){
@@ -510,7 +521,6 @@ public class CSPmainWindows extends Shell {
 					return;
 				}
 				Controller controller = Controller.getInstance();
-				
 				try {
 					controller.updateUser(benutzernameTextField.getText(), vornameTextField.getText(), nachnameTextField.getText(), straßeTextField.getText(), hausnummerTextField.getText(), postleitzahlTextField.getText(), stadtTextField.getText(), emailTextField.getText(), telefonTextField.getText(), unternehmensTextField.getText(), geschlechtCombo.getText());
 				} catch (SQLException e1) {
@@ -535,11 +545,13 @@ public class CSPmainWindows extends Shell {
 		stadtLabel.setText("Stadt");
 		
 		benutzernameTextField = new Text(profilMiddleContainer, SWT.READ_ONLY);
+		benutzernameTextField.setToolTipText("Der Benutzername muss einmalig sein");
 		benutzernameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		benutzernameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		benutzernameTextField.setEditable(false);
 		
 		stadtTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		stadtTextField.setToolTipText("Hier die Stadt in der Sie leben eintragen");
 		stadtTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		stadtTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		stadtTextField.addVerifyListener(getDigitListener());
@@ -553,11 +565,13 @@ public class CSPmainWindows extends Shell {
 		unternehmensLabel.setText("Unternehmen");
 		
 		vornameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		vornameTextField.setToolTipText("Hier Ihren Vornamen eintragen");
 		vornameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		vornameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		vornameTextField.addVerifyListener(getDigitListener());
 		
 		unternehmensTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		unternehmensTextField.setToolTipText("Hier Ihr Unternehmen eintragen");
 		unternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		unternehmensTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -570,11 +584,13 @@ public class CSPmainWindows extends Shell {
 		emailLabel.setText("E-Mail");
 		
 		nachnameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		nachnameTextField.setToolTipText("Hier Ihren Nachnamen eintragen");
 		nachnameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		nachnameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		nachnameTextField.addVerifyListener(getDigitListener());
 		
 		emailTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		emailTextField.setToolTipText("Hier Ihre E-Mail-Adresse eintragen");
 		emailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		emailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -587,11 +603,13 @@ public class CSPmainWindows extends Shell {
 		telefonLabel.setText("Telefon");
 		
 		straßeTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		straßeTextField.setToolTipText("Hier Ihre Stra\u00DFe eintragen");
 		straßeTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		straßeTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		straßeTextField.addVerifyListener(getDigitListener());
 		
 		telefonTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		telefonTextField.setToolTipText("Hier Ihre Telefonnummer eintragen");
 		telefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		telefonTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering letters out
@@ -614,10 +632,12 @@ public class CSPmainWindows extends Shell {
 		geschlechtLabel.setText("Geschlecht");
 		
 		hausnummerTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		hausnummerTextField.setToolTipText("Hier Ihre Hausnummer eintragen");
 		hausnummerTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		hausnummerTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		geschlechtCombo = new Combo(profilMiddleContainer, SWT.NONE);
+		geschlechtCombo = new Combo(profilMiddleContainer, SWT.READ_ONLY);
+		geschlechtCombo.setToolTipText("Hier Ihr Geschlecht ausw\u00E4hlen");
 		geschlechtCombo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		geschlechtCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		geschlechtCombo.add("Männlich");
@@ -630,6 +650,7 @@ public class CSPmainWindows extends Shell {
 		new Label(profilMiddleContainer, SWT.NONE);
 		
 		postleitzahlTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		postleitzahlTextField.setToolTipText("Hier Ihre Postleitzahl eintragen");
 		postleitzahlTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		postleitzahlTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		postleitzahlTextField.setTextLimit(5);

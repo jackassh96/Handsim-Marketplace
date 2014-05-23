@@ -85,6 +85,7 @@ public class NeuerBenutzerWindow extends Shell {
 		profilRightRightLowContainer.setLayoutData(BorderLayout.EAST);
 		
 		profilAbbrechenButton = new Button(profilRightRightLowContainer, SWT.NONE);
+		profilAbbrechenButton.setToolTipText("Benutzererstellung abbrechen");
 		profilAbbrechenButton.setBounds(0, 0, 105, 35);
 		profilAbbrechenButton.setText("Abbrechen");
 		profilAbbrechenButton.addSelectionListener(new SelectionAdapter(){
@@ -94,6 +95,7 @@ public class NeuerBenutzerWindow extends Shell {
 		});
 		
 		profilSpeichernButton = new Button(profilRightRightLowContainer, SWT.NONE);
+		profilSpeichernButton.setToolTipText("Neuen Benutzer speichern");
 		profilSpeichernButton.setBounds(105, 0, 105, 35);
 		profilSpeichernButton.setText("Speichern");
 		profilSpeichernButton.addSelectionListener(new SelectionAdapter(){
@@ -204,9 +206,11 @@ public class NeuerBenutzerWindow extends Shell {
 		passwortLabel.setText("Passwort");
 		
 		benutzernameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		benutzernameTextField.setToolTipText("Hier einmaligen Benutzernamen eintragen");
 		benutzernameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		passwortTextField = new Text(profilMiddleContainer, SWT.BORDER | SWT.PASSWORD);
+		passwortTextField.setToolTipText("Hier gew\u00FCnschtes Passwort eintragen");
 		passwortTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		vornameLabel = new Label(profilMiddleContainer, SWT.NONE);
@@ -218,6 +222,7 @@ public class NeuerBenutzerWindow extends Shell {
 		unternehmensLabel.setText("Unternehmen");
 		
 		vornameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		vornameTextField.setToolTipText("Hier Ihren Vornamen eintragen");
 		vornameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		vornameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering digits out
@@ -232,6 +237,7 @@ public class NeuerBenutzerWindow extends Shell {
         });
 		
 		unternehmensTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		unternehmensTextField.setToolTipText("Hier Ihr Unternehmen eintragen");
 		unternehmensTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		unternehmensTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -245,6 +251,7 @@ public class NeuerBenutzerWindow extends Shell {
 		emailLabel.setText("E-Mail");
 		
 		nachnameTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		nachnameTextField.setToolTipText("Hier Ihren Nachnamen eintragen");
 		nachnameTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		nachnameTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering digits out
@@ -259,6 +266,7 @@ public class NeuerBenutzerWindow extends Shell {
         });
 		
 		emailTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		emailTextField.setToolTipText("Hier Ihre E-Mail-Adresse eintragen");
 		emailTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		emailTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
@@ -271,6 +279,7 @@ public class NeuerBenutzerWindow extends Shell {
 		telefonLabel.setText("Telefon");
 		
 		straﬂeTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		straﬂeTextField.setToolTipText("Hier Ihren Stra\u00DFennamen eintragen");
 		straﬂeTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		straﬂeTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering digits out
@@ -285,6 +294,7 @@ public class NeuerBenutzerWindow extends Shell {
 		});
 		
 		telefonTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		telefonTextField.setToolTipText("Hier Ihre Telefonnummer eintragen");
 		telefonTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		telefonTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		//VerifyListener filtering letters out
@@ -308,10 +318,12 @@ public class NeuerBenutzerWindow extends Shell {
 		geschlechtLabel.setText("Geschlecht");
 		
 		hausnummerTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		hausnummerTextField.setToolTipText("Hier Ihre Hausnummer eintragen");
 		hausnummerTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		hausnummerTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
-		geschlechtCombo = new Combo(profilMiddleContainer, SWT.NONE);
+		geschlechtCombo = new Combo(profilMiddleContainer, SWT.READ_ONLY);
+		geschlechtCombo.setToolTipText("Hier Ihr Geschlecht eintragen");
 		geschlechtCombo.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		geschlechtCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		geschlechtCombo.add("M‰nnlich");
@@ -326,11 +338,13 @@ public class NeuerBenutzerWindow extends Shell {
 		stadtLabel.setText("Stadt");
 		
 		postleitzahlTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		postleitzahlTextField.setToolTipText("Hier Ihre Postleitzahl eintragen");
 		postleitzahlTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		postleitzahlTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		postleitzahlTextField.setTextLimit(5);
 		
 		stadtTextField = new Text(profilMiddleContainer, SWT.BORDER);
+		stadtTextField.setToolTipText("Hier die Stadt in der Sie leben eintragen");
 		stadtTextField.setFont(SWTResourceManager.getFont("Calibri", 10, SWT.NORMAL));
 		stadtTextField.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		stadtTextField.addVerifyListener(new VerifyListener() {
