@@ -2,23 +2,15 @@ package processing.data;
 
 public class AssignmentHandler {
 
-// Attributes
-
+	// Attributes
 	private Assignment[] assignmentList;
 
-// Constructor
-
+	// Constructor
 	public AssignmentHandler(Assignment[] assignmentList) {
 		this.assignmentList = assignmentList;
 	}
 
-// Public methods
-	
-	/**
-	 * @param String, ID (AssigmentID)
-	 * @return Assignment
-	 * @throws TODO implement Exception correctly - Felix: wo braucht man da eine exception?? Finde keine Methode dafuer
-	 */
+	// Public methods
 	public Assignment SearchForID(String ID) {
 
 		try {
@@ -35,8 +27,7 @@ public class AssignmentHandler {
 
 	}
 
-// Getters and Setters
-	 
+	// Getters and Setters 
 	public Assignment[] getAssignmentList() {
 		return assignmentList;
 	}

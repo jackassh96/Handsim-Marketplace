@@ -63,8 +63,7 @@ public class User {
 		return s;
 	}
 	
-//Getters and Setters TODO Nicht genutzte Methoden eliminieren
-	 
+	//Getters and Setters (needed for test classes and controller) 
 	public String getUserID() {
 		return userID;
 	}
