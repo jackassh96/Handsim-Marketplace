@@ -13,23 +13,11 @@ import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.swing.text.Position;
-
-import processing.data.OfferHandler;
-import processing.helper.DatumFull;
 import sun.misc.BASE64Encoder;
 import sun.security.pkcs.EncodingException;
 
 
 public class dbHandler {
-
-	/**
-	 *  GENERAL TODO's :
-	 *	-> Documentation
-	 *	-> Tests 
-	 *	-> Comments
-	 */
-
 		
 	 /* 
 	  * attributes
@@ -37,7 +25,6 @@ public class dbHandler {
 	private String dbUrl;
 	private String dbUser;
 	private String dbPw;
-	
 	private String dbName = "Handsim";
 	
 	private String userTable = "marketuser";
@@ -47,30 +34,28 @@ public class dbHandler {
 	private String positionTable = "marketpositions";
 	private String offerTable = "marketoffer";
 	
-	//GLOBAL STRINGS FOR Assignment open; canceled; assigned; done
+	//GLOBAL STRINGS ASSIGNMENT STATUS
 	private String openStateName = "open";
 	private String rejectStateName = "canceled";
-	private String acceptStateName = "assigned"; //TODO
+	private String acceptStateName = "assigned"; 
 	private String doneStateName = "done";
 	
-	//GLOBAL STRINGS FOR Offer 	open; declined; accepted; CanceledByAssignment
-	private String openStateOffer = "open";
-	private String declinedStateOffer = "rejected";
-	private String acceptStateOffer = "accepted"; //TODO
-	private String doneStateOffer = "done";
+	//GLOBAL STRINGS OFFER STATUS (not all of them are used yet)
+//	private String openStateOffer = "open";
+//	private String declinedStateOffer = "rejected";
+	private String acceptStateOffer = "accepted";
+//	private String doneStateOffer = "done";
 	private String rejctStateOffer = "declined";
 	private String canceledStateOffer = "CanceledByAssignment";
 	
-	
-	
 	/**
 	 * default constructor	-	uses hard coded parameter for database connection 
-	 * 
 	 */
+	//adjust so that parameter are correct for certain situation
 	public dbHandler() {
-		this.dbUrl = "jdbc:mysql://localhost:3306";	//TODO
-		this.dbUser = "root";	//TODO
-		this.dbPw = "";		//TODO
+		this.dbUrl = "jdbc:mysql://localhost:3306";	
+		this.dbUser = "root";	
+		this.dbPw = "";
 	}
 	
 	/**
@@ -86,8 +71,7 @@ public class dbHandler {
 	/**
 	 * Creates database connection 
 	 * 
-	 * @throws SQLException
-	 *            if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException (if object can't get database connection with a maximum of 3 tries) 
 	 */
 	public Connection setUpConnection() throws SQLException {
 		Connection con = null;
@@ -101,7 +85,7 @@ public class dbHandler {
 			}
 			catch (SQLException e) {
 				con = null;
-				throw new SQLException("Keine Verbindung !\n" + e.getMessage()); //TODO write Errortext
+				throw new SQLException("Es konnte keine Verbindung zur Datenbank hergestellt werden, bitte überprüfen Sie Ihre Verbindung und die konfigurierten Parameter !");
 			}
 			finally { tries++; }
 		}
@@ -111,23 +95,12 @@ public class dbHandler {
 	/**
 	 * Creates user entry in database table
 	 *  
-	 * @param	Username		
-	 * @param	Password		
-	 * @param	Vorname
-	 * @param	Nachname
-	 * @param	Strasse
-	 * @param	Hausnummer
-	 * @param	Postleitzahl
-	 * @param	Stadt
-	 * @param	Email
-	 * @param	Telefonnummer
-	 * @param	Firma
-	 * @param   Geschlecht
-	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
-	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @param every single attribute of assignment object 
+	 *
+	 * @return boolean (returns true if successful)
+	 *
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base) 
 	 */
 	public boolean createUser(String Username, String Password, String Vorname, String Nachname, String Strasse, String Hausnummer,
 			  String Postleitzahl, String Stadt, String Email, String Telefonnummer, String Firma, String Geschlecht) throws SQLException, IOException {
@@ -142,7 +115,7 @@ public class dbHandler {
 			pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("User konnte nicht angelegt werden! \n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDer Benutzer konnte nicht angelegt werden!");
 		}
 		con.close();
 		return true;
@@ -151,12 +124,12 @@ public class dbHandler {
 	/**
 	 * Delete user entry in database table
 	 *  
-	 * @param  Username			user id
+	 * @param  Username (ID of specific user)
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean	(returns true if successful)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base) 
 	 */ 
 	public boolean deleteUser(String username) throws SQLException, IOException {
 		Connection con = setUpConnection();
@@ -165,7 +138,7 @@ public class dbHandler {
 				pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("User konnte nicht angelegt werden! \n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDer Benutzer konnte nicht entfernt werden!");
 		}
 		con.close();
 		return true;
@@ -174,15 +147,15 @@ public class dbHandler {
 	/**
 	 * Update user password and/or user name (user id) in database table
 	 *  
-	 * @param  oldUsername			old user id
-	 * @param  newUsername			new user id 
-	 * @param  oldPassword			old password
-	 * @param  newPassword			new password
+	 * @param  oldUsername (old user id)
+	 * @param  newUsername (new user id )
+	 * @param  oldPassword (old password)
+	 * @param  newPassword (new password)
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+ 	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
 	public boolean updateUserNamePW(String oldUsername, String newUsername, String oldPassword, String newPassword) throws SQLException, IOException {
 		Connection con = setUpConnection();
@@ -191,7 +164,7 @@ public class dbHandler {
 				pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("User update gescheitert! \n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDer Benutzer konnte nicht angepasst werden!");
 		}
 		con.close();
 		return true;
@@ -201,29 +174,17 @@ public class dbHandler {
 	/**
 	 * Update user values in database table
 	 *  
-	 * @param  Username		
-	 * @param  Password		
-	 * @param  Vorname
-	 * @param  Nachname
-	 * @param  Strasse
-	 * @param  Hausnummer
-	 * @param  Postleitzahl
-	 * @param  Stadt
-	 * @param  Email
-	 * @param  Telefonnummer
-	 * @param  Firma
-	 * @param  Geschlecht
+	 * @param  every single attribute of the user object
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */  
 	public boolean updateUser(String Username, String Vorname, String Nachname, String Strasse, String Hausnummer,
 							  String Postleitzahl, String Stadt, String Email, String Telefonnummer, String Firma, String Geschlecht) throws SQLException, IOException {
 		Connection con = setUpConnection();
 		try {
-//			UPDATE `marketuser` SET  `User_ID`='peterX',  `Password`='000',  `First_Name`='Peter',  `Last_Name`='Pan',  `Street`='Freidrichstr.',  `Number`='104',  `Post_Code`='13317',  `City`='Berlin',  `Email`='ppan@pan.de',  `Phone`='0190123456',  `Company`='Pan AG',  `Gender`='maennlich' WHERE `User_ID` = '';
 				PreparedStatement pst = con.prepareStatement("UPDATE " + dbName + "." + userTable + 
 						" SET User_ID=\"" + Username + "\" , First_Name=\"" + Vorname + 
 						"\" , Last_Name=\"" + Nachname + "\" , Street=\"" + Strasse + "\" , Number=\"" + Hausnummer +
@@ -231,10 +192,9 @@ public class dbHandler {
 						"\" , Phone=\"" + Telefonnummer + "\" , Company=\"" + Firma + "\" , Gender=\"" + Geschlecht +
 						"\" WHERE User_ID=\"" + Username + "\"");
 				pst.execute();
-
 		}
 		catch (SQLException ex) {
-			throw new IOException("User update gescheitert! \n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDer Benutzer konnte nicht angepasst werden!");
 		}
 		con.close();
 		return true;
@@ -243,13 +203,13 @@ public class dbHandler {
 	/**
 	 * Proves if log in data given by the user is correct (exists in database table)
 	 *  
-	 * @param  Username		
-	 * @param  Password		
+	 * @param  Username	(ID of the user)	
+	 * @param  Password	(encoded password of the user)	
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean	(returns true if successful)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
 	public boolean checkLogInData(String username, String password) throws SQLException, IOException {
 		Connection con = setUpConnection();
@@ -261,7 +221,7 @@ public class dbHandler {
 				correct = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Login fehlgeschlagen :(!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten!\n Die Überprüfung der Benutzerdaten ist fehlgeschlagen!");
 		}
 		finally { con.close(); }
 
@@ -271,13 +231,12 @@ public class dbHandler {
 	/**
 	 * Proves if given user name is already existing
 	 *  
-	 * @param  Username		
-	 * @param  Password		
+	 * @param  Username	(ID of the user)
 	 * 
-	 * @return boolean			returns true if user already exists, otherwise false
+	 * @return boolean	(returns true if user already exists)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
 	public boolean checkUserExistence(String username) throws SQLException, IOException {
 		boolean exists = false;
@@ -288,7 +247,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage gescheitert :(!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDie Überprüfung auf Existenz des Benutzernamens ist fehlgeschlagen!");
 		}
 		finally { con.close(); }
 		return exists;
@@ -297,19 +256,17 @@ public class dbHandler {
 	/**
 	 * Loads specific user data from database table
 	 *  
-	 * @param  Username		
-	 * @param  Password		
+	 * @param  Username	(ID of the user)	
 	 * 
-	 * @return boolean			returns true if user already exists, otherwise false
+	 * @return String [] (containing all attribute values for a specifc user object)
 	 *  
-	 * @throws IOException		input data or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
 	public String [] loadUserData(String User_id) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
 		String [] rowStr = null;
-		
 		Connection con = setUpConnection();
 		try {
 				PreparedStatement pst = con.prepareStatement("SELECT * FROM " + dbName + "." + userTable + " WHERE User_ID=\"" + User_id  + "\"");
@@ -317,10 +274,9 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage gescheitert :(!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten!\n Die Benutzerinformationen konnten nicht aus der Datenbank geladen werden!");
 		}
 		finally { 
-			
 			if (exists) {
 				rowStr = new String[12];
 				rowStr[0] = neu.getNString("User_ID");
@@ -337,62 +293,57 @@ public class dbHandler {
 				rowStr[11] = neu.getNString("Gender");
 			}
 			con.close();
-			 }
+			}
 		return rowStr;
 	}
 
 	/**
 	 * Encodes the users password 
 	 *  		
-	 * @param  password			
+	 * @param  password	(readable string to encode)		
 	 * 
-	 * @return String				encoded password string			
+	 * @return String (encoded password string)			
 	 * 
-	 * @throws EncoderException		if encoding didn't work 
+	 * @throws EncoderException (if encoding didn't work) 
 	 */ 
 	public String encodePw(String password) throws ParseException, EncodingException {
 		
-		//TODO change after last github commit!
+		//TODO change after last github commit!!!
 		String randomString = "RaJzEkTSFRbW54oBwkfryQ"; 
 		try {
-		      // byte-Array erzeugen
+			  //generating secret key
 		      byte[] key = (randomString).getBytes("UTF-8");
-		      // aus dem Array einen Hash-Wert erzeugen mit MD5 oder SHA
 		      MessageDigest sha = MessageDigest.getInstance("MD5");
 		      key = sha.digest(key);
-		      // nur die ersten 128 bit nutzen
 		      key = Arrays.copyOf(key, 16); 
-		      // der fertige Schluessel
 		      SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
 	      
-		      // Verschluesseln
+		      //encoding
 		      Cipher cipher;
 		      cipher = Cipher.getInstance("AES");
 		      cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
 		      byte[] encrypted = cipher.doFinal(password.getBytes());
 		 
-		      // bytes zu Base64-String konvertieren (dient der Lesbarkeit)
+		      //convert bytes to Base64 so that its readable
 		      BASE64Encoder myEncoder = new BASE64Encoder();
 		      randomString = myEncoder.encode(encrypted);
 		      
-		      //dont give a hint its base64 :D
+		      //remove "==" so that its not obvious its Base64
 		      randomString = randomString.replaceAll("==", "");
 	      }
 	      catch (Exception ex) {
-	    	  //TODO throw new WasAuchImmerException -> nothing to do hard error!
-	    	  throw new EncodingException(""); //TODO fix error msg
+	    	  throw new EncodingException("Es ist ein Fehler aufgetreten! \nDas angegebene Passwort konnte nicht verschlüsselt werden, bitte wenden Sie sich an Ihren Administrator.");
 	      }
-		
 		return randomString;
 	}
 	
 	/**
 	 * Loads company list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */
 	public HashMap<String,String[]> getCompanyList() throws SQLException, IOException{
 		boolean exists = false;
@@ -406,7 +357,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Unternehmensliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDie Datenbankabfrage (zur Unternehmensliste) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -428,28 +379,25 @@ public class dbHandler {
 			} while (neu.next()); 
 			con.close(); 
 		}
-		
 		return hFirmenMap;
 	}
-
-	
 	
 	/**
 	 * Creates assignment in database table	
-	 * TODO params 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * 
+	 * @param every single attribute of an assignment object
 	 *  
-	 * @throws IOException		if output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @return String (ID of the created assignment)
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs or assignment could not be created)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
-	//	TODO TEST!
 	public String createAssignment( String owner, String description, String dateOfCreation, String deadline , String title, String dueDate) throws SQLException, IOException {
 	Connection con = setUpConnection();
 	ResultSet neu = null;
-	boolean exists = false;
 	String temp = "";
 	
-	try {	//TODO fix statement to create database structure
+	try {	
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + assingmentTable + " " +
 														"( Assignment_ID, Owner, Description , DateOfCreation , Deadline , Status , Title , DueDate )" +
 														//set NULL for ID for auto_increment and automatically generated id
@@ -459,72 +407,75 @@ public class dbHandler {
 			
 	}
 	catch (SQLException ex) {
-		throw new IOException("Wert konnte nicht eingefuegt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDer Auftrag konnte nicht erstellt werden!"); 
 	}
-	
 	try {
 		PreparedStatement pst2 = con.prepareStatement("");
 		neu = pst2.executeQuery("SELECT * FROM " + dbName + "." + assingmentTable + " WHERE Owner=\"" + owner + "\" AND Description=\"" + description + "\" " +
 								"AND DateOfCreation=\"" + dateOfCreation + "\" AND Deadline=\"" + deadline + "\" " +
 								"AND Status=\"" + openStateName + "\" AND Title=\"" + title + "\" " +
 								"AND DueDate=\"" + dueDate + "\"");
-		
-		exists = neu.first();
 		temp = String.valueOf(neu.getInt(1));
 		
 	} catch (Exception ex) {
-		throw new IOException(ex.getMessage());
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDer Auftrag konnte nicht erstellt werden!");
 	}
-	
 	con.close();
 	return temp;
 	}
 	
 	/**
-	 * Sets assignment status to declined in database table	
+	 * Deletes assignment in database table (updates state, no real deletion)	
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		if output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */ 
 	public boolean deleteAssignment(String assignment_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
+	try {	
 			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + assingmentTable + " SET Status=\"" + rejectStateName + "\"" +
 														"WHERE Assignment_ID=\"" + assignment_ID +"\";");
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new IOException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDer Auftrag konnte nicht gelöscht werden!");
 	}
 	con.close();
 	return true;
 	}
 	
 	/**
-	 * Updates assignment status in database table	
+	 * Accepts assignment in database table	(updates state)
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		if output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */  
 	public boolean acceptAssignmentStatus(String assignment_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
+	try {	
 			PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + assingmentTable + " SET Status=\"" + acceptStateName + "\"" +
 														"WHERE Assignment_ID=\"" + assignment_ID +"\";");
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new IOException("Auftrag konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDer Auftrag konnte nicht aktualisiert werden!");
 	}
 	con.close();
 	return true;
 	}
 	
-	//TODO DOCUMENTATION + Test
+	/**
+	 * Finish assignment in database table	(updates state)
+	 * 
+	 * @return boolean (returns true if successful)
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
+	 */  
 	public boolean finishAssignmentStatus(String assignment_ID) throws SQLException, IOException {
 		Connection con = setUpConnection();
 		try {	
@@ -533,19 +484,19 @@ public class dbHandler {
 				pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Auftrag konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDer Auftrag konnte nicht aktualisiert werden!");
 		}
 		con.close();
 		return true;
 		}
 
 	/**
-	 * Updates offer status in database table	
+	 * Accepts offer database table	 (updates state)
 	 * 
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * @return boolean (returns true if successful) 
 	 *  
-	 * @throws IOException		if output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
 	 */   
 	public boolean acceptOffer(String Offer_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
@@ -555,13 +506,20 @@ public class dbHandler {
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDas Angebot konnte nicht angenommen werden!");
 	}
 	con.close();
 	return true;
 	}
 	
-	//TODO DOCU
+	/**
+	 * Rejects offer database table	 (updates state)
+	 * 
+	 * @return boolean (returns true if successful) 
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
+	 */ 
 	public boolean rejectOffer(String Offer_ID) throws SQLException, IOException {
 		Connection con = setUpConnection();
 		try {	
@@ -570,13 +528,20 @@ public class dbHandler {
 				pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDas Angebot konnte nicht abgelehnt werden!");
 		}
 		con.close();
 		return true;
 	}
 	
-	//TODO DOCU + test
+	/**
+	 * Cancels all other offer for a specific assignment (updates state)
+	 * 
+	 * @return boolean (returns true if successful) 
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
+	 */ 
 	public boolean cancelAllOtherOffer(String Assignment_ID, String Offer_ID) throws SQLException, IOException {
 		Connection con = setUpConnection();
 		try {	
@@ -585,34 +550,41 @@ public class dbHandler {
 				pst.execute();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDie Angebote konnten nicht abgelehnt werden!");
 		}
 		con.close();
 		return true;
 	}
 	
-	//TODO DOCU + test
-		public boolean cancelAllOffer(String Assignment_ID) throws SQLException, IOException {
-			Connection con = setUpConnection();
-			try {	
-					PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + canceledStateOffer + "\"" +
-																"WHERE Assignment_ID=\"" + Assignment_ID +"\";");
-					pst.execute();
-			}
-			catch (SQLException ex) {
-				throw new IOException("Angebot konnte nicht aktualisiert werden!\n" + ex.getMessage()); //TODO write Errortext
-			}
-			con.close();
-			return true;
+	/**
+	 * Cancels all offer for a specific assignment (updates state)
+	 * 
+	 * @return boolean (returns true if successful) 
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)  
+	 */ 
+	public boolean cancelAllOffer(String Assignment_ID) throws SQLException, IOException {
+		Connection con = setUpConnection();
+		try {	
+				PreparedStatement pst = con.prepareStatement("UPDATE  " + dbName + "." + offerTable + " SET Status=\"" + canceledStateOffer + "\"" +
+															"WHERE Assignment_ID=\"" + Assignment_ID +"\";");
+				pst.execute();
 		}
+		catch (SQLException ex) {
+			throw new IOException("Es ist ein Fehler aufgetreten! \nDie Angebote konnten nicht abgelehnt werden!");
+		}
+		con.close();
+		return true;
+	}
 
 	/**
 	 * Loads category list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public HashMap<String,String[]> getCategories() throws SQLException, IOException {
 		boolean exists = false;
@@ -624,10 +596,9 @@ public class dbHandler {
 				PreparedStatement pst = con.prepareStatement("");
 				neu = pst.executeQuery("SELECT * FROM " + dbName + "." + categoryTable);
 				exists = neu.first();
-				//TODO evaluate exists
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (zur Kategorieliste) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -643,23 +614,21 @@ public class dbHandler {
 			} while (neu.next());
 			con.close(); 
 		}
-		
 		return hCategoryMap;
 	}
 	
 	/**
 	 * Loads assignment list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]>	(containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */ 
 	public HashMap<String,String[]> getAssignments(String owner) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
 		HashMap<String,String[]> hAssignmentMap = new HashMap<>();
-		
 		Connection con = setUpConnection();
 		try {
 				PreparedStatement pst = con.prepareStatement("");
@@ -667,7 +636,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Auftraege/Ausschreibungen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (für Aufträge/Ausschreibungen) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -675,9 +644,6 @@ public class dbHandler {
 				if (exists) {
 					String [] rowStr = new String[7];
 					rowStr[0] = String.valueOf(neu.getInt("Assignment_ID"));
-	//				rowStr[1] = neu.getNString("Owner");
-	//				rowStr[2] = neu.getNString("PositionList");
-	//				rowStr[3] = neu.getNString("OfferHandler");
 					rowStr[1] = neu.getNString("Description");
 					rowStr[2] = neu.getNString("DateOfCreation");
 					rowStr[3] = neu.getNString("Deadline");
@@ -696,10 +662,10 @@ public class dbHandler {
 	/**
 	 * Loads offer list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public HashMap<String,String[]> getOffer(String Assignment_ID) throws SQLException, IOException {
 		boolean exists = false;
@@ -713,7 +679,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (für Angebote) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -734,11 +700,17 @@ public class dbHandler {
 			} while (neu.next());
 			con.close(); 
 		}
-		
 		return hOfferMap;
 	}
 	
-	//TODO DOCU
+	/**
+	 * Loads specific offer from database table	
+	 * 
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
+	 *  
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
+	 */
 	public HashMap<String,String[]> getSpecificOffer(String Offer_ID) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
@@ -751,7 +723,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (für das Angebot) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -772,18 +744,16 @@ public class dbHandler {
 			} while (neu.next());
 			con.close(); 
 		}
-		
 		return hOfferMap;
 	}
-	
 	
 	/**
 	 * Loads position list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */ 
 	public HashMap<String,String[]> getPositionList(String Assignment_ID) throws SQLException, IOException {
 		boolean exists = false;
@@ -796,7 +766,7 @@ public class dbHandler {
 			exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Positionen) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (für Positionen) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -820,10 +790,10 @@ public class dbHandler {
 	/**
 	 * Loads user list from database table	
 	 * 
-	 * @return HashMap<String,String[]>		containing every single database entry with a key string for iterations
+	 * @return HashMap<String,String[]> (containing every single database entry with a key string for iterations)
 	 *  
-	 * @throws IOException					if output statement is corrupt 
-	 * @throws SQLException					if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public HashMap<String,String[]> getUsers(String Username) throws SQLException, IOException {
 		boolean exists = false;
@@ -837,7 +807,7 @@ public class dbHandler {
 				exists = neu.first();
 		}
 		catch (SQLException ex) {
-			throw new IOException("Datenbankabfrage (Kategorieliste) gescheitert !\n" + ex.getMessage()); //TODO write Errortext
+			throw new IOException("Es ist ein Fehler aufgetreten! \n Die Datenbankabfrage (für den Benutzer) ist fehlgeschlagen !");
 		}
 		finally { 
 			int i = 0;
@@ -861,7 +831,6 @@ public class dbHandler {
 			} while (neu.next());
 			con.close(); 
 		}
-		
 		return hUserMap;
 	}
 		
@@ -869,15 +838,17 @@ public class dbHandler {
 
 	/**
 	 * Creates Position in database table	
-	 * TODO params
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * 
+	 * @param  every single attribute for position objects
+	 * 
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		input or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */  
 	public boolean createPosition(String category_ID, String assignment_ID, String description, String amount) throws SQLException, IOException {
 	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure
+	try {	
 			PreparedStatement pst = con.prepareStatement("INSERT INTO " + dbName + "." + positionTable + " " +
 														"( Position_ID, Category_ID, Assignment_ID, Description , Amount )" +
 														//set NULL for ID for auto_increment and automatically generated id
@@ -886,7 +857,7 @@ public class dbHandler {
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new IOException("Wert konnte nicht eingefuegt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDie Position konne nicht erstellt werden.");
 	}
 	con.close();
 	return true;
@@ -895,57 +866,25 @@ public class dbHandler {
 	
 	/**
 	 * Creates Position in database table	
-	 * TODO params, untested!
-	 * @return boolean			should return true if successful otherwise false TODO ->evaluate boolean
+	 * 
+	 * @param  Position_ID (ID of the position you want to delete)
+	 * 
+	 * @return boolean (returns true if successful)
 	 *  
-	 * @throws IOException		input or output statement is corrupt 
-	 * @throws SQLException		if object can't get database connection with a maximum of 3 tries 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public boolean deletePosition(String Position_ID) throws SQLException, IOException {
 	Connection con = setUpConnection();
-	try {	//TODO fix statement to create database structure -> Status -> "Abgelehnt"?
+	try {	
 			PreparedStatement pst = con.prepareStatement("DELETE FROM  " + dbName + "." + positionTable + " WHERE Position_ID=\"" + Position_ID +"\";");
 			pst.execute();
 	}
 	catch (SQLException ex) {
-		throw new IOException("Tabelle konnte nicht angelegt werden!\n" + ex.getMessage()); //TODO write Errortext
+		throw new IOException("Es ist ein Fehler aufgetreten! \nDie Position konne nicht gelöscht werden.");
 	}
 	con.close();
 	return true;
 	}
 	
-	
-	//GETTER AND SETTER needed TODO?
-	public String getDbUrl() {
-		return dbUrl;
-	}
-
-	public void setDbUrl(String dbUrl) {
-		this.dbUrl = dbUrl;
-	}
-
-	public String getDbUser() {
-		return dbUser;
-	}
-
-	public void setDbUser(String dbUser) {
-		this.dbUser = dbUser;
-	}
-
-	public String getDbPw() {
-		return dbPw;
-	}
-
-	public void setDbPw(String dbPw) {
-		this.dbPw = dbPw;
-	}
-
-	public String getDbName() {
-		return dbName;
-	}
-
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
-
 }

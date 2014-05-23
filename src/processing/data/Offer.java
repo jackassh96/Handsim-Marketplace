@@ -5,11 +5,10 @@ import processing.helper.DatumFull;
 
 public class Offer {
 
-//Attributes
-	
+	//Attributes
 	private String offerID;
-	private String assignmentID;//Felix: Getter / Setter
-	private String companyID; //Felix: Getter / Setter
+	private String assignmentID;
+	private String companyID;
 	private double price;
 	private String amountOfTimeNeeded;
 	private String description;
@@ -17,12 +16,7 @@ public class Offer {
 	private String status;
 	
 		
-//Constructor
-	/**
-	 * @Exception TODO 
-	 * @param data
-	 * @throws Exception
-	 */
+	//Constructor
 	public Offer(String[] data) throws Exception{
 		this.offerID = data[0];
 		this.assignmentID = data[1];
@@ -46,8 +40,7 @@ public class Offer {
 		this.status = status;
 	}
 
-//Getters and Setters
-	 
+	//Getters and Setters 
 	public String getOfferID() {
 		return offerID;
 	}

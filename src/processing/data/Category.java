@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.TreeItem;
 
 public class Category {
 	//Attributes
-	
 	private String categoryID;
 	private String title;
 	private String parentCategory;
@@ -15,20 +14,15 @@ public class Category {
 		
 	
 	// Constructor
-
 	public Category(String categoryID, String title, String parentCategory) {
 		this.categoryID = categoryID;
 		this.title = title;
 		this.parentCategory = parentCategory;
 	}
 
-	
-	//Public Methods
-	
 	public TreeItem toMajorTreeItem(Tree tree) {
 		TreeItem trItem = new TreeItem(tree, SWT.NONE);
 		trItem.setText(title);
-		//TODO set correct data depending on columns
 		String [] tem = new String [3];
 		tem[0] = categoryID;
 		tem[1] = title;
@@ -39,7 +33,6 @@ public class Category {
 	
 	public TreeItem toSubTreeItem(TreeItem treeitem) {
 		TreeItem trItem = new TreeItem(treeitem, SWT.NONE);
-		//TODO set correct data depending on columns
 		String [] tem = new String [3];
 		tem[0] = categoryID;
 		tem[1] = title;
@@ -51,7 +44,6 @@ public class Category {
 	
 
 	// Getters and Setters 
-	 
 	public String getCategoryID() {
 		return categoryID;
 	}

@@ -2,8 +2,7 @@ package processing.data;
 
 public class Company {
 
-// Attributes
-	
+	//Attributes
 	private String companyID;
 	private String name;
 	private String street;
@@ -15,12 +14,7 @@ public class Company {
 	private String description;
 
 	
-//Constructor
-	
-	/**
-	 * @param data TODO
-	 * @throws NumberFormatException Thrown when String can not be converted to postCode Integer
-	 */
+	//Constructor	
 	public Company(String[] data) throws NumberFormatException{
 		try{
 			this.companyID = data[0];
@@ -39,8 +33,7 @@ public class Company {
 	}
 
 	
-//Getters and Setters
-	 
+	//Getters and Setters
 	public String getCompanyID() {
 		return companyID;
 	}

@@ -1,16 +1,9 @@
 package processing;
 
-import gui.CSPmainWindows;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Locale;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Event;
@@ -24,7 +17,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import processing.data.Assignment;
 import processing.data.Category;
 import processing.data.Offer;
-import processing.data.OfferHandler;
 import processing.data.Position;
 import processing.data.User;
 import processing.data.Company;
@@ -35,70 +27,13 @@ import processing.helper.Sorter;
 
 
 public class Controller {
-
-	/**
-	 * GENERAL TODO's: (NEEDS DISCUSSION AND AGREEMENT)
-	 * 
-	 ********** GUI
-	 * 
-	 * -> triggering gui:
-	 * 	TOBI	o start main window
-	 * 	TOBI	o close main window
-	 * 	TOBI	o close main window and start login again
-	 * 
-	 * ----------------------
-	 * 
-	 * -> generate TableItems:
-	 * 		x	o my Assignments Header
-	 * 		x	o my Assignments (short version for dashboard)			-> Bezeichnung, Status, Deadline
-	 * 			o next Dates											-> 
-	 * 		x	o companies header				
-	 * 		x	o companies								
-	 * 		x	o my Assignments (detailed list) header
-	 * 		x	o my Assignments (detailed list)
-	 * 		x	o generate offer list header
-	 * 		x	o generate offer list (database action)
-	 * 
-	 * 			
-	 * -> generate Strings:
-	 * 	nT	x	o my Profile
-	 * 	nT	x	o specific Assignment
-	 * 	nT	x	o specific Offer
-	 * 	nT	x	o specific Company
-	 * 
-	 * 
-	 *************** DB 
-	 * 
-	 * -> triggering database actions
-	 * 			o create User  			->login controller
-	 * 	nT	x	o update User
-	 * 			o delete User			->login controller
-	 * 	nT	x	o create Assignment
-	 * 	nT	x	o update Assignment
-	 * 	nT	x	o delete Assignment
-	 * 	nT	x	o update Offer
-	 * 	nT  x	o generate Offer list
-	 * 		x	o create Position
-	 * 
-	 * 
-	 * 	x = implemented
-	 * nT = not tested yet
-	 *  
-	 *  /// String [][] = gneriere pposituino 8assignnmentid<9
-	 *  
-	 *  
-	 * 
-	 */
-	
 	
 	
    /*
 	* Attributes
 	*/
 	protected boolean asc = false;
-	
 	private User activeUser;
-	private CSPmainWindows mainWindow;	
 	private Company[] companyList;
 	private Category[] categoryList;
 	private Category[] majorCategoryList;
@@ -106,19 +41,16 @@ public class Controller {
 	private dbHandler dbHandler;
 	private ArrayList<TreeItem> serviceTreeList;
 	private ArrayList<TreeItem> positionTreeList;
-	
 	ArrayList<String> idspuffer = new ArrayList<>();
 	ArrayList<Category> catpuffer = new ArrayList<>();
 
-// Singleton methods and attributes
-
+	//Singleton methods and attributes
 	private static Controller instance;
 
 	/**
 	 * Constructor is private (Singleton).
 	 */
 	private Controller() {}
-
 	
 	/**
 	 * @return Returns the singleton instance of Controller
@@ -130,21 +62,21 @@ public class Controller {
 		return instance;
 	}
 
-	// Init methods
-
+	//Initialization method
 	/**
 	 * Gives the caller the singleton instance and (re)creates the attributes.
 	 * ONLY USE FOR THE INITIAL SETUP OR A WANTED RESET OF THE OBJECT
 	 * all data needed is imported
-	 * @param userData Data of the active user which is loaded from the data base
-	 * @param dbHandler object that connects to the data base
-	 * @return Returns the controller singleton instance 
-	 * @throws IOException 
-	 * @throws SQLException
-	 * @throws Exception  
+	 * 
+	 * @param 	userData (data of the active user which is loaded from the data base)
+	 * @param 	dbHandler (object that connects to the data base)
+	 * 
+	 * @return 	Controller (singleton object of controller class) 
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
-	//TODO dbHandler �bergeben?
-	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException, Exception {
+	public static Controller init(String[] userData, dbHandler dbHandler) throws SQLException, IOException  {
 		instance = Controller.getInstance();
 		//initialize helper lists
 		instance.serviceTreeList = new ArrayList<>(); 
@@ -167,14 +99,14 @@ public class Controller {
 	}
 
 	/**
-	 * Creates the active User from the result coming from the data base.
-	 * @param data The User information
+	 * Imports all data of the active user from data base.
 	 * 
-	 * @return User
+	 * @param  User_ID (primary key of user entry in database)
 	 * 
-	 * @throws IOException 
-	 * @throws SQLException
-	 * @throws ArrayIndexOutOfBoundsException 
+	 * @return User (user object containing all information
+	 * 
+	 * @throws SQLException (thrown when a data base connection error occurs)
+	 * @throws IOException  (thrown when corrupt data is imported from the data base)
 	 */
 	private User importUser(String User_id) throws SQLException, IOException {
 		User buf = new User(dbHandler.loadUserData(User_id));
@@ -184,53 +116,49 @@ public class Controller {
 	/**
 	 * This Method imports all Categories from database table
 	 * 
-	 * @return Category []	 array containing all categories imported from database (without sub category list!)
+	 * @return Category []	 (containing all categories imported from database ,without sub category list!)
 	 * 
-	 * @throws SQLException  Exception is thrown when a data base connection error occurs.
-	 * @throws IOException 	 Exception is thrown when corrupt data is imported from the data base
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
-	private Category [] importCategories() throws SQLException, IOException  { 
+	//needs to be public for test class
+	public Category [] importCategories() throws SQLException, IOException  { 
 			HashMap<String, String[]> dataFromDB = dbHandler.getCategories();
 			Category [] result = new Category[dataFromDB.size()];
 			String [] buf = new String[dataFromDB.get(String.valueOf(0)).length];
 			
 			for (int j = 0; j < dataFromDB.size(); j++) {
-				
 				int i = 0;
 				for (String x : dataFromDB.get(String.valueOf(j))) {
 					buf[i] = x;	
 					i++;
 				}
-				
 				result[j] = new Category(buf[0], buf[1], buf[2]); 
 			}
 			return result;
 	}
 	
 	/**
-	 * This Method imports all sub categories into the categories
+	 * This Method imports all sub categories into the category objects
 	 * 
 	 * @return Category []	array containing all categories with their sub category lists
 	 * 
 	 */
-	private Category [] generateSubCategories(Category [] Categories) { 
+	//needs to be public for test class
+	public Category [] generateSubCategories(Category [] Categories) { 
 		Category [] result = Categories;
 		int j = 0;
-		//durch das gesamte array laufen
 		for (Category c : Categories) {
 			ArrayList<Category> buf = new ArrayList<>();
-			//pro categorien subcategorien zusammensammeln
 			for (Category c2 : Categories) {
 				if (c2.getParentCategory().equals(c.getCategoryID())) {
 					buf.add(c2);
 				}
 			}
 			Category [] subCats = new Category[buf.size()];
-			//gemerkte Arraylist in array �berf�hren
 			for (int i = 0; i < buf.size(); i++) {
 				subCats[i] = buf.get(i);
-			}
-			//ermittelte subcategory liste ins finale array schreiben 
+			} 
 			result[j].setSubCategories(subCats);
 			j++;
 		}
@@ -240,11 +168,12 @@ public class Controller {
 	/**
 	 * Separates major categories from category list
 	 * 
-	 * @param  Category []		array containing all categories
+	 * @param  Category [] (containing all categories)
 	 * 
-	 * @return Category [] 		array containing only major categories
+	 * @return Category [] (containing only major categories)
 	 */
-	private Category [] seperateMajorCategories(Category [] Categories) { 
+	//needs to be public for test class
+	public Category [] seperateMajorCategories(Category [] Categories) { 
 		ArrayList<Category> buf = new ArrayList<>();
 		Category [] result = Categories;
 		//durch das gesamte array laufen
@@ -266,9 +195,12 @@ public class Controller {
 	/**
 	 * Separates sub categories from category list
 	 * 
-	 * @param  Category []		array containing all categories
+	 * @param  Category [] (containing all categories)
 	 * 
-	 * @return Category [] 		array containing only sub categories
+	 * @return Category [] (containing only sub categories)
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	private Category [] seperateSubCategories(Category [] Categories) throws SQLException, IOException { 
 		ArrayList<Category> buf = new ArrayList<>();
@@ -292,7 +224,7 @@ public class Controller {
 	/**
 	 * Builds tree from top down (major categories to sub categories)
 	 * 
-	 * @param  tree 			tree to put in TreeItems (needed as a parent for the first TreeItems)
+	 * @param  tree (parent for the TreeItems)
 	 * 
 	 */
 	public void buildTreeFromMajorCategories(Tree tree) { 
@@ -311,8 +243,8 @@ public class Controller {
 	/**
 	 * Builds all sub tree items (recursively)
 	 * 
-	 * @param  category		category object to get specific sub categories
-	 * @param  treeitem		tree item as the parent to build tree hierarchy
+	 * @param  category	(object to get specific sub categories)
+	 * @param  treeitem	(as the parent to build tree hierarchy)
 	 * 
 	 */
 	private void createSubTreeItems(Category category, TreeItem treeitem) { 
@@ -327,8 +259,8 @@ public class Controller {
 	/**
 	 * Builds tree from bottom up (sub categories to major categories)
 	 * 
-	 * @param  Assignment_ID	ID to get positions of specifc assignment
-	 * @param  tree 			tree to put in TreeItems (needed as a parent for the first TreeItems)
+	 * @param  Assignment_ID (to get positions of specific assignment)
+	 * @param  tree (as the parent to build tree hierarchy)
 	 * 
 	 */
 	public void builTreeWithPositons(String Assignment_ID, Tree tree) throws SQLException, IOException { 
@@ -345,7 +277,6 @@ public class Controller {
 				catpuffer.add(c);
 				findParentCategory(c.getParentCategory());
 		}
-		//arrayList in Array überführen
 		Category [] buffer = new Category[catpuffer.size()];
 		int i = 0;
 		for (Category c : catpuffer) {
@@ -375,7 +306,6 @@ public class Controller {
 				positionTreeList.add(tItem);
 			}
 		}
-		
 	}
 	
 	/**
@@ -385,11 +315,11 @@ public class Controller {
 	 */
 	private void findParentCategory(String Parent_ID) {
 		Category cat = instance.searchForCategory(Parent_ID);
-		//category in liste aufnehmen
+		//add category to list
 		if (!(catpuffer.contains(cat))) {
 			instance.catpuffer.add(cat);
 		}
-		//rekursive Suche nach Parent bis Kategorie keinen mehr hat
+		//recursively searching for parent until it has no
 		if (!(cat.getParentCategory().equals("-1"))) {
 			findParentCategory(cat.getParentCategory());
 		}
@@ -398,9 +328,9 @@ public class Controller {
 	/**
 	 * Finds tree item with specific id
 	 * 
-	 * @param  Category_ID	ID of parent category object
+	 * @param  Category_ID (identifier for category object)
 	 * 
-	 * @return TreeItem 	tree item with given category id
+	 * @return TreeItem (item with given category id)
 	 */
 	private TreeItem findTreeItemWithID(String Category_ID) {
 		for (TreeItem t : instance.positionTreeList) {
@@ -417,10 +347,12 @@ public class Controller {
 	/**
 	 * Imports position list for specific assignment
 	 * 
-	 * @param Assignment_ID		Assignment ID of the needed positions
+	 * @param Assignment_ID	 (ID of the needed positions)
 	 * 
-	 * @throws SQLException 	Exception is thrown when a data base connection error occurs.
-	 * @throws IOException 		Exception is thrown when corrupt data is imported from the data base
+	 * @return Position [] (position objects for specific assignment)
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	
 	private Position [] importPositionsForAssignment(String Assignment_ID) throws SQLException, IOException { 
@@ -439,15 +371,15 @@ public class Controller {
 			}
 		}
 		return result;
-}
+	}
 
 	/**
 	 * Imports all assignments from database table
 	 * 
-	 * @param  User_ID			User ID of the needed assignments
+	 * @param  User_ID (ID of the needed assignments)
 	 * 
-	 * @throws SQLException 	Exception is thrown when a data base connection error occurs.
-	 * @throws IOException 		Exception is thrown when corrupt data is imported from the data base
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	private void importAssingments(String User_ID) throws SQLException, IOException {
 		
@@ -468,23 +400,21 @@ public class Controller {
 			}
 		}
 		this.assignmentHandler = new AssignmentHandler(result);
-		}
-	
+	}
 
-	
 
 	/**
 	 * Imports all companies from database table
 	 * 
-	 * @throws SQLException Exception is thrown when a data base connection error occurs.
-	 * @throws IOException Exception is thrown when corrupt data is imported from the data base
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	private void importCompanyList() throws SQLException, IOException {
 		try{
 			//get HashMap from DB
 			HashMap<String,String[]> dataFromDB = this.dbHandler.getCompanyList();
 			if (dataFromDB.size() > 0) {	
-				//for loop for parsing the HashMap
+				//loop for parsing the HashMap
 				for (int j = 0; j < dataFromDB.size(); j++) { 
 					Company[] temporaryCompanyList = new Company[j+1]; 
 					Company temporaryCompany;
@@ -507,11 +437,11 @@ public class Controller {
 	
 	/**
 	 * Generates Offer Array for a specific assignment
-	 * TODO TES!!
-	 * @param  assignment_ID	id to filter specific offers from database
 	 * 
-	 * @throws SQLException 	Exception is thrown when a data base connection error occurs.
-	 * @throws IOException 		Exception is thrown when corrupt data is imported from the data base
+	 * @param  assignment_ID (id to filter specific offers from database)
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	private Offer [] generateOfferlistforAssignment(String assignment_ID) throws SQLException, IOException {
 		HashMap<String,String[]> offerDataFromDB = dbHandler.getOffer(assignment_ID);
@@ -521,31 +451,24 @@ public class Controller {
 			String [] buf = new String[offerDataFromDB.get(String.valueOf(0)).length];
 			
 			for (int j = 0; j < offerDataFromDB.size(); j++) {
-				
 				int i = 0;
 				for (String x : offerDataFromDB.get(String.valueOf(j))) {
 					buf[i] = x;	
 					i++;
 				}
-	
 				result[j] = new Offer(buf[0], assignment_ID, buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 			}
 		}
 		return result;
-		}
+	}
 	
-	
-
-// GUI triggered Methods TODO's!!!
-
 	/**
-	 * Called by GUI, when user changes their user data. Method changes its
-	 * actual user and notifies DBHandler of changes
+	 * Method to update active user
 	 * 
-	 * @return Returns true when User update was successful
-	 * @param updatedUser Updated User item that comes from the GUI
-	 * @throws SQLException Exception is thrown when a data base connection error occurs.
-	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	 * @param every single attribute of user object
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public void updateUser(String Username, String Vorname, String Nachname, String Strasse,
 						 String Hausnummer, String Postleitzahl, String Stadt, String Email, String Telefonnummer,
@@ -553,40 +476,30 @@ public class Controller {
 		dbHandler.updateUser(Username, Vorname, Nachname, Strasse, Hausnummer, Postleitzahl, Stadt, Email, Telefonnummer, Firma, Geschlecht);
 	}
 
-	/**
-	 * Called by GUI when User selects to delete his Account. 
-	 * The user will automatically get logged off and will return to the Login Screen. 
-	 * @throws SQLException Exception is thrown when a data base connection error occurs.
-	 * @throws IOException Exception is thrown when corrupt data is importet from the data base
+	/** 
+	 * Method to log off a user automatically and return to the Login Screen. 
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public void deleteUser() throws SQLException, IOException {
 		dbHandler.deleteUser(activeUser.getUserID());
-		//logOff(); //TODO
+		//TODO no function to log off is implemented
 	}
 
 	/**
 	 * This method creates a new Assignment from data entered into the GUI and appends it to the assignmentHandler's list.
 	 * 
-	 * TODO TEST! 
-	 * 
-	 *  All parameters according to the attributes of the assignment object.
-	 * @param description
-	 * @param dateOfCreation
-	 * @param deadline
-	 * @param title
-	 * 
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * @param every single attribute of assignment object 
+	 *
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
-	// assignmentID raus, positionlist raus 
 	public String createAssignment(String description, String dateOfCreation,String title, String dueDate) throws SQLException, IOException {
-//		deadline
 		DatumFull buf = new DatumFull(dueDate);
 		buf.minusDays(7);
-		//add entry in database
-		String id = dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation, buf.toMachineString(), title, dueDate);
-		
-		//string mit id zurückgeben
+		String id = dbHandler.createAssignment(activeUser.getUserID(), description, dateOfCreation,
+											   buf.toMachineString(), title, dueDate);
 		return id;
 	}
 	
@@ -594,41 +507,30 @@ public class Controller {
 	/**
 	 * Deletes a specific Assignment within the database (updates the status in database! no real deletion)
 	 * 
-	 * TODO TEST! 
+	 * @param assignmentID (ID to identify assignment to delete)
 	 * 
-	 * @param assignmentID
-	 * @param status
-	 * 
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public void deleteAssignment(String assignment_ID) throws SQLException, IOException {
-		//update entry in database
 		dbHandler.deleteAssignment(assignment_ID);
-
-		//TODO fill new database table with description
-		dbHandler.cancelAllOffer(assignment_ID);
-
 		
+		dbHandler.cancelAllOffer(assignment_ID);
 	}
 	
 	/**
-	 * Updates a specific Assignment within the database
+	 * Accepts a specific Offer within the database
 	 * 
-	 * TODO TEST! 
+	 * @param offer_ID (ID of the offer to accept)
 	 * 
-	 * @param offer id 
-	 * @param status
-	 * 
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public void acceptOffer(String offer_ID) throws SQLException, IOException {
 		HashMap<String,String[]> hM = dbHandler.getSpecificOffer(offer_ID);
 		String [] buf = new String[hM.get(String.valueOf(0)).length];
 		Offer offer = null;
 		for (int j = 0; j < hM.size(); j++) {
-			
 			int i = 0;
 			for (String x : hM.get(String.valueOf(j))) {
 				buf[i] = x;	
@@ -636,7 +538,6 @@ public class Controller {
 			}
 			offer = new Offer(buf[0], buf[1], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 		}
-		
 		//set state assigned for assignment in database
 		dbHandler.acceptAssignmentStatus(offer.getAssignmentID());
 		//set state accepted for offer in database
@@ -644,7 +545,15 @@ public class Controller {
 		//set state reject state for all other offers
 		dbHandler.cancelAllOtherOffer(offer.getAssignmentID(), offer_ID);
 	}
-	//TODO + beschreibung
+
+	/**
+	 * Declines a specific Offer within the database
+	 * 
+	 * @param offer_ID (ID of the offer to decline)
+	 * 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
+	 */
 	public void declineOffer(String offer_ID) throws SQLException, IOException {
 		dbHandler.rejectOffer(offer_ID);
 	}
@@ -652,16 +561,10 @@ public class Controller {
 	/**
 	 * This method creates a new Position from data entered into the GUI and appends it to the assignment within assignmentHandler's list.
 	 * 
-	 * TODO TEST! 
+	 * @param  every single attribute of position object
 	 * 
-	 * @param position_ID
-	 * @param category_ID
-	 * @param assignment_ID
-	 * @param description
-	 * @param amount
-	 * 
-	 * @throws IOException 
-	 * @throws SQLException 
+	 * @throws SQLException  (thrown when a data base connection error occurs)
+	 * @throws IOException 	 (thrown when corrupt data is imported from the data base)
 	 */
 	public void createPosition(String category_ID, String assignment_ID, String description, String amount) throws SQLException, IOException {
 		//add entry in database
@@ -671,8 +574,10 @@ public class Controller {
 	
 	/**
 	 * Gets specific category with given ID
-	 * @param ID
-	 * @return Category 
+	 * 
+	 * @param Cat_ID (ID of the category you want to find)
+	 *  
+	 * @return Category (Category Object with given ID)
 	 */
 	public Category searchForCategory(String Cat_ID){
 		for (Category a : instance.categoryList) {
@@ -685,8 +590,10 @@ public class Controller {
 	
 	/**
 	 * Gets specific assignment from the assignment handler 
-	 * @param 	Assignment_ID		ID of the needed assignment
-	 * @return	Assignment			assignment object with given id or null if not in there
+	 * 
+	 * @param 	Assignment_ID (ID of the needed assignment)
+	 * 
+	 * @return	Assignment (object with given id or null if not in there)
 	 */
 	public Assignment searchForID(String Assingtment_ID){
 		for (Assignment a : instance.assignmentHandler.getAssignmentList()) {
@@ -697,10 +604,11 @@ public class Controller {
 		return null;
 	}
 	
-
-	//TODO'S
-	// could be global parameters at beginning of class definition! TODO 
-	// + documentation
+	/**
+	 * Generates the table columns for the table of my assignments 
+	 * 
+	 * @param table (parent of created table columns)
+	 */
 	public void generateTableHeaderMyAssignments(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(218);
@@ -754,25 +662,26 @@ public class Controller {
 		tblClmnIcon.setWidth(43);
 		tblClmnIcon.setText("");
 	}
-	
+
+	/**
+	 * Generates the table items for the table of my assignments 
+	 * 
+	 * @param table (parent of created table items)
+	 */
 	public void generateMyAssignmentTableItemsDashboard(Table table) {
 		for (Assignment a : assignmentHandler.getAssignmentList()) {
 			TableItem tableItem = new TableItem(table, SWT.CENTER);
 			tableItem.setText(new String[] {a.getTitle(), a.getStatus(), a.getDeadline()});
 			tableItem.setData("id", a.getAssignmentID());
 			
+			//add different states with small icon
 			switch (a.getStatus()) {
-			
-			//TODO add different states
 			case "open": 		tableItem.setImage(3, new Image(null, ".\\images\\openState.png"));
 								break;
-			
 			case "canceled": 	tableItem.setImage(3, new Image(null, ".\\images\\declinedState.png"));
 								break;
-								
 			case "assigned": 	tableItem.setImage(3, new Image(null, ".\\images\\assignedState.png"));
 								break;
-								
 			default :			tableItem.setImage(3, new Image(null, ".\\images\\doneState.png"));
 								break;
 			}
@@ -780,6 +689,11 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Generates the table columns for the table of companies
+	 * 
+	 * @param table (parent of created table columns)
+	 */
 	public void generateTableHeaderCompanyTable(final Table table) {
 		TableColumn tblClmnName = new TableColumn(table, SWT.CENTER);
 		tblClmnName.setWidth(150);
@@ -797,7 +711,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnStreet = new TableColumn(table, SWT.CENTER);
 		tblClmnStreet.setWidth(150);
 		tblClmnStreet.setText("Straße");
@@ -814,7 +727,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnNumber = new TableColumn(table, SWT.CENTER);
 		tblClmnNumber.setWidth(80);
 		tblClmnNumber.setText("Nummer");
@@ -831,7 +743,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnPostcode = new TableColumn(table, SWT.CENTER);
 		tblClmnPostcode.setWidth(80);
 		tblClmnPostcode.setText("Postleitzahl");
@@ -848,7 +759,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnOwner = new TableColumn(table, SWT.CENTER);
 		tblClmnOwner.setWidth(100);
 		tblClmnOwner.setText("Eigentümer");
@@ -865,7 +775,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnPhone = new TableColumn(table, SWT.CENTER);
 		tblClmnPhone.setWidth(120);
 		tblClmnPhone.setText("Telefonnummer");
@@ -882,7 +791,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnEmail = new TableColumn(table, SWT.CENTER);
 		tblClmnEmail.setWidth(140);
 		tblClmnEmail.setText("Email");
@@ -899,7 +807,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDescription = new TableColumn(table, SWT.CENTER);
 		tblClmnDescription.setWidth(300);
 		tblClmnDescription.setText("Beschreibung");
@@ -918,6 +825,11 @@ public class Controller {
 		});
 	}
 	
+	/**
+	 * Generates the table items for the table of companies
+	 * 
+	 * @param table (parent of created table items)
+	 */
 	public void generateCompanyTableItems(Table table) {
 		for (Company c : companyList) {
 			TableItem tableItem = new TableItem(table, SWT.CENTER);
@@ -927,6 +839,11 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Generates the table columns for the table of assignment view 
+	 * 
+	 * @param table (parent of created table columns)
+	 */
 	public void generateTableHeaderAssignmentTable(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(220);
@@ -944,7 +861,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnCreation = new TableColumn(table, SWT.CENTER);
 		tblClmnCreation.setWidth(100);
 		tblClmnCreation.setText("Erstellungsdatum");
@@ -961,7 +877,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
 		tblClmnDeadline.setWidth(100);
 		tblClmnDeadline.setText("Ausschreibungsende");
@@ -978,7 +893,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDuedate = new TableColumn(table, SWT.CENTER);
 		tblClmnDuedate.setWidth(100);
 		tblClmnDuedate.setText("Fälligkeitsdatum");
@@ -995,7 +909,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
@@ -1012,7 +925,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.CENTER);
 		tblClmnDescritpion.setWidth(250);
 		tblClmnDescritpion.setText("Beschreibung");
@@ -1029,14 +941,16 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnIcon = new TableColumn(table, SWT.CENTER);
 		tblClmnIcon.setWidth(25);
 		tblClmnIcon.setText("");
 	}
 	
-	
-	
+	/**
+	 * Generates the table items for the table of assignment view 
+	 * 
+	 * @param table (parent of created table items)
+	 */
 	public void generateMyAssignmentTableItems(Table table) {
 		for (Assignment a : assignmentHandler.getAssignmentList()) {
 			TableItem tableItem = new TableItem(table, SWT.CENTER);
@@ -1044,8 +958,8 @@ public class Controller {
 											a.getDueDate(), a.getStatus(), a.getDescription()});
 			tableItem.setData("id", a.getAssignmentID());
 			
+			//add different states with small icons
 			switch (a.getStatus()) {
-				//TODO add different states
 				case "open": 		tableItem.setImage(6, new Image(null, ".\\images\\openState.png"));
 									break;
 				
@@ -1062,6 +976,11 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Generates the table columns for the offer table 
+	 * 
+	 * @param table (parent of created table columns)
+	 */
 	public void generateTableHeaderOfferTable(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(200);
@@ -1079,7 +998,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnCreation = new TableColumn(table, SWT.CENTER);
 		tblClmnCreation.setWidth(100);
 		tblClmnCreation.setText("Preis");
@@ -1096,7 +1014,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDeadline = new TableColumn(table, SWT.CENTER);
 		tblClmnDeadline.setWidth(80);
 		tblClmnDeadline.setText("Benötigter Zeitraum");
@@ -1113,7 +1030,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnDuedate = new TableColumn(table, SWT.CENTER);
 		tblClmnDuedate.setWidth(100);
 		tblClmnDuedate.setText("Beschreibung");
@@ -1130,7 +1046,6 @@ public class Controller {
 				}
 			}
 		});
-		
 		TableColumn tblClmnState = new TableColumn(table, SWT.CENTER);
 		tblClmnState.setWidth(100);
 		tblClmnState.setText("Status");
@@ -1146,9 +1061,7 @@ public class Controller {
 					asc = true;
 				}
 			}
-		});
-		
-		
+		});		
 		TableColumn tblClmnDescritpion = new TableColumn(table, SWT.CENTER);
 		tblClmnDescritpion.setWidth(100);
 		tblClmnDescritpion.setText("Erstellt am");
@@ -1167,6 +1080,11 @@ public class Controller {
 		});
 	}
 	
+	/**
+	 * Generates the table items for the offer table 
+	 * 
+	 * @param table (parent of created table items)
+	 */
 	public void generateOfferTableItems(Table table, String assignment_ID) throws SQLException, IOException {
 		Offer [] offerList = generateOfferlistforAssignment(assignment_ID);
 		if (offerList.length > 0) {
@@ -1185,7 +1103,11 @@ public class Controller {
 		}
 	}
 	
-	
+	/**
+	 * Generates the table columns for the table of next offer 
+	 * 
+	 * @param table (parent of created table columns)
+	 */
 	public void generateTableHeaderNextOfferTable(final Table table) {
 		TableColumn tblClmnTitle = new TableColumn(table, SWT.CENTER);
 		tblClmnTitle.setWidth(215);
@@ -1253,6 +1175,11 @@ public class Controller {
 		});
 	}
 	
+	/**
+	 * Generates the table items for the table of next offer 
+	 * 
+	 * @param table (parent of created table items)
+	 */
 	public void generateNextOfferTableItems(Table table) throws SQLException, IOException {
 		for (Assignment a : assignmentHandler.getAssignmentList()) {
 			Offer [] offerList = generateOfferlistforAssignment(a.getAssignmentID());
@@ -1272,7 +1199,11 @@ public class Controller {
 		}
 	}
 
-	//TODO DOCU
+	/**
+	 * Generates HashMap for the active User 
+	 * 
+	 * @return HashMap (containing all attributes of the object and their values)
+	 */
 	public HashMap<String,String> genereateMyProfileHashMap() {
 		HashMap<String,String> result = new HashMap<>();
 		result.put("id", activeUser.getUserID());
@@ -1289,7 +1220,11 @@ public class Controller {
 		return result;
 	}
 
-	//TODO DOCU
+	/**
+	 * Generates HashMap for an assignment 
+	 * 
+	 * @return HashMap (containing all attributes of the object and their values)
+	 */
 	public HashMap<String,String> genereateAssignmentHashMap(String assignment_ID) {
 		Assignment assign = null;
 		for ( Assignment a : assignmentHandler.getAssignmentList()) {
@@ -1309,7 +1244,11 @@ public class Controller {
 		return result;
 	}
 	
-	//TODO DOCU
+	/**
+	 * Generates HashMap for the an offer 
+	 * 
+	 * @return HashMap (containing all attributes of the object and their values)
+	 */
 	public HashMap<String,String> genereateOfferHashMap(String offer_ID) throws SQLException, IOException {
 		Offer offer = null;
 		Company comp = null;
@@ -1324,7 +1263,6 @@ public class Controller {
 			}
 			offer = new Offer(buf[0], buf[1], buf[2], Double.parseDouble(buf[3]), buf[4], buf[5], buf[6], buf[7]); 
 		}
-
 		for (Company c : companyList) {
 			if (c.getCompanyID().equals(offer.getCompanyID())) {
 				comp = c;
@@ -1342,7 +1280,11 @@ public class Controller {
 		return result;
 	}
 	
-	//TODO DOCU
+	/**
+	 * Generates HashMap for a company 
+	 * 
+	 * @return HashMap (containing all attributes of the object and their values)
+	 */
 	public HashMap<String,String> genereatCompanyHashMap(String company_ID) {
 		Company comp = null;
 		for ( Company c : companyList) {
@@ -1362,8 +1304,13 @@ public class Controller {
 			result.put("description", comp.getDescription());
 		}
 		return result;
-
 	}
 
+
+	/**
+	 * Getter and Setter needed for test classes
+	 */
+	public ArrayList<TreeItem> getServiceTreeList() {return serviceTreeList;}
+	public ArrayList<TreeItem> getPositionTreeList() {return positionTreeList;}
 }
 
