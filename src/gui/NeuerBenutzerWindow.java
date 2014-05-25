@@ -23,7 +23,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import processing.dataBase.dbHandler;
+import database.dbHandler;
+
 import sun.security.pkcs.EncodingException;
 import swing2swt.layout.BorderLayout;
 

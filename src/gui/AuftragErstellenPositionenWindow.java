@@ -47,10 +47,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 
+import database.dbHandler;
+
 import processing.Controller;
 import processing.data.Category;
 import processing.data.Position;
-import processing.dataBase.dbHandler;
 
 public class AuftragErstellenPositionenWindow extends Shell {
 
@@ -211,9 +212,9 @@ public class AuftragErstellenPositionenWindow extends Shell {
 							JPanel pnl3 = new JPanel(new java.awt.BorderLayout());
 							pnl3.add(pnl, java.awt.BorderLayout.NORTH);
 							pnl3.add(pnl2, java.awt.BorderLayout.SOUTH);
-							pnl.add(new JLabel("Bitte geben Sie die gewünschte Anzahl an:"), java.awt.BorderLayout.NORTH);
+							pnl.add(new JLabel("Bitte geben Sie die gewï¿½nschte Anzahl an:"), java.awt.BorderLayout.NORTH);
 							pnl.add(mengeField, java.awt.BorderLayout.SOUTH);
-							pnl2.add(new JLabel("Hier, falls nötig, weitere Beschreibung einfügen:"), java.awt.BorderLayout.NORTH);
+							pnl2.add(new JLabel("Hier, falls nï¿½tig, weitere Beschreibung einfï¿½gen:"), java.awt.BorderLayout.NORTH);
 							pnl2.add(beschreibungArea, java.awt.BorderLayout.SOUTH);
 							boolean inputCheck;
 							do{
@@ -332,7 +333,7 @@ public class AuftragErstellenPositionenWindow extends Shell {
 					TreeItem tempItem = idTaken(item, singleData[0]);
 					if(tempItem != null){
 						TreeItem foundItem = getSameTreeItem(tempItem, outputTree);
-						foundItem.setText(new String[]{item.getText(), singleData[1], singleData[2]});
+						foundItem.setText(new String[]{singleData[3], singleData[1], singleData[2]});
 					}
 				}
 			}

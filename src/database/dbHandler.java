@@ -1,4 +1,4 @@
-package processing.dataBase;
+package database;
 
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -51,7 +51,7 @@ public class dbHandler {
 	/**
 	 * default constructor	-	uses hard coded parameter for database connection 
 	 */
-	//adjust so that parameter are correct for certain situation
+	//adjust so that parameter are correct for your scenario
 	public dbHandler() {
 		this.dbUrl = "jdbc:mysql://localhost:3306";	
 		this.dbUser = "root";	
@@ -348,7 +348,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getCompanyList() throws SQLException, IOException{
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hFirmenMap = new HashMap<>();
+		HashMap<String,String[]> hFirmenMap = new HashMap<String,String[]>();
 		
 		Connection con = setUpConnection();
 		try {
@@ -589,7 +589,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getCategories() throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hCategoryMap = new HashMap<>();
+		HashMap<String,String[]> hCategoryMap = new HashMap<String,String[]>();
 		
 		Connection con = setUpConnection();
 		try {
@@ -628,7 +628,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getAssignments(String owner) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hAssignmentMap = new HashMap<>();
+		HashMap<String,String[]> hAssignmentMap = new HashMap<String,String[]>();
 		Connection con = setUpConnection();
 		try {
 				PreparedStatement pst = con.prepareStatement("");
@@ -670,7 +670,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getOffer(String Assignment_ID) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hOfferMap = new HashMap<>();
+		HashMap<String,String[]> hOfferMap = new HashMap<String,String[]>();
 		
 		Connection con = setUpConnection();
 		try {
@@ -714,7 +714,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getSpecificOffer(String Offer_ID) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hOfferMap = new HashMap<>();
+		HashMap<String,String[]> hOfferMap = new HashMap<String,String[]>();
 		
 		Connection con = setUpConnection();
 		try {
@@ -758,7 +758,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getPositionList(String Assignment_ID) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hPositionMap = new HashMap<>();
+		HashMap<String,String[]> hPositionMap = new HashMap<String,String[]>();
 		Connection con = setUpConnection();
 		try {	
 			PreparedStatement pst = con.prepareStatement("");
@@ -798,7 +798,7 @@ public class dbHandler {
 	public HashMap<String,String[]> getUsers(String Username) throws SQLException, IOException {
 		boolean exists = false;
 		ResultSet neu = null;
-		HashMap<String,String[]> hUserMap = new HashMap<>();
+		HashMap<String,String[]> hUserMap = new HashMap<String,String[]>();
 		
 		Connection con = setUpConnection();
 		try {

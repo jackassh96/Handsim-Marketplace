@@ -147,7 +147,7 @@ public class AuftragErstellenInfoWindow extends Shell {
 					}
 					String[][] dataArray = new String[returnItems.size()][];
 					for(int i = 0; i < returnItems.size(); i++){
-						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2)};
+						dataArray[i] = new String[]{((String[]) returnItems.get(i).getData())[0], returnItems.get(i).getText(1), returnItems.get(i).getText(2), returnItems.get(i).getText(0)};
 					}
 					Shell parent = (Shell) ((Button)e.getSource()).getShell().getParent();
 					((Button)e.getSource()).getShell().dispose();

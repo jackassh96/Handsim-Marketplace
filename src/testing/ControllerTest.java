@@ -7,9 +7,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import database.dbHandler;
+
 import processing.Controller;
 import processing.data.Category;
-import processing.dataBase.dbHandler;
 
 public class ControllerTest {
 

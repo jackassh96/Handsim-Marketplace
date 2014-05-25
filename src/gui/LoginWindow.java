@@ -18,8 +18,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 
+import database.dbHandler;
+
 import processing.Controller;
-import processing.dataBase.dbHandler;
 
 public class LoginWindow extends Shell {
 	private Text passwortTextField;

@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import database.dbHandler;
+
 import processing.data.Assignment;
 import processing.data.Category;
 import processing.data.Offer;
@@ -21,7 +23,6 @@ import processing.data.Position;
 import processing.data.User;
 import processing.data.Company;
 import processing.data.AssignmentHandler;
-import processing.dataBase.dbHandler;
 import processing.helper.DatumFull;
 import processing.helper.Sorter;
 

@@ -1,8 +1,9 @@
 package testing;
 
 import java.util.HashMap;
+
+import database.dbHandler;
 import processing.data.User;
-import processing.dataBase.dbHandler;
 
 public class DbTest {
 
