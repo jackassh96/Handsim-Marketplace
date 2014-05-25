@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import swing2swt.layout.BorderLayout;
 
-import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.Table;
 
 import processing.Controller;

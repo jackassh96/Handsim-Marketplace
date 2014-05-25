@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import processing.Controller;
 
